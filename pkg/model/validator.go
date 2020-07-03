@@ -49,19 +49,29 @@ var rules = []rule{
 	// Overlapping territories must be fire.
 	func(w *World) bool {
 		for i, square := range w.Squares {
-			x, y := w.GetCoords(i)
-			neighbours := w.GetNeighbours(x, y)
+			if square != SquareUndefined {
+				x, y := w.GetCoords(i)
+				neighbours := w.GetNeighbours(x, y)
 
-			dragons := 0
-
-			for _, n := range neighbours {
-				if n == SquareDragon {
-					dragons++
+				dragons := 0
+				undefined := 0
+				for _, n := range neighbours {
+					if n == SquareDragon {
+						dragons++
+					}
+					if n == SquareUndefined {
+						undefined++
+					}
 				}
-			}
 
-			if dragons > 1 && square != SquareFire {
-				return false
+				if dragons > 1 && square != SquareFire {
+					// if more than one dragon is around a square, there must be fire
+					return false
+				}
+				if dragons <= 1 && undefined == 0 && square == SquareFire {
+					// if 0 or 1 dragon is around a square, there must NOT be fire
+					return false
+				}
 			}
 		}
 		return true

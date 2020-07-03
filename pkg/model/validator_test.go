@@ -50,7 +50,10 @@ func TestValidateWorld(t *testing.T) {
 		{NewWorld(3, 3).
 			SetSquare(0, 0, SquareDragon).
 			SetSquare(2, 1, SquareDragon).
+			SetSquare(1, 0, SquareEmpty).
 			SetSquare(1, 1, SquareFire), false, "fight"},
+		{NewWorld(1, 1).
+			SetSquare(0, 0, SquareFire), false, "fight"},
 	}
 
 	for _, table := range tables {

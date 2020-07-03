@@ -1,15 +1,9 @@
 package model
 
 import (
+	"fmt"
 	"strings"
 )
-
-var m = map[Square]rune{
-	0: '.', // undefined
-	1: 'x', // empty
-	2: 'F', // fire
-	3: 'D', // dragon
-}
 
 // World represents the puzzles state.
 type World struct {
@@ -37,7 +31,7 @@ func coordsExist(w *World, x int, y int) bool {
 
 // GetCoords gets the coordinates of a quare by the square index.
 func (w *World) GetCoords(i int) (x, y int) {
-	return i % w.Width, i / w.Height
+	return i % w.Width, i / w.Width
 }
 
 // GetSquare gets the field value at coordinates x, y.
@@ -51,7 +45,7 @@ func (w *World) GetSquare(x int, y int) Square {
 // SetSquare sets the squares value at coordinates x, y.
 func (w *World) SetSquare(x int, y int, val Square) *World {
 	if !coordsExist(w, x, y) {
-		panic("Error: invalid coordinates")
+		panic(fmt.Sprintf("Error: invalid coordinates (x = %v, y = %v, width = %v, height = %v)", x, y, w.Width, w.Height))
 	}
 	w.Squares[coordsToIndex(w, x, y)] = val
 	return w
@@ -71,6 +65,14 @@ func (w *World) GetNeighbours(x int, y int) []Square {
 	}
 }
 
+// Clone creates an exact deep copy of a world.
+func (w *World) Clone() *World {
+	worldCopy := *w
+	worldCopy.Squares = make([]Square, len(w.Squares))
+	copy(worldCopy.Squares, w.Squares)
+	return &worldCopy
+}
+
 func (w *World) String() string {
 	var sb strings.Builder
 	for i, val := range w.Squares {
@@ -86,5 +88,5 @@ func (w *World) String() string {
 }
 
 func getSymbol(val Square) rune {
-	return m[val]
+	return squareSymbols[val]
 }
