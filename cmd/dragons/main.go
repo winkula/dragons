@@ -8,9 +8,9 @@ import (
 
 func main() {
 	world := model.NewWorld(3, 3)
-	world.SetField(0, 0, 3)
-	world.SetField(0, 1, 2)
-	world.SetField(1, 2, 1)
+	world.SetSquare(0, 0, 3)
+	world.SetSquare(0, 1, 2)
+	world.SetSquare(1, 2, 1)
 
 	fmt.Printf("World:\n%s\n", world)
 
