@@ -1,5 +1,8 @@
 package model
 
+// Options defines possible square values when enumerating valid world states.
+var options = []Square{SquareDragon, SquareFire, SquareEmpty}
+
 // Enumerate enumerates all possible successor states from a given world.
 func (w *World) Enumerate() []*World {
 	return enumerateInternal(w, make([]*World, 0), 0)
@@ -26,7 +29,7 @@ func enumerateInternal(w *World, result []*World, index int) []*World {
 	}
 
 	//fmt.Printf("Enumerate i=%v, x=%v, y=%v", i, x, y)
-	for _, option := range Options {
+	for _, option := range options {
 		// fmt.Printf("Enumerate (option %v) for world: %s", option, w)
 		successor := w.Clone()
 		successor.SetSquare(x, y, option)

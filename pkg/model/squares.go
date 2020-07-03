@@ -23,6 +23,3 @@ var squareSymbols = map[Square]rune{
 	SquareFire:      'F',
 	SquareDragon:    'D',
 }
-
-// Options defines possible square values when enumerating valid world states.
-var Options = []Square{SquareEmpty, SquareFire, SquareDragon}

@@ -75,15 +75,29 @@ func (w *World) Clone() *World {
 
 func (w *World) String() string {
 	var sb strings.Builder
+	sb.WriteString("┌")
+	if w.Width > 1 {
+		pad := (2*w.Width + 3 - 7) / 2
+		sb.WriteString(strings.Repeat("─", pad))
+		sb.WriteString(fmt.Sprintf("╴%vx%v╶", w.Width, w.Height))
+		sb.WriteString(strings.Repeat("─", pad))
+	} else {
+		sb.WriteString(strings.Repeat("─", 2*w.Width+1))
+	}
+	sb.WriteString("┐\n")
 	for i, val := range w.Squares {
-
+		if i%w.Width == 0 {
+			sb.WriteString("│ ")
+		}
 		sb.WriteRune(getSymbol(val))
 		sb.WriteRune(' ')
-
-		if i%w.Width == w.Width-1 && i != len(w.Squares)-1 {
-			sb.WriteRune('\n')
+		if i%w.Width == w.Width-1 {
+			sb.WriteString("│\n")
 		}
 	}
+	sb.WriteString("└")
+	sb.WriteString(strings.Repeat("─", 2*w.Width+1))
+	sb.WriteString("┘")
 	return sb.String()
 }
 

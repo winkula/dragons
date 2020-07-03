@@ -2,27 +2,43 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/winkula/dragons/pkg/model"
+	"github.com/winkula/dragons/pkg/parser"
 )
 
 func main() {
-	world := model.NewWorld(3, 3)
-	world.SetSquare(0, 0, model.SquareDragon)
-	world.SetSquare(0, 1, model.SquareFire)
-	world.SetSquare(1, 2, model.SquareEmpty)
+	args := os.Args[1:]
 
-	fmt.Printf("World:\n%s\n", world)
+	cmd := args[0]
 
-	fmt.Printf("Neighbours: %v\n", world.GetNeighbours(0, 0))
+	if cmd == "parse" {
+		arg := args[1]
+		parse(arg)
+		return
+	}
 
+	if cmd == "enum" {
+		arg := args[1]
+		world := parse(arg)
+		enumerate(world)
+		return
+	}
+}
+
+func parse(s string) *model.World {
+	world := parser.ParseWorld(s)
+	fmt.Println("World:")
+	fmt.Println(world)
 	fmt.Printf("Valid: %t\n", model.ValidateWorld(world))
+	return world
+}
 
-	world2 := model.NewWorld(3, 3)
-	successors := world2.Enumerate()
-	fmt.Println("Successors:")
+func enumerate(world *model.World) {
+	successors := world.Enumerate()
+	fmt.Printf("Successors (%v):\n", len(successors))
 	for _, s := range successors {
 		fmt.Println(s)
-		fmt.Println("----")
 	}
 }
