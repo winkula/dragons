@@ -3,9 +3,10 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 
+	"github.com/winkula/dragons/pkg/generator"
 	"github.com/winkula/dragons/pkg/model"
-	"github.com/winkula/dragons/pkg/parser"
 )
 
 func main() {
@@ -25,10 +26,17 @@ func main() {
 		enumerate(world)
 		return
 	}
+
+	if cmd == "gen" {
+		width, _ := strconv.ParseInt(args[1], 10, 32)
+		height, _ := strconv.ParseInt(args[2], 10, 32)
+		generate(int(width), int(height))
+		return
+	}
 }
 
 func parse(s string) *model.World {
-	world := parser.ParseWorld(s)
+	world := model.ParseWorld(s)
 	fmt.Println("World:")
 	fmt.Println(world)
 	fmt.Printf("Valid: %t\n", model.ValidateWorld(world))
@@ -41,4 +49,13 @@ func enumerate(world *model.World) {
 	for _, s := range successors {
 		fmt.Println(s)
 	}
+}
+
+func generate(width int, height int) {
+	world := generator.GenerateWorld(width, height)
+	fmt.Println("World:")
+	fmt.Println(world)
+	obf := generator.ObfuscateWorld(world)
+	fmt.Println("Obfuscated:")
+	fmt.Println(obf)
 }

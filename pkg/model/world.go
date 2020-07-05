@@ -29,6 +29,10 @@ func coordsExist(w *World, x int, y int) bool {
 	return x >= 0 && x < w.Width && y >= 0 && y < w.Height
 }
 
+func indexExists(w *World, index int) bool {
+	return index >= 0 && index < w.Width*w.Height
+}
+
 // GetCoords gets the coordinates of a quare by the square index.
 func (w *World) GetCoords(i int) (x, y int) {
 	return i % w.Width, i / w.Width
@@ -42,12 +46,37 @@ func (w *World) GetSquare(x int, y int) Square {
 	return w.Squares[coordsToIndex(w, x, y)]
 }
 
+// GetSquareByIndex gets the field value at the specified index.
+func (w *World) GetSquareByIndex(index int) Square {
+	if !indexExists(w, index) {
+		panic(fmt.Sprintf("Error: invalid index (index = %v, width = %v, height = %v)", index, w.Width, w.Height))
+	}
+	return w.Squares[index]
+}
+
 // SetSquare sets the squares value at coordinates x, y.
 func (w *World) SetSquare(x int, y int, val Square) *World {
 	if !coordsExist(w, x, y) {
 		panic(fmt.Sprintf("Error: invalid coordinates (x = %v, y = %v, width = %v, height = %v)", x, y, w.Width, w.Height))
 	}
 	w.Squares[coordsToIndex(w, x, y)] = val
+	return w
+}
+
+// SetSquareByIndex sets the squares value at the specified index.
+func (w *World) SetSquareByIndex(index int, val Square) *World {
+	if !indexExists(w, index) {
+		panic(fmt.Sprintf("Error: invalid index (index = %v, width = %v, height = %v)", index, w.Width, w.Height))
+	}
+	w.Squares[index] = val
+	return w
+}
+
+// FillSquares fills all squares.
+func (w *World) FillSquares(val Square) *World {
+	for i := range w.Squares {
+		w.Squares[i] = val
+	}
 	return w
 }
 
@@ -65,12 +94,38 @@ func (w *World) GetNeighbours(x int, y int) []Square {
 	}
 }
 
+// CountNeighbours counts the neighboured squares that match the given type.
+func (w *World) CountNeighbours(index int, square Square) int {
+	x, y := w.GetCoords(index)
+	ns := w.GetNeighbours(x, y)
+	count := 0
+	for _, v := range ns {
+		if v == square {
+			count++
+		}
+	}
+	return count
+}
+
 // Clone creates an exact deep copy of a world.
 func (w *World) Clone() *World {
 	worldCopy := *w
 	worldCopy.Squares = make([]Square, len(w.Squares))
 	copy(worldCopy.Squares, w.Squares)
 	return &worldCopy
+}
+
+// SetDragon sets a dragon to a specific square and computes where fire must be.
+func (w *World) SetDragon(index int) {
+	x, y := w.GetCoords(index)
+	w.SetSquare(x, y, SquareDragon)
+	ns := w.GetNeighbours(x, y)
+	for i := range ns {
+		numDragons := w.CountNeighbours(i, SquareDragon)
+		if numDragons > 1 {
+			w.SetSquareByIndex(i, SquareFire)
+		}
+	}
 }
 
 func (w *World) String() string {

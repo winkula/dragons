@@ -14,6 +14,8 @@ func TestEnumerate(t *testing.T) {
 		{NewWorld(2, 3), 7},
 		{NewWorld(3, 2), 7},
 		{NewWorld(3, 3), 12},
+
+		{ParseWorld("____,_ff_,_xd_"), 1},
 	}
 
 	for _, table := range tables {
