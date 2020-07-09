@@ -94,10 +94,59 @@ func (w *World) GetNeighbours(x int, y int) []Square {
 	}
 }
 
+// GetNeighbourIndexes gets the neighbours indexes.
+func (w *World) GetNeighbourIndexes(i int) []int {
+	x, y := w.GetCoords(i)
+	return []int{
+		coordsToIndex(w, x-1, y-1),
+		coordsToIndex(w, x, y-1),
+		coordsToIndex(w, x+1, y-1),
+		coordsToIndex(w, x-1, y),
+		coordsToIndex(w, x+1, y),
+		coordsToIndex(w, x-1, y+1),
+		coordsToIndex(w, x, y+1),
+		coordsToIndex(w, x+1, y+1),
+	}
+}
+
+// GetAdjacentNeighbourIndexes gets the adjacent neighbours indexes.
+func (w *World) GetAdjacentNeighbourIndexes(i int) []int {
+	x, y := w.GetCoords(i)
+	return []int{
+		coordsToIndex(w, x, y-1),
+		coordsToIndex(w, x-1, y),
+		coordsToIndex(w, x+1, y),
+		coordsToIndex(w, x, y+1),
+	}
+}
+
+// GetAdjacentNeighbours gets the adjacent neighbours field values.
+func (w *World) GetAdjacentNeighbours(x int, y int) []Square {
+	return []Square{
+		w.GetSquare(x, y-1),
+		w.GetSquare(x-1, y),
+		w.GetSquare(x+1, y),
+		w.GetSquare(x, y+1),
+	}
+}
+
 // CountNeighbours counts the neighboured squares that match the given type.
 func (w *World) CountNeighbours(index int, square Square) int {
 	x, y := w.GetCoords(index)
 	ns := w.GetNeighbours(x, y)
+	count := 0
+	for _, v := range ns {
+		if v == square {
+			count++
+		}
+	}
+	return count
+}
+
+// CountAdjacentNeighbours counts the adacent neighboured squares that match the given type.
+func (w *World) CountAdjacentNeighbours(index int, square Square) int {
+	x, y := w.GetCoords(index)
+	ns := w.GetAdjacentNeighbours(x, y)
 	count := 0
 	for _, v := range ns {
 		if v == square {
@@ -128,6 +177,25 @@ func (w *World) SetDragon(index int) {
 	}
 }
 
+// Interestingness returns the interestingness of a world.
+// This is useful if we want to sort possible solved worlds.
+func (w *World) Interestingness() (interestingness int) {
+	for _, val := range w.Squares {
+		interestingness += squareInterestingness[val]
+	}
+	return interestingness
+}
+
+// Size returns a worlds number of squares.
+func (w *World) Size() int {
+	return w.Width * w.Height
+}
+
+// CountSquares fills all squares.
+func (w *World) CountSquares(needle Square) int {
+	return countSquares(w.Squares, needle)
+}
+
 func (w *World) String() string {
 	var sb strings.Builder
 	sb.WriteString("┌")
@@ -153,9 +221,29 @@ func (w *World) String() string {
 	sb.WriteString("└")
 	sb.WriteString(strings.Repeat("─", 2*w.Width+1))
 	sb.WriteString("┘")
+	sb.WriteString("\nCode: ")
+	for i, val := range w.Squares {
+		sb.WriteRune(getSymbolForCode(val))
+		if i%w.Width == w.Width-1 && i < w.Width*w.Height-1 {
+			sb.WriteString(",")
+		}
+	}
 	return sb.String()
 }
 
 func getSymbol(val Square) rune {
 	return squareSymbols[val]
+}
+
+func getSymbolForCode(val Square) rune {
+	return squareSymbolsForCode[val]
+}
+
+func countSquares(squares []Square, needle Square) (count int) {
+	for _, s := range squares {
+		if s == needle {
+			count++
+		}
+	}
+	return
 }

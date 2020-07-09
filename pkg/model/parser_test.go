@@ -13,6 +13,10 @@ func TestParseWorld(t *testing.T) {
 		{"_", NewWorld(1, 1)},
 		{"___,___", NewWorld(3, 2)},
 		{"_D", NewWorld(2, 1).SetSquare(1, 0, SquareDragon)},
+
+		{"1,1", NewWorld(1, 1)},
+		{"2,1", NewWorld(2, 1)},
+		{"4,5", NewWorld(4, 5)},
 	}
 
 	for _, table := range tables {

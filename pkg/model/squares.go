@@ -17,9 +17,25 @@ const (
 )
 
 var squareSymbols = map[Square]rune{
-	SquareUndefined: '.',
-	SquareOut:       ' ',
+	SquareUndefined: ' ',
+	SquareOut:       '#',
+	SquareEmpty:     '-',
+	SquareFire:      '●', // 🔥
+	SquareDragon:    'D', // 🐲
+}
+
+var squareSymbolsForCode = map[Square]rune{
+	SquareUndefined: '_',
+	SquareOut:       '#',
 	SquareEmpty:     'x',
-	SquareFire:      'F',
-	SquareDragon:    'D',
+	SquareFire:      'f',
+	SquareDragon:    'd',
+}
+
+var squareInterestingness = map[Square]int{
+	SquareUndefined: 0,
+	SquareOut:       0,
+	SquareEmpty:     0,
+	SquareFire:      1,
+	SquareDragon:    3,
 }

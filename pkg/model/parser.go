@@ -2,6 +2,8 @@ package model
 
 import (
 	"fmt"
+	"regexp"
+	"strconv"
 	"strings"
 	"unicode"
 )
@@ -12,8 +14,15 @@ const (
 
 // ParseWorld parses a string that represents a dragons world.
 func ParseWorld(s string) *World {
+	matched, _ := regexp.MatchString(`^[0-9]+,[0-9]+$`, s)
+	if matched {
+		parts := strings.Split(s, delimiter)
+		width, _ := strconv.ParseInt(parts[0], 10, 32)
+		height, _ := strconv.ParseInt(parts[1], 10, 32)
+		return NewWorld(int(width), int(height))
+	}
+
 	parts := strings.Split(s, delimiter)
-	fmt.Printf("Parts: %v\n", parts)
 	height := len(parts)
 	if height == 0 {
 		panic("Parse error: World has no height, invlid.")
@@ -37,7 +46,7 @@ func ParseWorld(s string) *World {
 
 func getSquare(square rune) Square {
 	switch unicode.ToLower(square) {
-	case '_':
+	case '_', '.':
 		return SquareUndefined
 	case 'x':
 		return SquareEmpty
@@ -46,6 +55,5 @@ func getSquare(square rune) Square {
 	case 'd':
 		return SquareDragon
 	}
-
 	panic(fmt.Sprintf("Parse error: '%c' is not a valid value.", square))
 }

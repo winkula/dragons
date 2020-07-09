@@ -2,35 +2,34 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
-	"strconv"
+	"sort"
+	"time"
 
-	"github.com/winkula/dragons/pkg/generator"
 	"github.com/winkula/dragons/pkg/model"
 )
 
 func main() {
-	args := os.Args[1:]
+	seed()
 
+	args := os.Args[1:]
 	cmd := args[0]
 
 	if cmd == "parse" {
-		arg := args[1]
-		parse(arg)
+		parse(args[1])
 		return
 	}
 
 	if cmd == "enum" {
-		arg := args[1]
-		world := parse(arg)
+		world := parse(args[1])
 		enumerate(world)
 		return
 	}
 
 	if cmd == "gen" {
-		width, _ := strconv.ParseInt(args[1], 10, 32)
-		height, _ := strconv.ParseInt(args[2], 10, 32)
-		generate(int(width), int(height))
+		world := parse(args[1])
+		generate(world)
 		return
 	}
 }
@@ -39,23 +38,37 @@ func parse(s string) *model.World {
 	world := model.ParseWorld(s)
 	fmt.Println("World:")
 	fmt.Println(world)
-	fmt.Printf("Valid: %t\n", model.ValidateWorld(world))
+	fmt.Println("Valid:", model.ValidateWorld(world))
 	return world
 }
 
 func enumerate(world *model.World) {
 	successors := world.Enumerate()
-	fmt.Printf("Successors (%v):\n", len(successors))
+	sort.Slice(successors, func(i, j int) bool {
+		return successors[i].Interestingness() < successors[j].Interestingness()
+	})
 	for _, s := range successors {
 		fmt.Println(s)
+		fmt.Println("Interestingness:", s.Interestingness())
 	}
+	fmt.Printf("%v possible worlds found.\n", len(successors))
 }
 
-func generate(width int, height int) {
-	world := generator.GenerateWorld(width, height)
+func generate(world *model.World) {
+	if world.Size() == world.CountSquares(model.SquareUndefined) {
+		world = model.MostInteresting(world)
+	}
 	fmt.Println("World:")
 	fmt.Println(world)
-	obf := generator.ObfuscateWorld(world)
-	fmt.Println("Obfuscated:")
-	fmt.Println(obf)
+
+	g := model.GenerateWorld(world)
+	fmt.Println("Generated:")
+	fmt.Println(g)
+
+	fmt.Println("Undef squares:", g.CountSquares(model.SquareUndefined))
+}
+
+func seed() {
+	// seed the random generator
+	rand.Seed(time.Now().UnixNano())
 }

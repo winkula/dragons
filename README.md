@@ -2,6 +2,8 @@
 
 ...
 
+Inspired by: bimaru, mine sweeper, game of life
+
 ## Todo list
 
 ### Code
