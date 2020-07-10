@@ -5,6 +5,22 @@ import (
 	"strings"
 )
 
+var neighbours = []struct {
+	x        int
+	y        int
+	adjacent bool
+}{
+	{x: -1, y: -1, adjacent: false},
+	{x: 0, y: -1, adjacent: true},
+	{x: 1, y: -1, adjacent: false},
+	{x: -1, y: 0, adjacent: true},
+	//{x: 0, y: 0, adjacent: false}, // self
+	{x: 1, y: 0, adjacent: true},
+	{x: -1, y: 1, adjacent: false},
+	{x: 0, y: 1, adjacent: true},
+	{x: 1, y: 1, adjacent: false},
+}
+
 // World represents the puzzles state.
 type World struct {
 	Width   int
@@ -95,35 +111,15 @@ func (w *World) GetNeighbours(x int, y int) []Square {
 }
 
 // GetNeighbourIndexes gets the neighbours indexes.
-func (w *World) GetNeighbourIndexes(i int) []int {
+func (w *World) GetNeighbourIndexes(i int, adjacent bool) []int {
+	var res []int
 	x, y := w.GetCoords(i)
-	size := w.Size()
-	return filterint([]int{
-		coordsToIndex(w, x-1, y-1),
-		coordsToIndex(w, x, y-1),
-		coordsToIndex(w, x+1, y-1),
-		coordsToIndex(w, x-1, y),
-		coordsToIndex(w, x+1, y),
-		coordsToIndex(w, x-1, y+1),
-		coordsToIndex(w, x, y+1),
-		coordsToIndex(w, x+1, y+1),
-	}, func(i int) bool {
-		return i >= 0 && i < size
-	})
-}
-
-// GetAdjacentNeighbourIndexes gets the adjacent neighbours indexes.
-func (w *World) GetAdjacentNeighbourIndexes(i int) []int {
-	x, y := w.GetCoords(i)
-	size := w.Size()
-	return filterint([]int{
-		coordsToIndex(w, x, y-1),
-		coordsToIndex(w, x-1, y),
-		coordsToIndex(w, x+1, y),
-		coordsToIndex(w, x, y+1),
-	}, func(i int) bool {
-		return i >= 0 && i < size
-	})
+	for _, n := range neighbours {
+		if (!adjacent || n.adjacent) && coordsExist(w, x+n.x, y+n.y) {
+			res = append(res, coordsToIndex(w, x+n.x, y+n.y))
+		}
+	}
+	return res
 }
 
 // GetAdjacentNeighbours gets the adjacent neighbours field values.
@@ -257,14 +253,4 @@ func countSquares(squares []Square, needle Square) (count int) {
 		}
 	}
 	return
-}
-
-func filterint(arr []int, cond func(int) bool) []int {
-	result := []int{}
-	for i := range arr {
-		if cond(arr[i]) {
-			result = append(result, arr[i])
-		}
-	}
-	return result
 }

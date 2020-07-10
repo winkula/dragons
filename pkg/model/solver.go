@@ -29,6 +29,7 @@ func Solve(w *World) *World {
 
 // SolveSimple solves a world state only using the validation rules of the game.
 func SolveSimple(w *World) *World {
+	tries := 10
 	if !w.HasDistinctSolution() {
 		fmt.Println("SolveSimple: no distinct solution possible!")
 		return nil
@@ -36,7 +37,7 @@ func SolveSimple(w *World) *World {
 
 	cpy := w.Clone()
 	knowledge := newKnowledge(cpy)
-	for try := 0; try < 10; try++ {
+	for try := 0; try < tries; try++ {
 		for i := range cpy.Squares {
 			val := cpy.GetSquareByIndex(i)
 			if val != SquareUndefined {
@@ -58,15 +59,29 @@ func SolveSimple(w *World) *World {
 			var ok []Square
 			fmt.Println("-> evaluate options")
 			for _, o := range ops {
+				fmt.Printf("   -> option %c", squareSymbolsForCode[o])
 				test := cpy.Clone()
 				test.SetSquareByIndex(i, o)
-				if ValidateWorld(test) {
-					fmt.Printf("   -> possible: %c\n", squareSymbolsForCode[o])
-					ok = append(ok, o)
-				} else {
+
+				if !ValidateWorld(test) {
 					// update knowledge
-					fmt.Printf("   -> NOT possible: %c\n", squareSymbolsForCode[o])
+					fmt.Printf(" => NOT possible\n")
 					knowledge.squareCannotBe(i, o)
+					continue
+				}
+
+				// we compute all permutations that are possible when the neighbour squares are taken into account
+				nis := test.GetNeighbourIndexes(i, false)
+				permRes := knowledge.getPermutations(test, nis)
+				fmt.Printf(" => permutations of %v: %v/%v", nis, permRes.valid, permRes.count)
+
+				if permRes.valid == 0 {
+					// update knowledge
+					fmt.Println(" => [NOK]")
+					knowledge.squareCannotBe(i, o)
+				} else {
+					fmt.Println(" => [ OK]")
+					ok = append(ok, o)
 				}
 			}
 			// if only one solution works.. use it
@@ -95,7 +110,7 @@ var solveRules = []solveRule{
 	// if a dragon is set, no neighbour square can be dragons
 	func(w *World, i int, k *knowledge) *World {
 		if w.GetSquareByIndex(i) == SquareDragon {
-			k.squaresCannotBe(w.GetNeighbourIndexes(i), SquareDragon)
+			k.squaresCannotBe(w.GetNeighbourIndexes(i, false), SquareDragon)
 			fmt.Println("-> [ar] neighbour squares of dragon cannot be dragons")
 		}
 		return w
@@ -107,7 +122,7 @@ var solveRules = []solveRule{
 			empty := w.CountAdjacentNeighbours(i, SquareEmpty)
 			undef := w.CountAdjacentNeighbours(i, SquareUndefined)
 			if empty < 2 && empty+undef == 2 {
-				for _, ni := range w.GetAdjacentNeighbourIndexes(i) {
+				for _, ni := range w.GetNeighbourIndexes(i, true) {
 					if w.GetSquareByIndex(ni) == SquareUndefined {
 						w.SetSquareByIndex(ni, SquareEmpty)
 					}
@@ -133,7 +148,7 @@ var solveRules = []solveRule{
 			dragons := w.CountNeighbours(i, SquareDragon)
 			undef := w.CountNeighbours(i, SquareUndefined)
 			if dragons < 2 && dragons+undef == 2 {
-				for _, ni := range w.GetNeighbourIndexes(i) {
+				for _, ni := range w.GetNeighbourIndexes(i, false) {
 					if w.GetSquareByIndex(ni) == SquareUndefined {
 						w.SetSquareByIndex(ni, SquareDragon)
 					}
@@ -177,7 +192,7 @@ var solveRules = []solveRule{
 		if square == SquareEmpty {
 			dragons := w.CountNeighbours(i, SquareDragon)
 			if dragons == 1 {
-				k.squaresCannotBe(w.GetNeighbourIndexes(i), SquareDragon)
+				k.squaresCannotBe(w.GetNeighbourIndexes(i, false), SquareDragon)
 				fmt.Println("-> [ar] if a empty square is set, there can maximum be one dragon around it")
 			}
 		}

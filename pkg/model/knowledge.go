@@ -46,6 +46,36 @@ func (k *knowledge) getOptions(w *World, i int) []Square {
 	return res
 }
 
-func (k *knowledge) possibleCount(is []int, v Square) {
+type permRes struct {
+	count int
+	valid int
+	perms []*World
+}
 
+func (k *knowledge) getPermutations(w *World, is []int) *permRes {
+	result := &permRes{}
+	permRecur(k, result, w, is, 0)
+	return result
+}
+
+func permRecur(k *knowledge, result *permRes, w *World, indexes []int, i int) {
+	if i >= len(indexes) {
+		result.count++
+		if ValidateWorld(w) {
+			//fmt.Printf("- opt:\n%v\n", w)
+			result.valid++
+		}
+		return // stop recursion
+	}
+	currentIndex := indexes[i]
+	if w.GetSquareByIndex(currentIndex) == SquareUndefined {
+		for _, v := range k.getOptions(w, currentIndex) {
+			successor := w.Clone()
+			successor.SetSquareByIndex(currentIndex, v)
+			permRecur(k, result, successor, indexes, i+1)
+		}
+	} else {
+		successor := w.Clone()
+		permRecur(k, result, successor, indexes, i+1)
+	}
 }

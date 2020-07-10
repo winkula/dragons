@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
 	"os"
 	"sort"
@@ -82,6 +83,11 @@ func generate(world *model.World) {
 	g := model.GenerateWorld(world)
 	fmt.Println("Generated:")
 	fmt.Println(g)
+	if model.SolveSimple(g) != nil {
+		log.Println("SolveSimple could solve this. Difficulty: EASY!")
+	} else {
+		log.Println("SolveSimple could not solve this. Difficulty: MEDIUM/HARD!")
+	}
 
 	fmt.Println("Undef squares:", g.CountSquares(model.SquareUndefined))
 }
