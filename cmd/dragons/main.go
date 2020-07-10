@@ -32,6 +32,24 @@ func main() {
 		generate(world)
 		return
 	}
+
+	if cmd == "solve" {
+		world := parse(args[1])
+		solve(world)
+		return
+	}
+
+	if cmd == "solves" {
+		world := parse(args[1])
+		solveSimple(world)
+		return
+	}
+
+	if cmd == "val" {
+		world := parse(args[1])
+		validate(world)
+		return
+	}
 }
 
 func parse(s string) *model.World {
@@ -66,6 +84,35 @@ func generate(world *model.World) {
 	fmt.Println(g)
 
 	fmt.Println("Undef squares:", g.CountSquares(model.SquareUndefined))
+}
+
+func solve(world *model.World) {
+	solved := model.Solve(world)
+	if solved == nil {
+		fmt.Println("Solver: No solution found! There are two reasons:")
+		fmt.Println(" - the puzzle is too difficult for the naive solver")
+		fmt.Println(" - the puzzle has no distinct solution")
+	} else {
+		fmt.Println("Solved:")
+		fmt.Println(solved)
+	}
+}
+
+func solveSimple(world *model.World) {
+	solved := model.SolveSimple(world)
+	if solved == nil {
+		fmt.Println("Solver: No solution found! There are two reasons:")
+		fmt.Println(" - the puzzle is too difficult for the naive solver")
+		fmt.Println(" - the puzzle has no distinct solution")
+	} else {
+		fmt.Println("Solved:")
+		fmt.Println(solved)
+	}
+}
+
+func validate(world *model.World) {
+	valid := model.ValidateWorld(world)
+	fmt.Println("IsValid:", valid)
 }
 
 func seed() {

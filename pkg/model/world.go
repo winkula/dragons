@@ -97,7 +97,8 @@ func (w *World) GetNeighbours(x int, y int) []Square {
 // GetNeighbourIndexes gets the neighbours indexes.
 func (w *World) GetNeighbourIndexes(i int) []int {
 	x, y := w.GetCoords(i)
-	return []int{
+	size := w.Size()
+	return filterint([]int{
 		coordsToIndex(w, x-1, y-1),
 		coordsToIndex(w, x, y-1),
 		coordsToIndex(w, x+1, y-1),
@@ -106,18 +107,23 @@ func (w *World) GetNeighbourIndexes(i int) []int {
 		coordsToIndex(w, x-1, y+1),
 		coordsToIndex(w, x, y+1),
 		coordsToIndex(w, x+1, y+1),
-	}
+	}, func(i int) bool {
+		return i >= 0 && i < size
+	})
 }
 
 // GetAdjacentNeighbourIndexes gets the adjacent neighbours indexes.
 func (w *World) GetAdjacentNeighbourIndexes(i int) []int {
 	x, y := w.GetCoords(i)
-	return []int{
+	size := w.Size()
+	return filterint([]int{
 		coordsToIndex(w, x, y-1),
 		coordsToIndex(w, x-1, y),
 		coordsToIndex(w, x+1, y),
 		coordsToIndex(w, x, y+1),
-	}
+	}, func(i int) bool {
+		return i >= 0 && i < size
+	})
 }
 
 // GetAdjacentNeighbours gets the adjacent neighbours field values.
@@ -198,7 +204,7 @@ func (w *World) CountSquares(needle Square) int {
 
 func (w *World) String() string {
 	var sb strings.Builder
-	sb.WriteString("┌")
+	sb.WriteString("   ┌")
 	if w.Width > 1 {
 		pad := (2*w.Width + 3 - 7) / 2
 		sb.WriteString(strings.Repeat("─", pad))
@@ -210,24 +216,29 @@ func (w *World) String() string {
 	sb.WriteString("┐\n")
 	for i, val := range w.Squares {
 		if i%w.Width == 0 {
-			sb.WriteString("│ ")
+			sb.WriteString("   │ ")
 		}
 		sb.WriteRune(getSymbol(val))
 		sb.WriteRune(' ')
 		if i%w.Width == w.Width-1 {
-			sb.WriteString("│\n")
+			sb.WriteString("│")
+
+			if i/w.Width == 0 {
+				sb.WriteString(" Code: ")
+				for i, val := range w.Squares {
+					sb.WriteRune(getSymbolForCode(val))
+					if i%w.Width == w.Width-1 && i < w.Width*w.Height-1 {
+						sb.WriteString(",")
+					}
+				}
+			}
+
+			sb.WriteString("\n")
 		}
 	}
-	sb.WriteString("└")
+	sb.WriteString("   └")
 	sb.WriteString(strings.Repeat("─", 2*w.Width+1))
 	sb.WriteString("┘")
-	sb.WriteString("\nCode: ")
-	for i, val := range w.Squares {
-		sb.WriteRune(getSymbolForCode(val))
-		if i%w.Width == w.Width-1 && i < w.Width*w.Height-1 {
-			sb.WriteString(",")
-		}
-	}
 	return sb.String()
 }
 
@@ -246,4 +257,14 @@ func countSquares(squares []Square, needle Square) (count int) {
 		}
 	}
 	return
+}
+
+func filterint(arr []int, cond func(int) bool) []int {
+	result := []int{}
+	for i := range arr {
+		if cond(arr[i]) {
+			result = append(result, arr[i])
+		}
+	}
+	return result
 }

@@ -1,17 +1,21 @@
 package model
 
-/*
-func TestSolve(t *testing.T) {
-	t.Skip("Not implemented at the moment")
+import "testing"
 
+// TODO
+func TestSolve(t *testing.T) {
 	tables := []*World{
+		ParseWorld("dx,_x"),
 		ParseWorld("dx,__"),
 		ParseWorld("_f_,_f_,_f_"),
-		ParseWorld("d__,___,__d"),
+		//ParseWorld("d__,___,__d"),
 	}
 
 	for _, table := range tables {
-		Solve(table)
+		solved := Solve(table)
+		if solved == nil || !isSolved(solved) {
+			t.Errorf("TestSolve was incorrect, world is not solved. World: \n%s",
+				table)
+		}
 	}
 }
-*/
