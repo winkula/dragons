@@ -14,6 +14,10 @@ Inspired by: bimaru, mine sweeper, game of life
 - [ ] Generator
 - [ ] CLI
 
+- [ ] various performance improvements
+- [ ] restructure packages
+- [ ] optimize cli
+
 ### Other
 
 - [ ] Readme
