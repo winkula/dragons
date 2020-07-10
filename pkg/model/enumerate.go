@@ -1,18 +1,21 @@
 package model
 
-import "sort"
+import (
+	"sort"
+	"strings"
+)
 
 // Options defines possible square values when enumerating valid world states.
 var options = []Square{SquareDragon, SquareFire, SquareEmpty}
 
 // Enumerate enumerates all possible successor states from a given world.
-func (w *World) Enumerate() []*World {
+func Enumerate(w *World) []*World {
 	return enumerateInternal(w, make([]*World, 0), 0, false)
 }
 
 // EnumerateSquare enumerates all possible worlds if a specified square is undefined.
 // Otherwise, the given world is returned as single possible solution.
-func (w *World) EnumerateSquare(index int) []*World {
+func EnumerateSquare(w *World, index int) []*World {
 	if w.GetSquareByIndex(index) != SquareUndefined {
 		return []*World{w.Clone()}
 	}
@@ -20,7 +23,7 @@ func (w *World) EnumerateSquare(index int) []*World {
 	for _, option := range options {
 		successor := w.Clone()
 		successor.SetSquareByIndex(index, option)
-		if ValidateWorld(successor) {
+		if Validate(successor) {
 			result = append(result, successor)
 		}
 	}
@@ -28,13 +31,13 @@ func (w *World) EnumerateSquare(index int) []*World {
 }
 
 // HasDistinctSolution returns 'true' if there is exactly one solution to the problem.
-func (w *World) HasDistinctSolution() bool {
+func HasDistinctSolution(w *World) bool {
 	return len(enumerateInternal(w, make([]*World, 0), 0, true)) == 1
 }
 
 // MostInteresting returns the most interesting possible solution to a puzzle.
 func MostInteresting(puzzle *World) *World {
-	successors := puzzle.Enumerate()
+	successors := Enumerate(puzzle)
 	// sort by interestingness
 	byInterestingnessDesc := func(i, j int) bool {
 		return successors[i].Interestingness() > successors[j].Interestingness()
@@ -58,16 +61,16 @@ func enumerateInternal(w *World, result []*World, index int, skipOnMultipleSolut
 		return result
 	}
 
-	if !ValidateWorld(w) {
+	if !Validate(w) {
 		// skip further investigation because the state is invalid
-		//fmt.Printf("%vInvalid!\n", strings.Repeat(" ", index))
-		//fmt.Println(w)
+		logd.Printf("%vInvalid!\n", strings.Repeat(" ", index))
+		logd.Println(w)
 		return result
 	}
 
 	if !hasSquares(w, SquareUndefined) {
 		// only append, if its a leaf node (final state, no undefined squares)
-		//fmt.Println("Sucessor found!")
+		logd.Println("Sucessor found!")
 		result = append(result, w)
 		return result
 	}
@@ -80,13 +83,13 @@ func enumerateInternal(w *World, result []*World, index int, skipOnMultipleSolut
 	square := w.GetSquare(x, y)
 	if square == SquareUndefined {
 		for _, option := range options {
-			//fmt.Printf("%vOption %c for x=%v,y=%v\n", strings.Repeat(" ", index), squareSymbols[option], x, y)
+			logd.Printf("%vOption %c for x=%v,y=%v\n", strings.Repeat(" ", index), squareSymbols[option], x, y)
 			successor := w.Clone()
 			successor.SetSquare(x, y, option)
 			result = enumerateInternal(successor, result, index+1, skipOnMultipleSolutions)
 		}
 	} else {
-		//fmt.Printf("%vSquare already defined for i=%v x=%v,y=%v\n", strings.Repeat(" ", index), index, x, y)
+		logd.Printf("%vSquare already defined for i=%v x=%v,y=%v\n", strings.Repeat(" ", index), index, x, y)
 		successor := w.Clone()
 		result = enumerateInternal(successor, result, index+1, skipOnMultipleSolutions)
 	}

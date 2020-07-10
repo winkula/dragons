@@ -7,20 +7,20 @@ func TestEnumerate(t *testing.T) {
 		world *World
 		count int
 	}{
-		{NewWorld(1, 1), 1},
-		{NewWorld(1, 2), 1},
-		{NewWorld(2, 1), 1},
-		{NewWorld(2, 2), 5},
-		{NewWorld(2, 3), 7},
-		{NewWorld(3, 2), 7},
-		{NewWorld(3, 3), 14},
+		{New(1, 1), 1},
+		{New(1, 2), 1},
+		{New(2, 1), 1},
+		{New(2, 2), 5},
+		{New(2, 3), 7},
+		{New(3, 2), 7},
+		{New(3, 3), 14},
 
-		{ParseWorld("____,_ff_,_xd_"), 2},
-		{ParseWorld("____,_ffx,_xd_"), 1},
+		{Parse("____,_ff_,_xd_"), 2},
+		{Parse("____,_ffx,_xd_"), 1},
 	}
 
 	for _, table := range tables {
-		successors := table.world.Enumerate()
+		successors := Enumerate(table.world)
 		length := len(successors)
 		if length != table.count {
 			t.Errorf("Enumerate was incorrect, got: %d, want: %d. World: \n%s",
@@ -37,12 +37,12 @@ func TestEnumerateSquare(t *testing.T) {
 		index int
 		count int
 	}{
-		{ParseWorld("x_,xd"), 1, 1},
-		{ParseWorld("xx,x_"), 3, 2},
+		{Parse("x_,xd"), 1, 1},
+		{Parse("xx,x_"), 3, 2},
 	}
 
 	for _, table := range tables {
-		successors := table.world.EnumerateSquare(table.index)
+		successors := EnumerateSquare(table.world, table.index)
 		length := len(successors)
 		if length != table.count {
 			t.Errorf("Enumerate was incorrect, got: %d, want: %d. World: \n%s",

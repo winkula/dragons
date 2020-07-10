@@ -4,32 +4,11 @@ import (
 	"math/bits"
 )
 
-// Solve solves a world and returns the only possible solution or otherwise panics.
+// Solve solves a puzzle only using the validation rules of the game.
+// it returns the only possible solution or "nil" otherwise.
 func Solve(w *World) *World {
-	if !w.HasDistinctSolution() {
-		logd.Println("Solver: no distinct solution possible!")
-		return nil
-	}
-	cpy := w.Clone()
-	knowledge := newKnowledge(cpy)
-	for try := 0; try < 10; try++ {
-		for i := range cpy.Squares {
-			for _, r := range solveRules {
-				r(cpy, i, knowledge)
-				if isSolved(cpy) {
-					return cpy
-				}
-			}
-		}
-		logd.Println("-----")
-	}
-	return nil
-}
-
-// SolveSimple solves a world state only using the validation rules of the game.
-func SolveSimple(w *World) *World {
 	tries := 10
-	if !w.HasDistinctSolution() {
+	if !HasDistinctSolution(w) {
 		logd.Println("SolveSimple: no distinct solution possible!")
 		return nil
 	}
@@ -62,7 +41,7 @@ func SolveSimple(w *World) *World {
 				test := cpy.Clone()
 				test.SetSquareByIndex(i, o)
 
-				if !ValidateWorld(test) {
+				if !Validate(test) {
 					// update knowledge
 					logd.Printf(" => NOT possible\n")
 					knowledge.squareCannotBe(i, o)
@@ -99,8 +78,40 @@ func SolveSimple(w *World) *World {
 	return nil
 }
 
+// SolveDk solves a puzzle using domain knowledge.
+// it returns the only possible solution or "nil" otherwise.
+func SolveDk(w *World) *World {
+	if !HasDistinctSolution(w) {
+		logd.Println("Solver: no distinct solution possible!")
+		return nil
+	}
+	cpy := w.Clone()
+	knowledge := newKnowledge(cpy)
+	for try := 0; try < 10; try++ {
+		for i := range cpy.Squares {
+			for _, r := range solveRules {
+				r(cpy, i, knowledge)
+				if isSolved(cpy) {
+					return cpy
+				}
+			}
+		}
+		logd.Println("-----")
+	}
+	return nil
+}
+
+// SolveBf solves a puzzle using a brute force strategy (enumerating all possible states).
+func SolveBf(w *World) *World {
+	solutions := Enumerate(w)
+	if len(solutions) == 1 {
+		return solutions[0]
+	}
+	return nil
+}
+
 func isSolved(w *World) bool {
-	return w.CountSquares(SquareUndefined) == 0 && ValidateWorld(w)
+	return w.CountSquares(SquareUndefined) == 0 && Validate(w)
 }
 
 type solveRule (func(*World, int, *knowledge) *World)

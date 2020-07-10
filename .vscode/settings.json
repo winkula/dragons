@@ -2,5 +2,6 @@
     "editor.insertSpaces": false,
     "[go]": {
         "editor.formatOnSave": true
-    }
+    },
+    "go.useLanguageServer": true
 }

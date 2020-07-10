@@ -5,22 +5,22 @@ import (
 	"testing"
 )
 
-func TestParseWorld(t *testing.T) {
+func TestParse(t *testing.T) {
 	tables := []struct {
 		str   string
 		world *World
 	}{
-		{"_", NewWorld(1, 1)},
-		{"___,___", NewWorld(3, 2)},
-		{"_D", NewWorld(2, 1).SetSquare(1, 0, SquareDragon)},
+		{"_", New(1, 1)},
+		{"___,___", New(3, 2)},
+		{"_D", New(2, 1).SetSquare(1, 0, SquareDragon)},
 
-		{"1,1", NewWorld(1, 1)},
-		{"2,1", NewWorld(2, 1)},
-		{"4,5", NewWorld(4, 5)},
+		{"1,1", New(1, 1)},
+		{"2,1", New(2, 1)},
+		{"4,5", New(4, 5)},
 	}
 
 	for _, table := range tables {
-		world := ParseWorld(table.str)
+		world := Parse(table.str)
 		if !reflect.DeepEqual(world, table.world) {
 			t.Errorf("ParseWorld was incorrect, got:\n%s, want:\n%s.\nInput: '%s'",
 				world,
@@ -32,12 +32,12 @@ func TestParseWorld(t *testing.T) {
 
 func TestParseWorldPanicsOnWrongDimensions(t *testing.T) {
 	defer assertPanic(t)
-	ParseWorld("__,___")
+	Parse("__,___")
 }
 
 func TestParseWorldPanicsOnInvalidSymbols(t *testing.T) {
 	defer assertPanic(t)
-	ParseWorld("ab,xy,+*")
+	Parse("ab,xy,+*")
 }
 
 func assertPanic(t *testing.T) {

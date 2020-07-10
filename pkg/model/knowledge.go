@@ -61,7 +61,7 @@ func (k *knowledge) getPermutations(w *World, is []int) *permRes {
 func permRecur(k *knowledge, result *permRes, w *World, indexes []int, i int) {
 	if i >= len(indexes) {
 		result.count++
-		if ValidateWorld(w) {
+		if Validate(w) {
 			result.valid++
 		}
 		return // stop recursion

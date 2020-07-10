@@ -29,7 +29,7 @@ type World struct {
 }
 
 // NewWorld creates a new world struct.
-func NewWorld(width, height int) *World {
+func New(width, height int) *World {
 	return &World{
 		Width:   width,
 		Height:  height,

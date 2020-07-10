@@ -16,10 +16,11 @@ const (
 	DifficultyHard
 )
 
-// GenerateWorldOld generates a random world with the given dimensions.
-func GenerateWorldOld(width int, height int) *World {
+// Generate generates a random puzzle with the given dimensions and difficulty.
+// TODO: rework this implementation!
+func Generate(width int, height int, difficulty Difficulty) *World {
 	for {
-		world := NewWorld(width, height).FillSquares(SquareEmpty)
+		world := New(width, height).FillSquares(SquareEmpty)
 		size := world.Width * world.Height
 		numDragons := size / 6
 		for i := 0; i < numDragons; {
@@ -29,48 +30,27 @@ func GenerateWorldOld(width int, height int) *World {
 			}
 			worldNew := world.Clone()
 			worldNew.SetDragon(index)
-			if ValidateWorld(worldNew) {
+			if Validate(worldNew) {
 				world = worldNew
 			} else {
 				continue
 			}
 			i++
 		}
-		if ValidateWorld(world) {
+		if Validate(world) {
 			return world
 		}
 	}
 }
 
-// ObfuscateWorld takes a world and tries to obfuscate it so that some
-// information is missing but it still has a definite solution.
-func ObfuscateWorld(world *World) *World {
-	size := world.Size()
-	tries := 20
-	for i := 0; i < tries; {
-		index := rand.Intn(size)
-		if world.GetSquareByIndex(index) == SquareUndefined {
-			continue
-		}
-		worldNew := world.Clone()
-		worldNew.SetSquareByIndex(index, SquareUndefined)
-		if worldNew.HasDistinctSolution() {
-			world = worldNew
-			i = 0
-		}
-		i++
-	}
-	return world
-}
-
-// GenerateWorld creates a puzzle with a distinct solution from an existing world.
-func GenerateWorld(world *World, difficulty Difficulty) *World {
+// GenerateFrom creates a puzzle from a given solved or partially solved puzzle and also takes a difficulty parameter.
+func GenerateFrom(world *World, difficulty Difficulty) *World {
 	bestWorld := world.Clone()
 	mostUndefined := 0
 	loops := 100
 	tries := 100
 	for i := 0; i < loops; i++ {
-		w := generateInternal(world, tries, difficulty)
+		w := incrementallyObfuscate(world, tries, difficulty)
 		undefCount := w.CountSquares(SquareUndefined)
 		if undefCount > mostUndefined {
 			bestWorld = w
@@ -79,7 +59,9 @@ func GenerateWorld(world *World, difficulty Difficulty) *World {
 	return bestWorld
 }
 
-func generateInternal(world *World, tries int, difficulty Difficulty) *World {
+// incrementallyObfuscate takes a world state and incrementally sets squares to "undefined".
+// After every step, it verifies if the puzzle is still solvable (i.e. has a distinct solution).
+func incrementallyObfuscate(world *World, tries int, difficulty Difficulty) *World {
 	if world.Size() == world.CountSquares(SquareUndefined) {
 		panic("generateInternal: all squares undefined")
 	}
@@ -91,7 +73,7 @@ func generateInternal(world *World, tries int, difficulty Difficulty) *World {
 		}
 		worldNew := world.Clone()
 		worldNew.SetSquareByIndex(index, SquareUndefined)
-		if (difficulty > DifficultyEasy || len(worldNew.EnumerateSquare(index)) == 1) && worldNew.HasDistinctSolution() {
+		if (difficulty > DifficultyEasy || len(EnumerateSquare(worldNew, index)) == 1) && HasDistinctSolution(worldNew) {
 			world = worldNew
 			i = 0
 		}

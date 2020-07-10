@@ -12,14 +12,14 @@ const (
 	delimiter = ","
 )
 
-// ParseWorld parses a string that represents a dragons world.
-func ParseWorld(s string) *World {
+// Parse parses a string that represents a dragons world.
+func Parse(s string) *World {
 	matched, _ := regexp.MatchString(`^[0-9]+,[0-9]+$`, s)
 	if matched {
 		parts := strings.Split(s, delimiter)
 		width, _ := strconv.ParseInt(parts[0], 10, 32)
 		height, _ := strconv.ParseInt(parts[1], 10, 32)
-		return NewWorld(int(width), int(height))
+		return New(int(width), int(height))
 	}
 
 	parts := strings.Split(s, delimiter)
@@ -39,7 +39,7 @@ func ParseWorld(s string) *World {
 		}
 	}
 
-	world := NewWorld(width, height)
+	world := New(width, height)
 	world.Squares = squares
 	return world
 }
