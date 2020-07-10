@@ -62,7 +62,6 @@ func permRecur(k *knowledge, result *permRes, w *World, indexes []int, i int) {
 	if i >= len(indexes) {
 		result.count++
 		if ValidateWorld(w) {
-			//fmt.Printf("- opt:\n%v\n", w)
 			result.valid++
 		}
 		return // stop recursion

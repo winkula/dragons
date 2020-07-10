@@ -4,6 +4,18 @@ import (
 	"math/rand"
 )
 
+// Difficulty represents possible difficulty levels.
+type Difficulty int
+
+const (
+	// DifficultyEasy represents "easy" puzzles.
+	DifficultyEasy = iota
+	// DifficultyMedium represents "medium" puzzles.
+	DifficultyMedium
+	// DifficultyHard represents "hard" puzzles.
+	DifficultyHard
+)
+
 // GenerateWorldOld generates a random world with the given dimensions.
 func GenerateWorldOld(width int, height int) *World {
 	for {
@@ -52,13 +64,13 @@ func ObfuscateWorld(world *World) *World {
 }
 
 // GenerateWorld creates a puzzle with a distinct solution from an existing world.
-func GenerateWorld(world *World) *World {
+func GenerateWorld(world *World, difficulty Difficulty) *World {
 	bestWorld := world.Clone()
 	mostUndefined := 0
 	loops := 100
 	tries := 100
 	for i := 0; i < loops; i++ {
-		w := generateInternal(world, tries)
+		w := generateInternal(world, tries, difficulty)
 		undefCount := w.CountSquares(SquareUndefined)
 		if undefCount > mostUndefined {
 			bestWorld = w
@@ -67,7 +79,7 @@ func GenerateWorld(world *World) *World {
 	return bestWorld
 }
 
-func generateInternal(world *World, tries int) *World {
+func generateInternal(world *World, tries int, difficulty Difficulty) *World {
 	if world.Size() == world.CountSquares(SquareUndefined) {
 		panic("generateInternal: all squares undefined")
 	}
@@ -79,7 +91,7 @@ func generateInternal(world *World, tries int) *World {
 		}
 		worldNew := world.Clone()
 		worldNew.SetSquareByIndex(index, SquareUndefined)
-		if len(worldNew.EnumerateSquare(index)) == 1 && worldNew.HasDistinctSolution() {
+		if (difficulty > DifficultyEasy || len(worldNew.EnumerateSquare(index)) == 1) && worldNew.HasDistinctSolution() {
 			world = worldNew
 			i = 0
 		}
