@@ -6,86 +6,86 @@ import (
 
 // Solve solves a puzzle only using the validation rules of the game.
 // it returns the only possible solution or "nil" otherwise.
-func Solve(w *World) *World {
+func Solve(g *Grid) *Grid {
 	tries := 10
-	if !HasDistinctSolution(w) {
-		logd.Println("SolveSimple: no distinct solution possible!")
+	if !HasDistinctSolution(g) {
+		debug("SolveSimple: no distinct solution possible!")
 		return nil
 	}
 
-	cpy := w.Clone()
+	cpy := g.Clone()
 	knowledge := newKnowledge(cpy)
 	for try := 0; try < tries; try++ {
 		for i := range cpy.Squares {
-			val := cpy.GetSquareByIndex(i)
+			val := cpy.Squarei(i)
 			if val != SquareUndefined {
 				continue // square already defined
 			}
 
-			logd.Println("Investigating square", i)
+			debug("Investigating square", i)
 
 			// if only one option is possible for a sqaure.. go for it
 			ops := knowledge.getOptions(cpy, i)
 			if len(ops) == 1 {
-				cpy.SetSquareByIndex(i, ops[0])
-				logd.Println("-> set the only possible option")
-				logd.Println(cpy)
+				cpy.SetSquarei(i, ops[0])
+				debug("-> set the only possible option")
+				debug(cpy)
 				continue
 			}
 
 			// for all possible options, try and evaluate
-			var ok []Square
-			logd.Println("-> evaluate options")
+			ok := make([]Square, 0, len(options))
+			debug("-> evaluate options")
 			for _, o := range ops {
-				logd.Printf("   -> option %c", squareSymbolsForCode[o])
+				//logd.Printf("   -> option %c", squareSymbolsForCode[o])
 				test := cpy.Clone()
-				test.SetSquareByIndex(i, o)
+				test.SetSquarei(i, o)
 
 				if !Validate(test) {
 					// update knowledge
-					logd.Printf(" => NOT possible\n")
+					//logd.Printf(" => NOT possible\n")
 					knowledge.squareCannotBe(i, o)
 					continue
 				}
 
 				// we compute all permutations that are possible when the neighbour squares are taken into account
-				nis := test.GetNeighbourIndexes(i, false)
+				nis := test.Neighborsi(i, false)
 				permRes := knowledge.getPermutations(test, nis)
-				logd.Printf(" => permutations of %v: %v/%v", nis, permRes.valid, permRes.count)
+				//logd.Printf(" => permutations of %v: %v/%v", nis, permRes.valid, permRes.count)
 
 				if permRes.valid == 0 {
 					// update knowledge
-					logd.Println(" => [NOK]")
+					debug(" => [NOK]")
 					knowledge.squareCannotBe(i, o)
 				} else {
-					logd.Println(" => [ OK]")
+					debug(" => [ OK]")
 					ok = append(ok, o)
 				}
 			}
 			// if only one solution works.. use it
 			if len(ok) == 1 {
-				cpy.SetSquareByIndex(i, ok[0])
-				logd.Println("-> set the only possible option (after evaluating)")
-				logd.Println(cpy)
+				cpy.SetSquarei(i, ok[0])
+				debug("-> set the only possible option (after evaluating)")
+				debug(cpy)
 			}
 		}
 		if isSolved(cpy) {
 			return cpy
 		}
 
-		logd.Println("-----")
+		debug("-----")
 	}
 	return nil
 }
 
 // SolveDk solves a puzzle using domain knowledge.
 // it returns the only possible solution or "nil" otherwise.
-func SolveDk(w *World) *World {
-	if !HasDistinctSolution(w) {
-		logd.Println("Solver: no distinct solution possible!")
+func SolveDk(g *Grid) *Grid {
+	if !HasDistinctSolution(g) {
+		debug("Solver: no distinct solution possible!")
 		return nil
 	}
-	cpy := w.Clone()
+	cpy := g.Clone()
 	knowledge := newKnowledge(cpy)
 	for try := 0; try < 10; try++ {
 		for i := range cpy.Squares {
@@ -96,130 +96,130 @@ func SolveDk(w *World) *World {
 				}
 			}
 		}
-		logd.Println("-----")
+		debug("-----")
 	}
 	return nil
 }
 
 // SolveBf solves a puzzle using a brute force strategy (enumerating all possible states).
-func SolveBf(w *World) *World {
-	solutions := Enumerate(w)
+func SolveBf(g *Grid) *Grid {
+	solutions := Enumerate(g)
 	if len(solutions) == 1 {
 		return solutions[0]
 	}
 	return nil
 }
 
-func isSolved(w *World) bool {
-	return w.CountSquares(SquareUndefined) == 0 && Validate(w)
+func isSolved(g *Grid) bool {
+	return g.CountSquares(SquareUndefined) == 0 && Validate(g)
 }
 
-type solveRule (func(*World, int, *knowledge) *World)
+type solveRule (func(*Grid, int, *knowledge) *Grid)
 
 var solveRules = []solveRule{
 	// if a dragon is set, no neighbour square can be dragons
-	func(w *World, i int, k *knowledge) *World {
-		if w.GetSquareByIndex(i) == SquareDragon {
-			k.squaresCannotBe(w.GetNeighbourIndexes(i, false), SquareDragon)
-			logd.Println("-> [ar] neighbour squares of dragon cannot be dragons")
+	func(g *Grid, i int, k *knowledge) *Grid {
+		if g.Squarei(i) == SquareDragon {
+			k.squaresCannotBe(g.Neighborsi(i, false), SquareDragon)
+			debug("-> [ar] neighbour squares of dragon cannot be dragons")
 		}
-		return w
+		return g
 	},
 
 	// if a dragon is set, at least two adjacent quares must be empty
-	func(w *World, i int, k *knowledge) *World {
-		if w.GetSquareByIndex(i) == SquareDragon {
-			empty := w.CountAdjacentNeighbours(i, SquareEmpty)
-			undef := w.CountAdjacentNeighbours(i, SquareUndefined)
+	func(g *Grid, i int, k *knowledge) *Grid {
+		if g.Squarei(i) == SquareDragon {
+			empty := g.CountAdjacentNeighbours(i, SquareEmpty)
+			undef := g.CountAdjacentNeighbours(i, SquareUndefined)
 			if empty < 2 && empty+undef == 2 {
-				for _, ni := range w.GetNeighbourIndexes(i, true) {
-					if w.GetSquareByIndex(ni) == SquareUndefined {
-						w.SetSquareByIndex(ni, SquareEmpty)
+				for _, ni := range g.Neighborsi(i, true) {
+					if g.Squarei(ni) == SquareUndefined {
+						g.SetSquarei(ni, SquareEmpty)
 					}
 				}
-				logd.Println("-> [ar] fill adjacent squares to empty")
-				logd.Println(w)
+				debug("-> [ar] fill adjacent squares to empty")
+				debug(g)
 			}
 		}
-		if w.GetSquareByIndex(i) == SquareUndefined {
-			empty := w.CountAdjacentNeighbours(i, SquareEmpty)
-			undef := w.CountAdjacentNeighbours(i, SquareUndefined)
+		if g.Squarei(i) == SquareUndefined {
+			empty := g.CountAdjacentNeighbours(i, SquareEmpty)
+			undef := g.CountAdjacentNeighbours(i, SquareUndefined)
 			if empty+undef < 2 {
 				k.squareCannotBe(i, SquareDragon)
-				logd.Println("-> [ar] square connot be a dragon because there could not be 2 empty adjacent square")
+				debug("-> [ar] square connot be a dragon because there could not be 2 empty adjacent square")
 			}
 		}
-		return w
+		return g
 	},
 
 	// if a fire square is set, there must be at least 2 dragons around it
-	func(w *World, i int, k *knowledge) *World {
-		if w.GetSquareByIndex(i) == SquareFire {
-			dragons := w.CountNeighbours(i, SquareDragon)
-			undef := w.CountNeighbours(i, SquareUndefined)
+	func(g *Grid, i int, k *knowledge) *Grid {
+		if g.Squarei(i) == SquareFire {
+			dragons := g.CountNeighbours(i, SquareDragon)
+			undef := g.CountNeighbours(i, SquareUndefined)
 			if dragons < 2 && dragons+undef == 2 {
-				for _, ni := range w.GetNeighbourIndexes(i, false) {
-					if w.GetSquareByIndex(ni) == SquareUndefined {
-						w.SetSquareByIndex(ni, SquareDragon)
+				for _, ni := range g.Neighborsi(i, false) {
+					if g.Squarei(ni) == SquareUndefined {
+						g.SetSquarei(ni, SquareDragon)
 					}
 				}
-				logd.Println("-> [ar] set dragons in neighbour squares if only one solution")
-				logd.Println(w)
+				debug("-> [ar] set dragons in neighbour squares if only one solution")
+				debug(g)
 			}
 		}
-		return w
+		return g
 	},
 
 	// if a undefined square is surrounded by more than one dragon, there must be fire
-	func(w *World, i int, k *knowledge) *World {
-		if w.GetSquareByIndex(i) == SquareUndefined {
-			dragons := w.CountNeighbours(i, SquareDragon)
+	func(g *Grid, i int, k *knowledge) *Grid {
+		if g.Squarei(i) == SquareUndefined {
+			dragons := g.CountNeighbours(i, SquareDragon)
 			if dragons > 1 {
-				w.SetSquareByIndex(i, SquareFire)
-				logd.Println("-> [ar] set fire if more than 1 dragon around square")
-				logd.Println(w)
+				g.SetSquarei(i, SquareFire)
+				debug("-> [ar] set fire if more than 1 dragon around square")
+				debug(g)
 			}
 		}
-		return w
+		return g
 	},
 
 	// if a undefined square cannot be surrounded be at least 2 dragons, there can not be fire
-	func(w *World, i int, k *knowledge) *World {
-		if w.GetSquareByIndex(i) == SquareUndefined {
-			dragons := w.CountNeighbours(i, SquareDragon)
-			undef := w.CountNeighbours(i, SquareUndefined)
+	func(g *Grid, i int, k *knowledge) *Grid {
+		if g.Squarei(i) == SquareUndefined {
+			dragons := g.CountNeighbours(i, SquareDragon)
+			undef := g.CountNeighbours(i, SquareUndefined)
 			if dragons+undef < 2 {
 				k.squareCannotBe(i, SquareFire)
-				logd.Println("-> [ar] square cannot be fire if not at least 2 dragons could be around it")
+				debug("-> [ar] square cannot be fire if not at least 2 dragons could be around it")
 			}
 		}
-		return w
+		return g
 	},
 
 	// if a empty square is set, there can maximum be one dragon around it
-	func(w *World, i int, k *knowledge) *World {
-		square := w.GetSquareByIndex(i)
+	func(g *Grid, i int, k *knowledge) *Grid {
+		square := g.Squarei(i)
 		if square == SquareEmpty {
-			dragons := w.CountNeighbours(i, SquareDragon)
+			dragons := g.CountNeighbours(i, SquareDragon)
 			if dragons == 1 {
-				k.squaresCannotBe(w.GetNeighbourIndexes(i, false), SquareDragon)
-				logd.Println("-> [ar] if a empty square is set, there can maximum be one dragon around it")
+				k.squaresCannotBe(g.Neighborsi(i, false), SquareDragon)
+				debug("-> [ar] if a empty square is set, there can maximum be one dragon around it")
 			}
 		}
-		return w
+		return g
 	},
 
 	// if a square is undefined but there is only one value possible (according to the knowledge db)
 	// set the squares value
-	func(w *World, i int, k *knowledge) *World {
-		if w.GetSquareByIndex(i) == SquareUndefined {
+	func(g *Grid, i int, k *knowledge) *Grid {
+		if g.Squarei(i) == SquareUndefined {
 			if bits.OnesCount8(k.pv[i]) == 1 {
 				val := Square(bits.TrailingZeros8(k.pv[i]))
-				w.SetSquareByIndex(i, val)
-				logd.Println("-> [ar] set the only posible value of a square")
-				logd.Println(w)
+				g.SetSquarei(i, val)
+				debug("-> [ar] set the only posible value of a square")
+				debug(g)
 			}
 		}
-		return w
+		return g
 	},
 }

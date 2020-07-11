@@ -7,13 +7,10 @@ import (
 	"os"
 )
 
-type dummyWriter struct{}
-
-func (w *dummyWriter) Write(p []byte) (n int, err error) {
-	return 0, nil
+func debug(a ...interface{}) {
+	// noop
 }
 
 var (
-	logd = log.New(&dummyWriter{}, "[debug] ", log.Lshortfile)
 	loge = log.New(os.Stderr, "[error] ", log.Lshortfile)
 )

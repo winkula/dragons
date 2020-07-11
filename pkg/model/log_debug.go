@@ -7,7 +7,10 @@ import (
 	"os"
 )
 
+func debug(a ...interface{}) {
+	log.Println(a...)
+}
+
 var (
-	logd = log.New(os.Stderr, "[debug] ", log.Lshortfile)
 	loge = log.New(os.Stderr, "[error] ", log.Lshortfile)
 )

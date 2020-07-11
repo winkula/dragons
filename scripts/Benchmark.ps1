@@ -1,1 +1,4 @@
-& go test -benchmem -run=^$ github.com/winkula/dragons/pkg/model -bench '^(Benchmark)'
+& go test `
+-benchmem `
+-bench '^(Benchmark)' `
+github.com/winkula/dragons/pkg/model

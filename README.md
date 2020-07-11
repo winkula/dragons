@@ -8,13 +8,13 @@ Inspired by: bimaru, mine sweeper, game of life
 
 ### Code
 
-- [ ] Model
-- [ ] Enumerator
-- [ ] Solver
-- [ ] Generator
-- [ ] CLI
+- [x] Model
+- [x] Enumerator
+- [x] Solver
+- [x] Generator
+- [x] CLI
 
-- [ ] various performance improvements
+- [ ] optimize overall performance (but specially for the generator)
 - [ ] restructure packages
 - [ ] optimize cli
 

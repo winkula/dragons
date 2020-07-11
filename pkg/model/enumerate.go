@@ -2,52 +2,52 @@ package model
 
 import (
 	"sort"
-	"strings"
 )
 
-// Options defines possible square values when enumerating valid world states.
+// Options defines possible square values when enumerating valid grids.
 var options = []Square{SquareDragon, SquareFire, SquareEmpty}
 
-// Enumerate enumerates all possible successor states from a given world.
-func Enumerate(w *World) []*World {
-	return enumerateInternal(w, make([]*World, 0), 0, false)
+// Enumerate enumerates all possible successors from a given grid.
+func Enumerate(g *Grid) []*Grid {
+	return enumerateInternal(g, make([]*Grid, 0), 0, false)
 }
 
-// EnumerateSquare enumerates all possible worlds if a specified square is undefined.
-// Otherwise, the given world is returned as single possible solution.
-func EnumerateSquare(w *World, index int) []*World {
-	if w.GetSquareByIndex(index) != SquareUndefined {
-		return []*World{w.Clone()}
+// EnumerateSquare enumerates all possible grids if a specified square is undefined.
+// Otherwise, the given grid is returned as single possible solution.
+func EnumerateSquare(g *Grid, index int) []*Grid {
+	if g.Squarei(index) != SquareUndefined {
+		return []*Grid{g.Clone()}
 	}
-	result := make([]*World, 0)
+	result := make([]*Grid, 0)
 	for _, option := range options {
-		successor := w.Clone()
-		successor.SetSquareByIndex(index, option)
-		if Validate(successor) {
-			result = append(result, successor)
+		suc := g.Clone()
+		suc.SetSquarei(index, option)
+		if Validate(suc) {
+			result = append(result, suc)
 		}
 	}
 	return result
 }
 
 // HasDistinctSolution returns 'true' if there is exactly one solution to the problem.
-func HasDistinctSolution(w *World) bool {
-	return len(enumerateInternal(w, make([]*World, 0), 0, true)) == 1
+func HasDistinctSolution(g *Grid) bool {
+	return len(enumerateInternal(g, make([]*Grid, 0), 0, true)) == 1
 }
 
 // MostInteresting returns the most interesting possible solution to a puzzle.
-func MostInteresting(puzzle *World) *World {
-	successors := Enumerate(puzzle)
+// TODO: optimize this (this only works for small grids)
+func MostInteresting(g *Grid) *Grid {
+	sucs := Enumerate(g)
 	// sort by interestingness
 	byInterestingnessDesc := func(i, j int) bool {
-		return successors[i].Interestingness() > successors[j].Interestingness()
+		return sucs[i].Interestingness() > sucs[j].Interestingness()
 	}
-	sort.Slice(successors, byInterestingnessDesc)
-	return successors[0]
+	sort.Slice(sucs, byInterestingnessDesc)
+	return sucs[0]
 }
 
-func hasSquares(w *World, square Square) bool {
-	for _, v := range w.Squares {
+func hasSquares(g *Grid, square Square) bool {
+	for _, v := range g.Squares {
 		if v == square {
 			return true
 		}
@@ -55,43 +55,42 @@ func hasSquares(w *World, square Square) bool {
 	return false
 }
 
-func enumerateInternal(w *World, result []*World, index int, skipOnMultipleSolutions bool) []*World {
+func enumerateInternal(g *Grid, result []*Grid, index int, skipOnMultipleSolutions bool) []*Grid {
 	if skipOnMultipleSolutions && len(result) > 1 {
 		// this early exit is used to validate, if a distinct solution exists
 		return result
 	}
 
-	if !Validate(w) {
+	if !Validate(g) {
 		// skip further investigation because the state is invalid
-		logd.Printf("%vInvalid!\n", strings.Repeat(" ", index))
-		logd.Println(w)
+		// logd.Printf("%vInvalid!\n", strings.Repeat(" ", index))
+		// debug(w)
 		return result
 	}
 
-	if !hasSquares(w, SquareUndefined) {
+	if !hasSquares(g, SquareUndefined) {
 		// only append, if its a leaf node (final state, no undefined squares)
-		logd.Println("Sucessor found!")
-		result = append(result, w)
+		// debug("Sucessor found!")
+		result = append(result, g)
 		return result
 	}
 
-	if index >= len(w.Squares) {
+	if index >= len(g.Squares) {
 		panic("Force recursion stop (this should never happen)!!!")
 	}
 
-	x, y := w.GetCoords(index)
-	square := w.GetSquare(x, y)
+	square := g.Squarei(index)
 	if square == SquareUndefined {
 		for _, option := range options {
-			logd.Printf("%vOption %c for x=%v,y=%v\n", strings.Repeat(" ", index), squareSymbols[option], x, y)
-			successor := w.Clone()
-			successor.SetSquare(x, y, option)
-			result = enumerateInternal(successor, result, index+1, skipOnMultipleSolutions)
+			//logd.Printf("%vOption %c for x=%v,y=%v\n", strings.Repeat(" ", index), squareSymbols[option], x, y)
+			suc := g.Clone()
+			suc.SetSquarei(index, option)
+			result = enumerateInternal(suc, result, index+1, skipOnMultipleSolutions)
 		}
 	} else {
-		logd.Printf("%vSquare already defined for i=%v x=%v,y=%v\n", strings.Repeat(" ", index), index, x, y)
-		successor := w.Clone()
-		result = enumerateInternal(successor, result, index+1, skipOnMultipleSolutions)
+		//logd.Printf("%vSquare already defined for i=%v x=%v,y=%v\n", strings.Repeat(" ", index), index, x, y)
+		suc := g.Clone()
+		result = enumerateInternal(suc, result, index+1, skipOnMultipleSolutions)
 	}
 	return result
 }

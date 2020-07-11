@@ -12,8 +12,8 @@ const (
 	delimiter = ","
 )
 
-// Parse parses a string that represents a dragons world.
-func Parse(s string) *World {
+// Parse parses a string that represents a grid.
+func Parse(s string) *Grid {
 	matched, _ := regexp.MatchString(`^[0-9]+,[0-9]+$`, s)
 	if matched {
 		parts := strings.Split(s, delimiter)
@@ -25,7 +25,7 @@ func Parse(s string) *World {
 	parts := strings.Split(s, delimiter)
 	height := len(parts)
 	if height == 0 {
-		panic("Parse error: World has no height, invlid.")
+		panic("Parse error: grid has no height, invalid.")
 	}
 
 	width := len(parts[0])
@@ -39,9 +39,9 @@ func Parse(s string) *World {
 		}
 	}
 
-	world := New(width, height)
-	world.Squares = squares
-	return world
+	g := New(width, height)
+	g.Squares = squares
+	return g
 }
 
 func getSquare(square rune) Square {

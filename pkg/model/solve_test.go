@@ -3,7 +3,7 @@ package model
 import "testing"
 
 func TestSolve(t *testing.T) {
-	tables := []*World{
+	tables := []*Grid{
 		Parse("dx,_x"),
 		Parse("dx,__"),
 		Parse("_f_,_f_,_f_"),
@@ -14,24 +14,24 @@ func TestSolve(t *testing.T) {
 	for _, table := range tables {
 		solved := Solve(table)
 		if solved == nil || !isSolved(solved) {
-			t.Errorf("TestSolve was incorrect, world is not solved. World: \n%s",
+			t.Errorf("TestSolve was incorrect, grid is not solved. Grid: \n%s",
 				table)
 		}
 	}
 }
 
 func BenchmarkSolve(b *testing.B) {
-	w := Parse("_f_,_f_,_f_")
+	g := Parse("_f_,_f_,_f_")
 	for i := 0; i < b.N; i++ {
-		solved := Solve(w)
+		solved := Solve(g)
 		if solved == nil || !isSolved(solved) {
-			b.Errorf("BenchmarkSolve was incorrect, world is not solved. World: \n%s", w)
+			b.Errorf("BenchmarkSolve was incorrect, grid is not solved. Grid: \n%s", g)
 		}
 	}
 }
 
 func TestSolveDk(t *testing.T) {
-	tables := []*World{
+	tables := []*Grid{
 		Parse("dx,_x"),
 		Parse("dx,__"),
 		Parse("_f_,_f_,_f_"),
@@ -42,24 +42,24 @@ func TestSolveDk(t *testing.T) {
 	for _, table := range tables {
 		solved := SolveDk(table)
 		if solved == nil || !isSolved(solved) {
-			t.Errorf("TestSolve was incorrect, world is not solved. World: \n%s",
+			t.Errorf("TestSolve was incorrect, grid is not solved. Grid: \n%s",
 				table)
 		}
 	}
 }
 
 func BenchmarkSolveDk(b *testing.B) {
-	w := Parse("_f_,_f_,_f_")
+	g := Parse("_f_,_f_,_f_")
 	for i := 0; i < b.N; i++ {
-		solved := SolveDk(w)
+		solved := SolveDk(g)
 		if solved == nil || !isSolved(solved) {
-			b.Errorf("BenchmarkSolve was incorrect, world is not solved. World: \n%s", w)
+			b.Errorf("BenchmarkSolve was incorrect, grid is not solved. Grid: \n%s", g)
 		}
 	}
 }
 
 func TestSolveBf(t *testing.T) {
-	tables := []*World{
+	tables := []*Grid{
 		Parse("dx,_x"),
 		Parse("dx,__"),
 		Parse("_f_,_f_,_f_"),
@@ -70,18 +70,18 @@ func TestSolveBf(t *testing.T) {
 	for _, table := range tables {
 		solved := SolveBf(table)
 		if solved == nil || !isSolved(solved) {
-			t.Errorf("TestSolve was incorrect, world is not solved. World: \n%s",
+			t.Errorf("TestSolve was incorrect, grid is not solved. Grid: \n%s",
 				table)
 		}
 	}
 }
 
 func BenchmarkSolveBf(b *testing.B) {
-	w := Parse("_f_,_f_,_f_")
+	g := Parse("_f_,_f_,_f_")
 	for i := 0; i < b.N; i++ {
-		solved := SolveBf(w)
+		solved := SolveBf(g)
 		if solved == nil || !isSolved(solved) {
-			b.Errorf("BenchmarkSolve was incorrect, world is not solved. World: \n%s", w)
+			b.Errorf("BenchmarkSolve was incorrect, grid is not solved. Grid: \n%s", g)
 		}
 	}
 }

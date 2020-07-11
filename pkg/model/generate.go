@@ -18,66 +18,66 @@ const (
 
 // Generate generates a random puzzle with the given dimensions and difficulty.
 // TODO: rework this implementation!
-func Generate(width int, height int, difficulty Difficulty) *World {
+func Generate(width int, height int, difficulty Difficulty) *Grid {
 	for {
-		world := New(width, height).FillSquares(SquareEmpty)
-		size := world.Width * world.Height
+		g := New(width, height).FillSquares(SquareEmpty)
+		size := g.Width * g.Height
 		numDragons := size / 6
 		for i := 0; i < numDragons; {
 			index := rand.Intn(size)
-			if world.GetSquareByIndex(index) == SquareDragon {
+			if g.Squarei(index) == SquareDragon {
 				continue
 			}
-			worldNew := world.Clone()
-			worldNew.SetDragon(index)
-			if Validate(worldNew) {
-				world = worldNew
+			suc := g.Clone()
+			suc.SetDragon(index)
+			if Validate(suc) {
+				g = suc
 			} else {
 				continue
 			}
 			i++
 		}
-		if Validate(world) {
-			return world
+		if Validate(g) {
+			return g
 		}
 	}
 }
 
 // GenerateFrom creates a puzzle from a given solved or partially solved puzzle and also takes a difficulty parameter.
-func GenerateFrom(world *World, difficulty Difficulty) *World {
-	bestWorld := world.Clone()
+func GenerateFrom(g *Grid, difficulty Difficulty) *Grid {
+	best := g.Clone()
 	mostUndefined := 0
 	loops := 100
 	tries := 100
 	for i := 0; i < loops; i++ {
-		w := incrementallyObfuscate(world, tries, difficulty)
-		undefCount := w.CountSquares(SquareUndefined)
+		suc := incrementallyObfuscate(g, tries, difficulty)
+		undefCount := suc.CountSquares(SquareUndefined)
 		if undefCount > mostUndefined {
-			bestWorld = w
+			best = suc
 		}
 	}
-	return bestWorld
+	return best
 }
 
-// incrementallyObfuscate takes a world state and incrementally sets squares to "undefined".
+// incrementallyObfuscate takes a grid state and incrementally sets squares to "undefined".
 // After every step, it verifies if the puzzle is still solvable (i.e. has a distinct solution).
-func incrementallyObfuscate(world *World, tries int, difficulty Difficulty) *World {
-	if world.Size() == world.CountSquares(SquareUndefined) {
+func incrementallyObfuscate(g *Grid, tries int, difficulty Difficulty) *Grid {
+	if g.Size() == g.CountSquares(SquareUndefined) {
 		panic("generateInternal: all squares undefined")
 	}
-	size := world.Size()
+	size := g.Size()
 	for i := 0; i < tries; {
 		index := rand.Intn(size)
-		if world.GetSquareByIndex(index) == SquareUndefined {
+		if g.Squarei(index) == SquareUndefined {
 			continue
 		}
-		worldNew := world.Clone()
-		worldNew.SetSquareByIndex(index, SquareUndefined)
-		if (difficulty > DifficultyEasy || len(EnumerateSquare(worldNew, index)) == 1) && HasDistinctSolution(worldNew) {
-			world = worldNew
+		suc := g.Clone()
+		suc.SetSquarei(index, SquareUndefined)
+		if (difficulty > DifficultyEasy || len(EnumerateSquare(suc, index)) == 1) && HasDistinctSolution(suc) {
+			g = suc
 			i = 0
 		}
 		i++
 	}
-	return world
+	return g
 }

@@ -1,7 +1,7 @@
 package model
 
 // Square represents possible cell values.
-type Square int
+type Square uint8
 
 const (
 	// SquareUndefined represent undefined squares.

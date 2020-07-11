@@ -7,8 +7,8 @@ import (
 
 func TestParse(t *testing.T) {
 	tables := []struct {
-		str   string
-		world *World
+		str  string
+		grid *Grid
 	}{
 		{"_", New(1, 1)},
 		{"___,___", New(3, 2)},
@@ -20,22 +20,22 @@ func TestParse(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		world := Parse(table.str)
-		if !reflect.DeepEqual(world, table.world) {
-			t.Errorf("ParseWorld was incorrect, got:\n%s, want:\n%s.\nInput: '%s'",
-				world,
-				table.world,
+		g := Parse(table.str)
+		if !reflect.DeepEqual(g, table.grid) {
+			t.Errorf("Parse was incorrect, got:\n%s, want:\n%s.\nInput: '%s'",
+				g,
+				table.grid,
 				table.str)
 		}
 	}
 }
 
-func TestParseWorldPanicsOnWrongDimensions(t *testing.T) {
+func TestParsePanicsOnWrongDimensions(t *testing.T) {
 	defer assertPanic(t)
 	Parse("__,___")
 }
 
-func TestParseWorldPanicsOnInvalidSymbols(t *testing.T) {
+func TestParsePanicsOnInvalidSymbols(t *testing.T) {
 	defer assertPanic(t)
 	Parse("ab,xy,+*")
 }

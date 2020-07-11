@@ -4,7 +4,7 @@ import "testing"
 
 func TestValidate(t *testing.T) {
 	tables := []struct {
-		world *World
+		grid  *Grid
 		valid bool
 		rule  string
 	}{
@@ -57,13 +57,32 @@ func TestValidate(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		valid := Validate(table.world)
+		valid := Validate(table.grid)
 		if valid != table.valid {
-			t.Errorf("ValidateWorld was incorrect, got: %t, want: %t (%s rule). World: \n%s",
+			t.Errorf("Validate was incorrect, got: %t, want: %t (%s rule). Grid: \n%s",
 				valid,
 				table.valid,
 				table.rule,
-				table.world)
+				table.grid)
 		}
+	}
+}
+
+/*
+History
+- 1904 ns/op
+- 1591 ns/op (after switching from int to uint8 for square values)
+*/
+func BenchmarkValidate(b *testing.B) {
+	gs := []*Grid{
+		Parse("_xf_,____,____,_d__"),
+		Parse("_f_f_,df_f_,_fxf_,x___x,_d_d_"),
+		Parse("_____,d__f_,_____,_____,__f__"),
+		Parse("__xdx_,xf____,_fd_xd,_f____,xfx_dx,x_d_x_"),
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		w := gs[i%len(gs)]
+		Validate(w)
 	}
 }

@@ -5,12 +5,12 @@ type knowledge struct {
 	pv   []uint8 // possible values
 }
 
-func newKnowledge(w *World) *knowledge {
+func newKnowledge(g *Grid) *knowledge {
 	k := &knowledge{}
-	k.size = w.Size()
+	k.size = g.Size()
 	k.pv = make([]uint8, k.size)
 	all := uint8(1<<SquareDragon | 1<<SquareFire | 1<<SquareEmpty)
-	for i := range w.Squares {
+	for i := range g.Squares {
 		k.pv[i] = all
 	}
 	return k
@@ -36,8 +36,8 @@ func (k *knowledge) canSquareBe(i int, v Square) bool {
 	return k.pv[i]&(1<<v) > 0
 }
 
-func (k *knowledge) getOptions(w *World, i int) []Square {
-	var res []Square
+func (k *knowledge) getOptions(g *Grid, i int) []Square {
+	res := make([]Square, 0, len(options))
 	for _, o := range options {
 		if k.canSquareBe(i, o) {
 			res = append(res, o)
@@ -49,32 +49,32 @@ func (k *knowledge) getOptions(w *World, i int) []Square {
 type permRes struct {
 	count int
 	valid int
-	perms []*World
+	perms []*Grid
 }
 
-func (k *knowledge) getPermutations(w *World, is []int) *permRes {
+func (k *knowledge) getPermutations(g *Grid, is []int) *permRes {
 	result := &permRes{}
-	permRecur(k, result, w, is, 0)
+	permRecur(k, result, g, is, 0)
 	return result
 }
 
-func permRecur(k *knowledge, result *permRes, w *World, indexes []int, i int) {
+func permRecur(k *knowledge, result *permRes, g *Grid, indexes []int, i int) {
 	if i >= len(indexes) {
 		result.count++
-		if Validate(w) {
+		if Validate(g) {
 			result.valid++
 		}
 		return // stop recursion
 	}
 	currentIndex := indexes[i]
-	if w.GetSquareByIndex(currentIndex) == SquareUndefined {
-		for _, v := range k.getOptions(w, currentIndex) {
-			successor := w.Clone()
-			successor.SetSquareByIndex(currentIndex, v)
-			permRecur(k, result, successor, indexes, i+1)
+	if g.Squarei(currentIndex) == SquareUndefined {
+		for _, v := range k.getOptions(g, currentIndex) {
+			suc := g.Clone()
+			suc.SetSquarei(currentIndex, v)
+			permRecur(k, result, suc, indexes, i+1)
 		}
 	} else {
-		successor := w.Clone()
-		permRecur(k, result, successor, indexes, i+1)
+		suc := g.Clone()
+		permRecur(k, result, suc, indexes, i+1)
 	}
 }

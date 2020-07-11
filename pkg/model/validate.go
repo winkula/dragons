@@ -2,7 +2,7 @@ package model
 
 type rule struct {
 	name  string
-	check func(w *World, i int) bool
+	check func(g *Grid, i int) bool
 }
 
 // rules represents the rules that defines, if a dragons puzzle is valid or not.
@@ -11,10 +11,10 @@ var rules = []rule{
 	// Territory means the 8 squares that are around itself.
 	{
 		name: "territory",
-		check: func(w *World, i int) bool {
-			square := w.GetSquareByIndex(i)
+		check: func(g *Grid, i int) bool {
+			square := g.Squarei(i)
 			if square == SquareDragon {
-				return w.CountNeighbours(i, SquareDragon) == 0
+				return g.CountNeighbours(i, SquareDragon) == 0
 			}
 			return true
 		},
@@ -23,18 +23,18 @@ var rules = []rule{
 	// Every square that is part of multiple territories must be fire - and only then.
 	{
 		name: "fight",
-		check: func(w *World, i int) bool {
-			square := w.GetSquareByIndex(i)
+		check: func(g *Grid, i int) bool {
+			square := g.Squarei(i)
 			if square == SquareFire {
 				// if a square is fire, there must be at least two dragons around it
-				dragons := w.CountNeighbours(i, SquareDragon)
-				undefined := w.CountNeighbours(i, SquareUndefined)
+				dragons := g.CountNeighbours(i, SquareDragon)
+				undefined := g.CountNeighbours(i, SquareUndefined)
 				return dragons+undefined > 1
 			}
 			if square == SquareEmpty {
 				// if 0 or 1 dragon is around a square, there must NOT be fire
 				// if a square is not fire, there can maximum be one dragon around it
-				return w.CountNeighbours(i, SquareDragon) <= 1
+				return g.CountNeighbours(i, SquareDragon) <= 1
 			}
 			return true
 		},
@@ -43,11 +43,11 @@ var rules = []rule{
 	// If a dragon is at the edge or in the corner of the grid, the possible number of adjacent squares is reduced.
 	{
 		name: "survive",
-		check: func(w *World, i int) bool {
-			square := w.GetSquareByIndex(i)
+		check: func(g *Grid, i int) bool {
+			square := g.Squarei(i)
 			if square == SquareDragon {
-				empty := w.CountAdjacentNeighbours(i, SquareEmpty)
-				undef := w.CountAdjacentNeighbours(i, SquareUndefined)
+				empty := g.CountAdjacentNeighbours(i, SquareEmpty)
+				undef := g.CountAdjacentNeighbours(i, SquareUndefined)
 				return empty+undef >= 2
 			}
 			return true
@@ -55,12 +55,13 @@ var rules = []rule{
 	},
 }
 
-// Validate validates, if a world is in a valid state.
-// This applies all validation rules to the world state.
-func Validate(w *World) bool {
-	for i := range w.Squares {
+// Validate validates, if a grid is in a valid state.
+// This applies all validation rules to the grid state.
+// A valid state does not necessarily mean, that it can lead to a solution.
+func Validate(g *Grid) bool {
+	for i := range g.Squares {
 		for _, rule := range rules {
-			if !rule.check(w, i) {
+			if !rule.check(g, i) {
 				return false
 			}
 		}

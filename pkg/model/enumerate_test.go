@@ -4,7 +4,7 @@ import "testing"
 
 func TestEnumerate(t *testing.T) {
 	tables := []struct {
-		world *World
+		grid  *Grid
 		count int
 	}{
 		{New(1, 1), 1},
@@ -20,20 +20,20 @@ func TestEnumerate(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		successors := Enumerate(table.world)
-		length := len(successors)
+		sucs := Enumerate(table.grid)
+		length := len(sucs)
 		if length != table.count {
-			t.Errorf("Enumerate was incorrect, got: %d, want: %d. World: \n%s",
+			t.Errorf("Enumerate was incorrect, got: %d, want: %d. Grid: \n%s",
 				length,
 				table.count,
-				table.world)
+				table.grid)
 		}
 	}
 }
 
 func TestEnumerateSquare(t *testing.T) {
 	tables := []struct {
-		world *World
+		grid  *Grid
 		index int
 		count int
 	}{
@@ -42,13 +42,13 @@ func TestEnumerateSquare(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		successors := EnumerateSquare(table.world, table.index)
-		length := len(successors)
+		sucs := EnumerateSquare(table.grid, table.index)
+		length := len(sucs)
 		if length != table.count {
-			t.Errorf("Enumerate was incorrect, got: %d, want: %d. World: \n%s",
+			t.Errorf("Enumerate was incorrect, got: %d, want: %d. Grid: \n%s",
 				length,
 				table.count,
-				table.world)
+				table.grid)
 		}
 	}
 }

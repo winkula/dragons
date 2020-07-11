@@ -22,68 +22,68 @@ func main() {
 	}
 
 	if cmd == "enum" {
-		world := parse(args[1], true)
-		enumerate(world)
+		g := parse(args[1], true)
+		enumerate(g)
 		return
 	}
 
 	if cmd == "gen" {
-		world := parse(args[1], false)
-		generate(world)
+		g := parse(args[1], false)
+		generate(g)
 		return
 	}
 
 	if cmd == "genr" {
-		world := parse(args[1], false)
-		generateRandom(world.Width, world.Height)
+		g := parse(args[1], false)
+		generateRandom(g.Width, g.Height)
 		return
 	}
 
 	if cmd == "solve" {
-		world := parse(args[1], true)
-		solve(world)
+		g := parse(args[1], true)
+		solve(g)
 		return
 	}
 
 	if cmd == "val" {
-		world := parse(args[1], true)
-		validate(world)
+		g := parse(args[1], true)
+		validate(g)
 		return
 	}
 }
 
-func parse(s string, print bool) *model.World {
-	world := model.Parse(s)
+func parse(s string, print bool) *model.Grid {
+	g := model.Parse(s)
 	if print {
-		fmt.Println("World:")
-		fmt.Println(world)
+		fmt.Println("Grid:")
+		fmt.Println(g)
 	}
-	return world
+	return g
 }
 
-func enumerate(world *model.World) {
-	successors := model.Enumerate(world)
-	sort.Slice(successors, func(i, j int) bool {
-		return successors[i].Interestingness() < successors[j].Interestingness()
+func enumerate(g *model.Grid) {
+	sucs := model.Enumerate(g)
+	sort.Slice(sucs, func(i, j int) bool {
+		return sucs[i].Interestingness() < sucs[j].Interestingness()
 	})
-	for _, s := range successors {
+	for _, s := range sucs {
 		fmt.Println(s)
 		fmt.Println("Interestingness:", s.Interestingness())
 	}
-	fmt.Printf("%v possible worlds found.\n", len(successors))
+	fmt.Printf("%v possible grids found.\n", len(sucs))
 }
 
-func generate(world *model.World) {
-	if world.Size() == world.CountSquares(model.SquareUndefined) {
-		world = model.MostInteresting(world)
+func generate(g *model.Grid) {
+	if g.Size() == g.CountSquares(model.SquareUndefined) {
+		g = model.MostInteresting(g)
 	}
-	fmt.Println("World:")
-	fmt.Println(world)
-
-	g := model.GenerateFrom(world, model.DifficultyEasy)
-	fmt.Println("Generated:")
+	fmt.Println("Grid:")
 	fmt.Println(g)
-	checkDifficulty(g)
+
+	gen := model.GenerateFrom(g, model.DifficultyHard)
+	fmt.Println("Generated:")
+	fmt.Println(gen)
+	checkDifficulty(gen)
 }
 
 func generateRandom(width int, height int) {
@@ -93,17 +93,17 @@ func generateRandom(width int, height int) {
 	checkDifficulty(g)
 }
 
-func checkDifficulty(w *model.World) {
-	fmt.Println("Number of undefined squares:", w.CountSquares(model.SquareUndefined))
-	if model.Solve(w) != nil {
+func checkDifficulty(g *model.Grid) {
+	fmt.Println("Number of undefined squares:", g.CountSquares(model.SquareUndefined))
+	if model.Solve(g) != nil {
 		fmt.Println("Difficulty: EASY")
 	} else {
 		fmt.Println("Difficulty: MEDIUM/HARD")
 	}
 }
 
-func solve(world *model.World) {
-	type solver func(w *model.World) *model.World
+func solve(g *model.Grid) {
+	type solver func(g *model.Grid) *model.Grid
 
 	solvers := []struct {
 		name   string
@@ -116,7 +116,7 @@ func solve(world *model.World) {
 
 	for _, s := range solvers {
 		fmt.Println("-> Using solver algorithm:", s.name)
-		solved := s.solver(world)
+		solved := s.solver(g)
 		if solved == nil {
 			fmt.Println("   No solution found. Reasons can be: the puzzle is too difficult, puzzle has no distinct solution...")
 			continue
@@ -127,9 +127,9 @@ func solve(world *model.World) {
 	}
 }
 
-func validate(world *model.World) {
-	valid := model.Validate(world)
-	fmt.Println("IsValid:", valid)
+func validate(g *model.Grid) {
+	valid := model.Validate(g)
+	fmt.Println("Valid:", valid)
 }
 
 func seed() {
