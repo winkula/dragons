@@ -39,18 +39,6 @@ func New(width int, height int) *Grid {
 	}
 }
 
-func coordsToIndex(g *Grid, x int, y int) int {
-	return g.Width*y + x
-}
-
-func coordsExist(g *Grid, x int, y int) bool {
-	return x >= 0 && x < g.Width && y >= 0 && y < g.Height
-}
-
-func indexExists(g *Grid, i int) bool {
-	return i >= 0 && i < g.Width*g.Height
-}
-
 // Coords gets the coordinates of a quare given the squares index.
 func (g *Grid) Coords(i int) (x int, y int) {
 	return i % g.Width, i / g.Width
@@ -67,7 +55,7 @@ func (g *Grid) Square(x int, y int) Square {
 // Squarei gets the field value at the specified index.
 func (g *Grid) Squarei(i int) Square {
 	if !indexExists(g, i) {
-		panic(fmt.Sprintf("Error: invalid index (index = %v, width = %v, height = %v)", i, g.Width, g.Height))
+		panic("grid.Squarei: index out of range.")
 	}
 	return g.Squares[i]
 }
@@ -75,7 +63,7 @@ func (g *Grid) Squarei(i int) Square {
 // SetSquare sets the squares value at coordinates x, y.
 func (g *Grid) SetSquare(x int, y int, val Square) *Grid {
 	if !coordsExist(g, x, y) {
-		panic(fmt.Sprintf("Error: invalid coordinates (x = %v, y = %v, width = %v, height = %v)", x, y, g.Width, g.Height))
+		panic("grid.SetSquare: coords out of range.")
 	}
 	g.Squares[coordsToIndex(g, x, y)] = val
 	return g
@@ -84,16 +72,26 @@ func (g *Grid) SetSquare(x int, y int, val Square) *Grid {
 // SetSquarei sets the squares value at the specified index.
 func (g *Grid) SetSquarei(i int, val Square) *Grid {
 	if !indexExists(g, i) {
-		panic(fmt.Sprintf("Error: invalid index (index = %v, width = %v, height = %v)", i, g.Width, g.Height))
+		panic("grid.SetSquarei: index out of range.")
 	}
 	g.Squares[i] = val
 	return g
 }
 
-// FillSquares fills all squares.
-func (g *Grid) FillSquares(val Square) *Grid {
+// HasSquare returns "true" if at least one square with the specified value exists.
+func (g *Grid) HasSquare(val Square) bool {
+	for _, v := range g.Squares {
+		if v == val {
+			return true
+		}
+	}
+	return false
+}
+
+// Fill fills all squares of a grid with the specified value.
+func (g *Grid) Fill(s Square) *Grid {
 	for i := range g.Squares {
-		g.Squares[i] = val
+		g.Squares[i] = s
 	}
 	return g
 }
@@ -112,8 +110,8 @@ func (g *Grid) Neighbors(x int, y int) []Square {
 	}
 }
 
-// Neighborsi gets the neighbours indexes.
-func (g *Grid) Neighborsi(i int, adjacent bool) []int {
+// NeighborIndicesi gets the indices of all neighbor squares.
+func (g *Grid) NeighborIndicesi(i int, adjacent bool) []int {
 	res := make([]int, 0, maxNumNeighbors)
 	x, y := g.Coords(i)
 	for _, n := range neighbours {
@@ -124,8 +122,8 @@ func (g *Grid) Neighborsi(i int, adjacent bool) []int {
 	return res
 }
 
-// GetAdjacentNeighbours gets the adjacent neighbours field values.
-func (g *Grid) GetAdjacentNeighbours(x int, y int) []Square {
+// GetAdjacentNeighbors gets the adjacent neighbours field values.
+func (g *Grid) GetAdjacentNeighbors(x int, y int) []Square {
 	return []Square{
 		g.Square(x, y-1),
 		g.Square(x-1, y),
@@ -134,8 +132,8 @@ func (g *Grid) GetAdjacentNeighbours(x int, y int) []Square {
 	}
 }
 
-// CountNeighbours counts the neighboured squares that match the given type.
-func (g *Grid) CountNeighbours(i int, square Square) int {
+// CountNeighbors counts the neighboured squares that match the given type.
+func (g *Grid) CountNeighbors(i int, square Square) int {
 	x, y := g.Coords(i)
 	ns := g.Neighbors(x, y)
 	count := 0
@@ -150,7 +148,7 @@ func (g *Grid) CountNeighbours(i int, square Square) int {
 // CountAdjacentNeighbours counts the adacent neighboured squares that match the given type.
 func (g *Grid) CountAdjacentNeighbours(i int, square Square) int {
 	x, y := g.Coords(i)
-	ns := g.GetAdjacentNeighbours(x, y)
+	ns := g.GetAdjacentNeighbors(x, y)
 	count := 0
 	for _, v := range ns {
 		if v == square {
@@ -169,16 +167,14 @@ func (g *Grid) Clone() *Grid {
 }
 
 // SetDragon sets a dragon to a specific square and computes where fire must be.
-func (g *Grid) SetDragon(i int) {
-	x, y := g.Coords(i)
-	g.SetSquare(x, y, SquareDragon)
-	ns := g.Neighbors(x, y)
-	for i := range ns {
-		numDragons := g.CountNeighbours(i, SquareDragon)
-		if numDragons > 1 {
-			g.SetSquarei(i, SquareFire)
+func (g *Grid) SetDragon(i int) *Grid {
+	g.SetSquarei(i, SquareDragon)
+	for _, ni := range g.NeighborIndicesi(i, false) {
+		if g.CountNeighbors(ni, SquareDragon) > 1 {
+			g.SetSquarei(ni, SquareFire)
 		}
 	}
+	return g
 }
 
 // Interestingness returns the interestingness of a grid.
@@ -195,23 +191,21 @@ func (g *Grid) Size() int {
 	return g.Width * g.Height
 }
 
-// CountSquares fills all squares.
-func (g *Grid) CountSquares(needle Square) int {
-	return countSquares(g.Squares, needle)
+// CountSquares counts all squares with a specified value.
+func (g *Grid) CountSquares(s Square) (count int) {
+	for _, v := range g.Squares {
+		if v == s {
+			count++
+		}
+	}
+	return
 }
 
 // String returns the string representation of a puzzle.
 func (g *Grid) String() string {
 	sb := strings.Builder{}
 	sb.WriteString("   ┌")
-	if g.Width > 1 {
-		pad := (2*g.Width + 3 - 7) / 2
-		sb.WriteString(strings.Repeat("─", pad))
-		sb.WriteString(fmt.Sprintf("╴%vx%v╶", g.Width, g.Height))
-		sb.WriteString(strings.Repeat("─", pad))
-	} else {
-		sb.WriteString(strings.Repeat("─", 2*g.Width+1))
-	}
+	sb.WriteString(strings.Repeat("─", 2*g.Width+1))
 	sb.WriteString("┐\n")
 	for i, val := range g.Squares {
 		if i%g.Width == 0 {
@@ -223,6 +217,8 @@ func (g *Grid) String() string {
 			sb.WriteString("│")
 
 			if i/g.Width == 0 {
+				sb.WriteString(fmt.Sprintf(" Size: %vx%v", g.Width, g.Height))
+			} else if i/g.Width == 1 {
 				sb.WriteString(" Code: ")
 				for i, val := range g.Squares {
 					sb.WriteRune(getSymbolForCode(val))
@@ -241,19 +237,22 @@ func (g *Grid) String() string {
 	return sb.String()
 }
 
+func coordsToIndex(g *Grid, x int, y int) int {
+	return g.Width*y + x
+}
+
+func coordsExist(g *Grid, x int, y int) bool {
+	return x >= 0 && x < g.Width && y >= 0 && y < g.Height
+}
+
+func indexExists(g *Grid, i int) bool {
+	return i >= 0 && i < g.Width*g.Height
+}
+
 func getSymbol(val Square) rune {
 	return squareSymbols[val]
 }
 
 func getSymbolForCode(val Square) rune {
 	return squareSymbolsForCode[val]
-}
-
-func countSquares(squares []Square, needle Square) (count int) {
-	for _, s := range squares {
-		if s == needle {
-			count++
-		}
-	}
-	return
 }

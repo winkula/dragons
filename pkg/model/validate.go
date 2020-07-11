@@ -14,7 +14,7 @@ var rules = []rule{
 		check: func(g *Grid, i int) bool {
 			square := g.Squarei(i)
 			if square == SquareDragon {
-				return g.CountNeighbours(i, SquareDragon) == 0
+				return g.CountNeighbors(i, SquareDragon) == 0
 			}
 			return true
 		},
@@ -27,14 +27,14 @@ var rules = []rule{
 			square := g.Squarei(i)
 			if square == SquareFire {
 				// if a square is fire, there must be at least two dragons around it
-				dragons := g.CountNeighbours(i, SquareDragon)
-				undefined := g.CountNeighbours(i, SquareUndefined)
+				dragons := g.CountNeighbors(i, SquareDragon)
+				undefined := g.CountNeighbors(i, SquareUndefined)
 				return dragons+undefined > 1
 			}
 			if square == SquareEmpty {
 				// if 0 or 1 dragon is around a square, there must NOT be fire
 				// if a square is not fire, there can maximum be one dragon around it
-				return g.CountNeighbours(i, SquareDragon) <= 1
+				return g.CountNeighbors(i, SquareDragon) <= 1
 			}
 			return true
 		},

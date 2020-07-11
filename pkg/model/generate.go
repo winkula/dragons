@@ -2,6 +2,7 @@ package model
 
 import (
 	"math/rand"
+	"time"
 )
 
 // Difficulty represents possible difficulty levels.
@@ -19,28 +20,35 @@ const (
 // Generate generates a random puzzle with the given dimensions and difficulty.
 // TODO: rework this implementation!
 func Generate(width int, height int, difficulty Difficulty) *Grid {
+	duration := 5.0 // the generation can last this many seconds
+	maxFails := 10000
+	start := time.Now()
+	var best *Grid
 	for {
-		g := New(width, height).FillSquares(SquareEmpty)
-		size := g.Width * g.Height
-		numDragons := size / 6
-		for i := 0; i < numDragons; {
-			index := rand.Intn(size)
-			if g.Squarei(index) == SquareDragon {
+		g := New(width, height).Fill(SquareEmpty)
+		size := g.Size()
+		fails := 0
+		for fails < maxFails {
+			i := rand.Intn(size)
+			if g.Squarei(i) != SquareEmpty || g.CountNeighbors(i, SquareDragon) > 0 {
+				fails++
 				continue
 			}
-			suc := g.Clone()
-			suc.SetDragon(index)
-			if Validate(suc) {
-				g = suc
-			} else {
+			suc := g.Clone().SetDragon(i)
+			if !Validate(suc) {
+				fails++
 				continue
 			}
-			i++
+			g = suc
 		}
-		if Validate(g) {
-			return g
+		if best == nil || g.Interestingness() > best.Interestingness() {
+			best = g
+		}
+		if time.Since(start).Seconds() > duration {
+			break
 		}
 	}
+	return best
 }
 
 // GenerateFrom creates a puzzle from a given solved or partially solved puzzle and also takes a difficulty parameter.
@@ -50,7 +58,7 @@ func GenerateFrom(g *Grid, difficulty Difficulty) *Grid {
 	loops := 100
 	tries := 100
 	for i := 0; i < loops; i++ {
-		suc := incrementallyObfuscate(g, tries, difficulty)
+		suc := obfuscIncr(g, tries, difficulty)
 		undefCount := suc.CountSquares(SquareUndefined)
 		if undefCount > mostUndefined {
 			best = suc
@@ -59,9 +67,9 @@ func GenerateFrom(g *Grid, difficulty Difficulty) *Grid {
 	return best
 }
 
-// incrementallyObfuscate takes a grid state and incrementally sets squares to "undefined".
+// obfuscIncr takes a grid state and incrementally sets squares to "undefined".
 // After every step, it verifies if the puzzle is still solvable (i.e. has a distinct solution).
-func incrementallyObfuscate(g *Grid, tries int, difficulty Difficulty) *Grid {
+func obfuscIncr(g *Grid, tries int, difficulty Difficulty) *Grid {
 	if g.Size() == g.CountSquares(SquareUndefined) {
 		panic("generateInternal: all squares undefined")
 	}
@@ -73,7 +81,7 @@ func incrementallyObfuscate(g *Grid, tries int, difficulty Difficulty) *Grid {
 		}
 		suc := g.Clone()
 		suc.SetSquarei(index, SquareUndefined)
-		if (difficulty > DifficultyEasy || len(EnumerateSquare(suc, index)) == 1) && HasDistinctSolution(suc) {
+		if (difficulty > DifficultyEasy || len(EnumerateSquare(suc, index)) == 1) && IsDistinct(suc) {
 			g = suc
 			i = 0
 		}

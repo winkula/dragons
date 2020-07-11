@@ -87,18 +87,27 @@ func generate(g *model.Grid) {
 }
 
 func generateRandom(width int, height int) {
-	g := model.Generate(width, height, model.DifficultyEasy)
-	fmt.Println("Generated:")
-	fmt.Println(g)
-	checkDifficulty(g)
+	solution := model.Generate(width, height, model.DifficultyEasy)
+	fmt.Println("Solution:")
+	fmt.Println(solution)
+
+	puzzle := model.GenerateFrom(solution, model.DifficultyEasy)
+	fmt.Println("Puzzle:")
+	fmt.Println(puzzle)
+
+	fmt.Println(" > Interestingness:", solution.Interestingness())
+	checkDifficulty(puzzle)
 }
 
 func checkDifficulty(g *model.Grid) {
-	fmt.Println("Number of undefined squares:", g.CountSquares(model.SquareUndefined))
+	undef := g.CountSquares(model.SquareUndefined)
+	all := g.Size()
+
+	fmt.Printf(" > Undefinedness: %.2f (%v/%v)\n", (100.0 * float64(undef) / float64(all)), undef, all)
 	if model.Solve(g) != nil {
-		fmt.Println("Difficulty: EASY")
+		fmt.Println(" > Difficulty: EASY")
 	} else {
-		fmt.Println("Difficulty: MEDIUM/HARD")
+		fmt.Println(" > Difficulty: MEDIUM/HARD")
 	}
 }
 

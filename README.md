@@ -17,6 +17,7 @@ Inspired by: bimaru, mine sweeper, game of life
 - [ ] optimize overall performance (but specially for the generator)
 - [ ] restructure packages
 - [ ] optimize cli
+- [ ] print properties/metrics to puzzle, such as: interestingness, percentage of emptyness, difficulty...
 
 ### Other
 

@@ -52,3 +52,11 @@ func TestEnumerateSquare(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkEnumerate(b *testing.B) {
+	g := New(4, 4)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		Enumerate(g)
+	}
+}

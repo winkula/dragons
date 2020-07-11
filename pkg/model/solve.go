@@ -8,7 +8,7 @@ import (
 // it returns the only possible solution or "nil" otherwise.
 func Solve(g *Grid) *Grid {
 	tries := 10
-	if !HasDistinctSolution(g) {
+	if !IsDistinct(g) {
 		debug("SolveSimple: no distinct solution possible!")
 		return nil
 	}
@@ -49,7 +49,7 @@ func Solve(g *Grid) *Grid {
 				}
 
 				// we compute all permutations that are possible when the neighbour squares are taken into account
-				nis := test.Neighborsi(i, false)
+				nis := test.NeighborIndicesi(i, false)
 				permRes := knowledge.getPermutations(test, nis)
 				//logd.Printf(" => permutations of %v: %v/%v", nis, permRes.valid, permRes.count)
 
@@ -81,7 +81,7 @@ func Solve(g *Grid) *Grid {
 // SolveDk solves a puzzle using domain knowledge.
 // it returns the only possible solution or "nil" otherwise.
 func SolveDk(g *Grid) *Grid {
-	if !HasDistinctSolution(g) {
+	if !IsDistinct(g) {
 		debug("Solver: no distinct solution possible!")
 		return nil
 	}
@@ -120,7 +120,7 @@ var solveRules = []solveRule{
 	// if a dragon is set, no neighbour square can be dragons
 	func(g *Grid, i int, k *knowledge) *Grid {
 		if g.Squarei(i) == SquareDragon {
-			k.squaresCannotBe(g.Neighborsi(i, false), SquareDragon)
+			k.squaresCannotBe(g.NeighborIndicesi(i, false), SquareDragon)
 			debug("-> [ar] neighbour squares of dragon cannot be dragons")
 		}
 		return g
@@ -132,7 +132,7 @@ var solveRules = []solveRule{
 			empty := g.CountAdjacentNeighbours(i, SquareEmpty)
 			undef := g.CountAdjacentNeighbours(i, SquareUndefined)
 			if empty < 2 && empty+undef == 2 {
-				for _, ni := range g.Neighborsi(i, true) {
+				for _, ni := range g.NeighborIndicesi(i, true) {
 					if g.Squarei(ni) == SquareUndefined {
 						g.SetSquarei(ni, SquareEmpty)
 					}
@@ -155,10 +155,10 @@ var solveRules = []solveRule{
 	// if a fire square is set, there must be at least 2 dragons around it
 	func(g *Grid, i int, k *knowledge) *Grid {
 		if g.Squarei(i) == SquareFire {
-			dragons := g.CountNeighbours(i, SquareDragon)
-			undef := g.CountNeighbours(i, SquareUndefined)
+			dragons := g.CountNeighbors(i, SquareDragon)
+			undef := g.CountNeighbors(i, SquareUndefined)
 			if dragons < 2 && dragons+undef == 2 {
-				for _, ni := range g.Neighborsi(i, false) {
+				for _, ni := range g.NeighborIndicesi(i, false) {
 					if g.Squarei(ni) == SquareUndefined {
 						g.SetSquarei(ni, SquareDragon)
 					}
@@ -173,7 +173,7 @@ var solveRules = []solveRule{
 	// if a undefined square is surrounded by more than one dragon, there must be fire
 	func(g *Grid, i int, k *knowledge) *Grid {
 		if g.Squarei(i) == SquareUndefined {
-			dragons := g.CountNeighbours(i, SquareDragon)
+			dragons := g.CountNeighbors(i, SquareDragon)
 			if dragons > 1 {
 				g.SetSquarei(i, SquareFire)
 				debug("-> [ar] set fire if more than 1 dragon around square")
@@ -186,8 +186,8 @@ var solveRules = []solveRule{
 	// if a undefined square cannot be surrounded be at least 2 dragons, there can not be fire
 	func(g *Grid, i int, k *knowledge) *Grid {
 		if g.Squarei(i) == SquareUndefined {
-			dragons := g.CountNeighbours(i, SquareDragon)
-			undef := g.CountNeighbours(i, SquareUndefined)
+			dragons := g.CountNeighbors(i, SquareDragon)
+			undef := g.CountNeighbors(i, SquareUndefined)
 			if dragons+undef < 2 {
 				k.squareCannotBe(i, SquareFire)
 				debug("-> [ar] square cannot be fire if not at least 2 dragons could be around it")
@@ -200,9 +200,9 @@ var solveRules = []solveRule{
 	func(g *Grid, i int, k *knowledge) *Grid {
 		square := g.Squarei(i)
 		if square == SquareEmpty {
-			dragons := g.CountNeighbours(i, SquareDragon)
+			dragons := g.CountNeighbors(i, SquareDragon)
 			if dragons == 1 {
-				k.squaresCannotBe(g.Neighborsi(i, false), SquareDragon)
+				k.squaresCannotBe(g.NeighborIndicesi(i, false), SquareDragon)
 				debug("-> [ar] if a empty square is set, there can maximum be one dragon around it")
 			}
 		}
