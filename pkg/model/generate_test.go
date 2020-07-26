@@ -10,6 +10,9 @@ func BenchmarkGenerate(b *testing.B) {
 	}
 }
 
+// history:
+// - 16471082 ns/op
+//
 func BenchmarkGenerateFrom(b *testing.B) {
 	difficulty := Difficulty(DifficultyEasy)
 	template := Parse("_f_,___,___")

@@ -17,14 +17,14 @@ const (
 	DifficultyHard
 )
 
-// Generate generates a random puzzle with the given dimensions and difficulty.
+// Generate generates a random but solved grid with the given dimensions.
 // TODO: rework this implementation!
-func Generate(width int, height int, difficulty Difficulty) *Grid {
+func Generate(width int, height int) *Grid {
 	duration := 5.0 // the generation can last this many seconds
 	maxFails := 10000
-	start := time.Now()
 	var best *Grid
-	for {
+
+	executeTimeBound(duration, func() {
 		g := New(width, height).Fill(SquareEmpty)
 		size := g.Size()
 		fails := 0
@@ -44,35 +44,37 @@ func Generate(width int, height int, difficulty Difficulty) *Grid {
 		if best == nil || g.Interestingness() > best.Interestingness() {
 			best = g
 		}
-		if time.Since(start).Seconds() > duration {
-			break
-		}
-	}
+	})
+
 	return best
 }
 
 // GenerateFrom creates a puzzle from a given solved or partially solved puzzle and also takes a difficulty parameter.
 func GenerateFrom(g *Grid, difficulty Difficulty) *Grid {
+	if g.Size() == g.CountSquares(SquareUndefined) {
+		panic("generateInternal: all squares undefined")
+	}
+
+	duration := 5.0 // the generation can last this many seconds
 	best := g.Clone()
 	mostUndefined := 0
-	loops := 100
 	tries := 100
-	for i := 0; i < loops; i++ {
-		suc := obfuscIncr(g, tries, difficulty)
+
+	executeTimeBound(duration, func() {
+		suc := obfuscate(g, tries, difficulty)
 		undefCount := suc.CountSquares(SquareUndefined)
 		if undefCount > mostUndefined {
 			best = suc
 		}
-	}
+	})
+
 	return best
 }
 
-// obfuscIncr takes a grid state and incrementally sets squares to "undefined".
+// obfuscate takes a grid state and incrementally sets squares to "undefined".
+// This is done choosing random squares (with a timeout of n tries).
 // After every step, it verifies if the puzzle is still solvable (i.e. has a distinct solution).
-func obfuscIncr(g *Grid, tries int, difficulty Difficulty) *Grid {
-	if g.Size() == g.CountSquares(SquareUndefined) {
-		panic("generateInternal: all squares undefined")
-	}
+func obfuscate(g *Grid, tries int, difficulty Difficulty) *Grid {
 	size := g.Size()
 	for i := 0; i < tries; {
 		index := rand.Intn(size)
@@ -81,11 +83,38 @@ func obfuscIncr(g *Grid, tries int, difficulty Difficulty) *Grid {
 		}
 		suc := g.Clone()
 		suc.SetSquarei(index, SquareUndefined)
-		if (difficulty > DifficultyEasy || len(EnumerateSquare(suc, index)) == 1) && IsDistinct(suc) {
+		if checkSolvable(suc, index, difficulty) {
 			g = suc
 			i = 0
 		}
 		i++
 	}
 	return g
+}
+
+func checkSolvable(g *Grid, index int, difficulty Difficulty) bool {
+	if !IsDistinct(g) {
+		return false
+	}
+
+	if difficulty == DifficultyHard {
+		return true
+	}
+
+	solved, _ := SolveHuman(g, difficulty)
+	if solved == nil {
+		return false
+	}
+
+	return true
+}
+
+func executeTimeBound(timeout float64, action func()) {
+	start := time.Now()
+	for {
+		action()
+		if time.Since(start).Seconds() > timeout {
+			break
+		}
+	}
 }

@@ -78,6 +78,13 @@ func (g *Grid) SetSquarei(i int, val Square) *Grid {
 	return g
 }
 
+// SetSquareiAndValidate sets a square to the specified value and validates the grid partially (only the changed square and its neighbors).
+func (g *Grid) SetSquareiAndValidate(i int, val Square) bool {
+	g.SetSquarei(i, val)
+	ixs := append(g.NeighborIndicesi(i, false), i)
+	return ValidatePartial(g, ixs)
+}
+
 // HasSquare returns "true" if at least one square with the specified value exists.
 func (g *Grid) HasSquare(val Square) bool {
 	for _, v := range g.Squares {
@@ -111,11 +118,11 @@ func (g *Grid) Neighbors(x int, y int) []Square {
 }
 
 // NeighborIndicesi gets the indices of all neighbor squares.
-func (g *Grid) NeighborIndicesi(i int, adjacent bool) []int {
+func (g *Grid) NeighborIndicesi(i int, adjacentOnly bool) []int {
 	res := make([]int, 0, maxNumNeighbors)
 	x, y := g.Coords(i)
 	for _, n := range neighbours {
-		if (!adjacent || n.adjacent) && coordsExist(g, x+n.x, y+n.y) {
+		if (!adjacentOnly || n.adjacent) && coordsExist(g, x+n.x, y+n.y) {
 			res = append(res, coordsToIndex(g, x+n.x, y+n.y))
 		}
 	}
@@ -132,30 +139,30 @@ func (g *Grid) GetAdjacentNeighbors(x int, y int) []Square {
 	}
 }
 
-// CountNeighbors counts the neighboured squares that match the given type.
-func (g *Grid) CountNeighbors(i int, square Square) int {
-	x, y := g.Coords(i)
-	ns := g.Neighbors(x, y)
-	count := 0
-	for _, v := range ns {
-		if v == square {
+// NeighborCount counts the neighboured squares (all 8 or the 4 adjacent) that match the given type.
+// If the 'includeUndefined' flag is set, also undefined squares are counted.
+func (g *Grid) NeighborCount(i int, square Square, adjacentOnly bool, includeUndefined bool) (count int) {
+	for _, ni := range g.NeighborIndicesi(i, adjacentOnly) {
+		v := g.Squarei(ni)
+		if v == square || (includeUndefined && v == SquareUndefined) {
 			count++
 		}
 	}
-	return count
+	return
+}
+
+// CountNeighbors counts the neighboured squares that match the given type.
+//
+// Deprecated: use NeighborCount
+func (g *Grid) CountNeighbors(i int, square Square) int {
+	return g.NeighborCount(i, square, false, false)
 }
 
 // CountAdjacentNeighbours counts the adacent neighboured squares that match the given type.
+//
+// Deprecated: use NeighborCount
 func (g *Grid) CountAdjacentNeighbours(i int, square Square) int {
-	x, y := g.Coords(i)
-	ns := g.GetAdjacentNeighbors(x, y)
-	count := 0
-	for _, v := range ns {
-		if v == square {
-			count++
-		}
-	}
-	return count
+	return g.NeighborCount(i, square, true, false)
 }
 
 // Clone creates an exact deep copy of a grid.

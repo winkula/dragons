@@ -3,6 +3,7 @@ package model
 type rule struct {
 	name  string
 	check func(g *Grid, i int) bool
+	apply func(g *Grid, i int, s Square)
 }
 
 // rules represents the rules that defines, if a dragons puzzle is valid or not.
@@ -14,7 +15,8 @@ var rules = []rule{
 		check: func(g *Grid, i int) bool {
 			square := g.Squarei(i)
 			if square == SquareDragon {
-				return g.CountNeighbors(i, SquareDragon) == 0
+				dragons := g.NeighborCount(i, SquareDragon, false, false)
+				return dragons == 0
 			}
 			return true
 		},
@@ -27,14 +29,14 @@ var rules = []rule{
 			square := g.Squarei(i)
 			if square == SquareFire {
 				// if a square is fire, there must be at least two dragons around it
-				dragons := g.CountNeighbors(i, SquareDragon)
-				undefined := g.CountNeighbors(i, SquareUndefined)
-				return dragons+undefined > 1
+				possibleDragons := g.NeighborCount(i, SquareDragon, false, true)
+				return possibleDragons > 1
 			}
 			if square == SquareEmpty {
 				// if 0 or 1 dragon is around a square, there must NOT be fire
 				// if a square is not fire, there can maximum be one dragon around it
-				return g.CountNeighbors(i, SquareDragon) <= 1
+				dragons := g.NeighborCount(i, SquareDragon, false, false)
+				return dragons <= 1
 			}
 			return true
 		},
@@ -46,9 +48,8 @@ var rules = []rule{
 		check: func(g *Grid, i int) bool {
 			square := g.Squarei(i)
 			if square == SquareDragon {
-				empty := g.CountAdjacentNeighbours(i, SquareEmpty)
-				undef := g.CountAdjacentNeighbours(i, SquareUndefined)
-				return empty+undef >= 2
+				possibleEmpty := g.NeighborCount(i, SquareEmpty, true, true)
+				return possibleEmpty >= 2
 			}
 			return true
 		},
@@ -60,6 +61,20 @@ var rules = []rule{
 // A valid state does not necessarily mean, that it can lead to a solution.
 func Validate(g *Grid) bool {
 	for i := range g.Squares {
+		for _, rule := range rules {
+			if !rule.check(g, i) {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+// ValidatePartial validates only some squares (ixs) of the whole grid.
+// The goal is to optimize performance by validating only squares that were changed.
+// This function is therefore best used when validating incrementally.
+func ValidatePartial(g *Grid, ixs []int) bool {
+	for _, i := range ixs {
 		for _, rule := range rules {
 			if !rule.check(g, i) {
 				return false

@@ -1,9 +1,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"math/rand"
-	"os"
 	"sort"
 	"time"
 
@@ -13,40 +13,50 @@ import (
 func main() {
 	seed()
 
-	args := os.Args[1:]
-	cmd := args[0]
+	difficulty := flag.String("difficulty", "easy", "difficulty of the puzzle")
+	flag.Parse()
+
+	tail := flag.Args()
+	cmd := tail[0]
+	difficultyEnum := parseDifficulty(*difficulty)
 
 	if cmd == "parse" {
-		parse(args[1], true)
+		parse(tail[1], true)
 		return
 	}
 
 	if cmd == "enum" {
-		g := parse(args[1], true)
+		g := parse(tail[1], true)
 		enumerate(g)
 		return
 	}
 
 	if cmd == "gen" {
-		g := parse(args[1], false)
-		generate(g)
+		g := parse(tail[1], false)
+		generatePuzzle(g, difficultyEnum)
+		return
+	}
+
+	if cmd == "gens" {
+		g := parse(tail[1], false)
+		generateSolution(g)
 		return
 	}
 
 	if cmd == "genr" {
-		g := parse(args[1], false)
-		generateRandom(g.Width, g.Height)
+		g := parse(tail[1], false)
+		generateRandom(g.Width, g.Height, difficultyEnum)
 		return
 	}
 
 	if cmd == "solve" {
-		g := parse(args[1], true)
-		solve(g)
+		g := parse(tail[1], true)
+		solve(g, difficultyEnum)
 		return
 	}
 
 	if cmd == "val" {
-		g := parse(args[1], true)
+		g := parse(tail[1], true)
 		validate(g)
 		return
 	}
@@ -73,65 +83,88 @@ func enumerate(g *model.Grid) {
 	fmt.Printf("%v possible grids found.\n", len(sucs))
 }
 
-func generate(g *model.Grid) {
+func generateSolution(g *model.Grid) {
 	if g.Size() == g.CountSquares(model.SquareUndefined) {
 		g = model.MostInteresting(g)
 	}
-	fmt.Println("Grid:")
+	fmt.Println("Input:")
 	fmt.Println(g)
 
-	gen := model.GenerateFrom(g, model.DifficultyHard)
-	fmt.Println("Generated:")
-	fmt.Println(gen)
-	checkDifficulty(gen)
-}
-
-func generateRandom(width int, height int) {
-	solution := model.Generate(width, height, model.DifficultyEasy)
+	solution := model.GenerateFrom(g, model.DifficultyEasy)
 	fmt.Println("Solution:")
 	fmt.Println(solution)
 
-	puzzle := model.GenerateFrom(solution, model.DifficultyEasy)
+	printStats(nil, solution)
+}
+
+func generatePuzzle(g *model.Grid, difficulty model.Difficulty) {
+	fmt.Println("Input:")
+	fmt.Println(g)
+
+	solution := model.Generate(g.Width, g.Height)
+	fmt.Println("Solution:")
+	fmt.Println(solution)
+
+	puzzle := model.GenerateFrom(solution, difficulty)
 	fmt.Println("Puzzle:")
 	fmt.Println(puzzle)
 
-	fmt.Println(" > Interestingness:", solution.Interestingness())
-	checkDifficulty(puzzle)
+	printStats(puzzle, solution)
 }
 
-func checkDifficulty(g *model.Grid) {
-	undef := g.CountSquares(model.SquareUndefined)
-	all := g.Size()
+func generateRandom(width int, height int, difficulty model.Difficulty) {
+	solution := model.Generate(width, height)
+	fmt.Println("Solution:")
+	fmt.Println(solution)
 
-	fmt.Printf(" > Undefinedness: %.2f (%v/%v)\n", (100.0 * float64(undef) / float64(all)), undef, all)
-	if model.Solve(g) != nil {
-		fmt.Println(" > Difficulty: EASY")
-	} else {
-		fmt.Println(" > Difficulty: MEDIUM/HARD")
+	puzzle := model.GenerateFrom(solution, difficulty)
+	fmt.Println("Puzzle:")
+	fmt.Println(puzzle)
+
+	printStats(puzzle, solution)
+}
+
+func printStats(puzzle *model.Grid, solution *model.Grid) {
+	if puzzle != nil {
+		undef := puzzle.CountSquares(model.SquareUndefined)
+		all := puzzle.Size()
+		fmt.Printf(" > Undefinedness: %.2f (%v/%v)\n", (100.0 * float64(undef) / float64(all)), undef, all)
+
+		_, difficulty := getDifficulty(puzzle)
+		fmt.Println(" > Difficulty:", difficulty)
+	}
+
+	if solution != nil {
+		fmt.Println(" > Interestingness:", solution.Interestingness())
 	}
 }
 
-func solve(g *model.Grid) {
-	type solver func(g *model.Grid) *model.Grid
+func solve(g *model.Grid, difficulty model.Difficulty) {
+	type solver func(g *model.Grid) (*model.Grid, *model.SolveResult)
 
 	solvers := []struct {
 		name   string
 		solver solver
 	}{
+		{name: "Solve", solver: func(g *model.Grid) (*model.Grid, *model.SolveResult) {
+			return model.SolveHuman(g, difficulty)
+		}},
 		{name: "SolveDk", solver: model.SolveDk},
 		{name: "SolveBf", solver: model.SolveBf},
-		{name: "Solve", solver: model.Solve},
 	}
 
 	for _, s := range solvers {
 		fmt.Println("-> Using solver algorithm:", s.name)
-		solved := s.solver(g)
-		if solved == nil {
+		solved, solveResult := s.solver(g)
+		if solved == nil || solveResult.Difficulty > difficulty {
 			fmt.Println("   No solution found. Reasons can be: the puzzle is too difficult, puzzle has no distinct solution...")
 			continue
 		}
 		fmt.Println("Solved:")
 		fmt.Println(solved)
+		if solveResult != nil {
+			fmt.Println("> Permutations:", solveResult.MaxPerm)
+		}
 		break
 	}
 }
@@ -144,4 +177,31 @@ func validate(g *model.Grid) {
 func seed() {
 	// seed the random generator
 	rand.Seed(time.Now().UnixNano())
+}
+
+func parseDifficulty(str string) model.Difficulty {
+	switch str {
+	case "easy":
+		return model.DifficultyEasy
+	case "medium":
+		return model.DifficultyMedium
+	case "hard":
+		return model.DifficultyHard
+	default:
+		return model.DifficultyEasy
+	}
+}
+
+func getDifficulty(puzzle *model.Grid) (model.Difficulty, string) {
+	solution, _ := model.SolveHuman(puzzle, model.DifficultyEasy)
+	if solution != nil {
+		return model.DifficultyEasy, "easy"
+	}
+
+	solution, _ = model.SolveHuman(puzzle, model.DifficultyMedium)
+	if solution != nil {
+		return model.DifficultyMedium, "medium"
+	}
+
+	return model.DifficultyHard, "hard"
 }

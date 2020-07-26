@@ -16,6 +16,8 @@ const (
 	SquareDragon
 )
 
+const numSquareValues = 5
+
 var squareSymbols = map[Square]rune{
 	SquareUndefined: ' ',
 	SquareOut:       '#',

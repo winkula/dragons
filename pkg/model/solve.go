@@ -1,89 +1,139 @@
 package model
 
 import (
+	"math"
 	"math/bits"
 )
 
+// SolveResult represents some statistics and metadata when solving a puzzle.
+type SolveResult struct {
+	MaxPerm    int
+	Difficulty Difficulty
+}
+
 // Solve solves a puzzle only using the validation rules of the game.
 // it returns the only possible solution or "nil" otherwise.
-func Solve(g *Grid) *Grid {
-	tries := 10
+func Solve(g *Grid) (*Grid, *SolveResult) {
+	return SolveHuman(g, DifficultyHard)
+}
+
+// SolveHuman solves a puzzle but only if it is easier than a given difficulty level.
+func SolveHuman(g *Grid, difficulty Difficulty) (*Grid, *SolveResult) {
+	solveRes := &SolveResult{}
 	if !IsDistinct(g) {
-		debug("SolveSimple: no distinct solution possible!")
-		return nil
+		return nil, solveRes // no distinct solution exists
 	}
 
-	cpy := g.Clone()
-	knowledge := newKnowledge(cpy)
-	for try := 0; try < tries; try++ {
-		for i := range cpy.Squares {
-			val := cpy.Squarei(i)
+	maxPermutations := getMaxPermsByDifficulty(difficulty)
+
+	work := g.Clone()
+	k := newKnowledge(work)
+	dirty := true // as long as this flag is set, we need to check every square of the grid
+	for dirty {
+		dirty = false
+		for i := range work.Squares {
+			val := work.Squarei(i)
 			if val != SquareUndefined {
 				continue // square already defined
 			}
 
-			debug("Investigating square", i)
+			debug(" ")
+			debug(" ")
+			debug(" ")
+			debug("========== Investigating square", i, "==========")
+			debug(Render(work, k, i))
 
-			// if only one option is possible for a sqaure.. go for it
-			ops := knowledge.getOptions(cpy, i)
-			if len(ops) == 1 {
-				cpy.SetSquarei(i, ops[0])
-				debug("-> set the only possible option")
-				debug(cpy)
-				continue
-			}
+			// if only one option is possible for a square.. go for it
+			ops := k.getOptions(work, i)
+			// if len(ops) == 1 {
+			// 	work.SetSquarei(i, ops[0])
+			// 	dirty = true
+			// 	k.squareIs(i, ops[0])
+			// 	// we don't need to validate here as it's the only possible option anyway
+			// 	// IMPORTANT: this is only correct if we know, that a solution exists!
+			// 	debug("-> set the only possible option")
+			// 	debug(Render(work, k, i))
+			// 	continue
+			// }
 
 			// for all possible options, try and evaluate
 			ok := make([]Square, 0, len(options))
 			debug("-> evaluate options")
 			for _, o := range ops {
-				//logd.Printf("   -> option %c", squareSymbolsForCode[o])
-				test := cpy.Clone()
-				test.SetSquarei(i, o)
 
-				if !Validate(test) {
+				// if the grid is already invalid after setting the square value,
+				// we can immediatelty go to the next option and can save us the permutation check
+				test := work.Clone()
+				valid := test.SetSquareiAndValidate(i, o)
+				if !valid {
 					// update knowledge
-					//logd.Printf(" => NOT possible\n")
-					knowledge.squareCannotBe(i, o)
+					debug("   -> option", string(squareSymbols[o]), "[NOK] (invalid state)")
+					dirty = true
+					k.squareCannotBe(i, o)
 					continue
 				}
 
 				// we compute all permutations that are possible when the neighbour squares are taken into account
 				nis := test.NeighborIndicesi(i, false)
-				permRes := knowledge.getPermutations(test, nis)
-				//logd.Printf(" => permutations of %v: %v/%v", nis, permRes.valid, permRes.count)
+				permRes := k.getPermutations(test, nis)
+
+				// too much permutations...
+				// this algorithm should simulate the human that solves the puzzle
+				// with the maxPermutationsToEvaluate parameter, we can fine tune how many permutations the human can/will evaluate
+				if permRes.total > maxPermutations {
+					debug("   -> option", string(squareSymbols[o]), "[ OK] (max permutations is too big for the difficulty level, so we can't exclude this option)")
+					debug("      permutations of", nis, "valid:", permRes.valid, "total:", permRes.total)
+					ok = append(ok, o)
+					continue
+				}
 
 				if permRes.valid == 0 {
-					// update knowledge
-					debug(" => [NOK]")
-					knowledge.squareCannotBe(i, o)
-				} else {
-					debug(" => [ OK]")
-					ok = append(ok, o)
+					// not a valid option for this square: update knowledge
+					debug("   -> option", string(squareSymbols[o]), "[NOK] (no valid permutations)")
+					debug("      permutations of", nis, "valid:", permRes.valid, "total:", permRes.total)
+					k.squareCannotBe(i, o)
+					dirty = true
+					continue
+				}
+
+				// at least one valid permutation exists
+
+				debug("   -> option", string(squareSymbols[o]), "[ OK]")
+				debug("      permutations of", nis, "valid:", permRes.valid, "total:", permRes.total)
+				ok = append(ok, o)
+
+				// update statistics
+				if permRes.total > solveRes.MaxPerm {
+					solveRes.MaxPerm = permRes.total
 				}
 			}
-			// if only one solution works.. use it
+			// if only one solution works... use it
+			// if not: try the next square...
 			if len(ok) == 1 {
-				cpy.SetSquarei(i, ok[0])
+				work.SetSquarei(i, ok[0])
+				dirty = true
+				k.squareIs(i, ok[0])
 				debug("-> set the only possible option (after evaluating)")
-				debug(cpy)
+				debug("\n" + Render(work, k, i))
 			}
 		}
-		if isSolved(cpy) {
-			return cpy
-		}
 
-		debug("-----")
+		// after going through all squares, we check if the puzzle is already solved
+		// if not, continue until we reach the tries timeout
+		if isSolved(work) {
+			return work, solveRes
+		}
 	}
-	return nil
+	return nil, solveRes
 }
 
 // SolveDk solves a puzzle using domain knowledge.
 // it returns the only possible solution or "nil" otherwise.
-func SolveDk(g *Grid) *Grid {
+func SolveDk(g *Grid) (*Grid, *SolveResult) {
+	solveRes := &SolveResult{}
 	if !IsDistinct(g) {
 		debug("Solver: no distinct solution possible!")
-		return nil
+		return nil, solveRes
 	}
 	cpy := g.Clone()
 	knowledge := newKnowledge(cpy)
@@ -92,25 +142,29 @@ func SolveDk(g *Grid) *Grid {
 			for _, r := range solveRules {
 				r(cpy, i, knowledge)
 				if isSolved(cpy) {
-					return cpy
+					return cpy, nil
 				}
 			}
 		}
 		debug("-----")
 	}
-	return nil
+	return nil, solveRes
 }
 
 // SolveBf solves a puzzle using a brute force strategy (enumerating all possible states).
-func SolveBf(g *Grid) *Grid {
+func SolveBf(g *Grid) (*Grid, *SolveResult) {
+	solveRes := &SolveResult{}
 	solutions := Enumerate(g)
 	if len(solutions) == 1 {
-		return solutions[0]
+		return solutions[0], solveRes
 	}
-	return nil
+	return nil, solveRes
 }
 
 func isSolved(g *Grid) bool {
+	if g == nil {
+		return false
+	}
 	return g.CountSquares(SquareUndefined) == 0 && Validate(g)
 }
 
@@ -222,4 +276,15 @@ var solveRules = []solveRule{
 		}
 		return g
 	},
+}
+
+func getMaxPermsByDifficulty(difficulty Difficulty) int {
+	switch difficulty {
+	case DifficultyEasy:
+		return 9 // 3^2 (all possibilities for 2 fields)
+	case DifficultyMedium:
+		return 27 // 3^3 (all possibilities for 3 fields)
+	default:
+		return math.MaxUint32
+	}
 }

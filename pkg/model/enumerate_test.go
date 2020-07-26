@@ -53,6 +53,9 @@ func TestEnumerateSquare(t *testing.T) {
 	}
 }
 
+// history:
+// - 9077091 ns/op
+// - 4670463 ns/op
 func BenchmarkEnumerate(b *testing.B) {
 	g := New(4, 4)
 	b.ResetTimer()

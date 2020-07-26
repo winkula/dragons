@@ -1,4 +1,4 @@
-[CmdletBinding(SupportsPaging = $true)]
+[CmdletBinding()]
 param(
 	[string] $Func = 'BenchmarkValidate$'
 )
@@ -14,4 +14,4 @@ clear
 #& go tool pprof -top -hide runtime $env:TEMP\cpu.prof
 #& go tool pprof -list Validate $env:TEMP\cpu.prof
 
-& go tool pprof -cum $env:TEMP\cpu.prof
+& go tool pprof $env:TEMP\cpu.prof

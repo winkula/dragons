@@ -68,11 +68,10 @@ func TestValidate(t *testing.T) {
 	}
 }
 
-/*
-History
-- 1904 ns/op
-- 1591 ns/op (after switching from int to uint8 for square values)
-*/
+// History
+// - 1904 ns/op
+// - 1591 ns/op (after switching from int to uint8 for square values)
+// - 1392 ns/op (after reducing multiple calls to CountNeighbors)
 func BenchmarkValidate(b *testing.B) {
 	gs := []*Grid{
 		Parse("_xf_,____,____,_d__"),

@@ -7,6 +7,10 @@ import (
 	"os"
 )
 
+func init() {
+	log.SetFlags(0)
+}
+
 func debug(a ...interface{}) {
 	log.Println(a...)
 }
