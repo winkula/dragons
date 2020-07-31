@@ -208,6 +208,11 @@ func (g *Grid) CountSquares(s Square) (count int) {
 	return
 }
 
+// IsUndefined return true if all squares are undefined
+func (g *Grid) IsUndefined() bool {
+	return g.Size() == g.CountSquares(SquareUndefined)
+}
+
 // String returns the string representation of a puzzle.
 func (g *Grid) String() string {
 	sb := strings.Builder{}

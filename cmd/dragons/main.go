@@ -4,62 +4,77 @@ import (
 	"flag"
 	"fmt"
 	"math/rand"
-	"sort"
+	"os"
 	"time"
 
 	"github.com/winkula/dragons/pkg/model"
 )
 
+var parseCmd = flag.NewFlagSet("parse", flag.ExitOnError)
+
+var enumerateCmd = flag.NewFlagSet("enumerate", flag.ExitOnError)
+
+var generateCmd = flag.NewFlagSet("generate", flag.ExitOnError)
+var genArgDifficulty = generateCmd.String("difficulty", "easy", "difficulty of the puzzle")
+var genArgWidth = generateCmd.Int("w", 3, "the puzzles width")
+var genArgHeight = generateCmd.Int("h", 3, "the puzzles height")
+
+var solveCmd = flag.NewFlagSet("solve", flag.ExitOnError)
+var solArgDifficulty = solveCmd.String("difficulty", "easy", "difficulty of the puzzle")
+
+var validateCmd = flag.NewFlagSet("validate", flag.ExitOnError)
+
 func main() {
 	seed()
 
-	difficulty := flag.String("difficulty", "easy", "difficulty of the puzzle")
-	flag.Parse()
-
-	tail := flag.Args()
-	cmd := tail[0]
-	difficultyEnum := parseDifficulty(*difficulty)
-
-	if cmd == "parse" {
-		parse(tail[1], true)
+	if len(os.Args) < 2 {
+		help()
+		os.Exit(1)
 		return
 	}
 
-	if cmd == "enum" {
-		g := parse(tail[1], true)
-		enumerate(g)
-		return
-	}
+	start := time.Now()
 
-	if cmd == "gen" {
-		g := parse(tail[1], false)
-		generatePuzzle(g, difficultyEnum)
-		return
-	}
+	switch os.Args[1] {
 
-	if cmd == "gens" {
-		g := parse(tail[1], false)
-		generateSolution(g)
-		return
-	}
+	case "generate":
+		generateCmd.Parse(os.Args[2:])
+		difficultyEnum := parseDifficulty(*genArgDifficulty)
 
-	if cmd == "genr" {
-		g := parse(tail[1], false)
-		generateRandom(g.Width, g.Height, difficultyEnum)
-		return
-	}
+		if len(generateCmd.Args()) > 0 {
+			g := parse(generateCmd.Arg(0), true)
+			generateFrom(g, difficultyEnum)
+		} else {
+			generate(*genArgWidth, *genArgHeight, difficultyEnum)
+		}
 
-	if cmd == "solve" {
-		g := parse(tail[1], true)
-		solve(g, difficultyEnum)
-		return
-	}
-
-	if cmd == "val" {
-		g := parse(tail[1], true)
+	case "validate":
+		validateCmd.Parse(os.Args[2:])
+		g := parse(validateCmd.Arg(0), true)
 		validate(g)
-		return
+
+	case "parse":
+		parseCmd.Parse(os.Args[2:])
+		parse(parseCmd.Arg(0), true)
+
+	case "enumerate":
+		enumerateCmd.Parse(os.Args[2:])
+		g := parse(enumerateCmd.Arg(0), true)
+		enumerate(g)
+
+	case "solve":
+		solveCmd.Parse(os.Args[2:])
+		difficultyEnum := parseDifficulty(*solArgDifficulty)
+		g := parse(solveCmd.Arg(0), true)
+		solve(g, difficultyEnum)
+
+	default:
+		help()
+		os.Exit(1)
 	}
+
+	elapsed := time.Since(start)
+	fmt.Printf("Executed in %s", elapsed)
 }
 
 func parse(s string, print bool) *model.Grid {
@@ -69,59 +84,6 @@ func parse(s string, print bool) *model.Grid {
 		fmt.Println(g)
 	}
 	return g
-}
-
-func enumerate(g *model.Grid) {
-	sucs := model.Enumerate(g)
-	sort.Slice(sucs, func(i, j int) bool {
-		return sucs[i].Interestingness() < sucs[j].Interestingness()
-	})
-	for _, s := range sucs {
-		fmt.Println(s)
-		fmt.Println("Interestingness:", s.Interestingness())
-	}
-	fmt.Printf("%v possible grids found.\n", len(sucs))
-}
-
-func generateSolution(g *model.Grid) {
-	if g.Size() == g.CountSquares(model.SquareUndefined) {
-		g = model.MostInteresting(g)
-	}
-	fmt.Println("Input:")
-	fmt.Println(g)
-
-	solution := model.GenerateFrom(g, model.DifficultyEasy)
-	fmt.Println("Solution:")
-	fmt.Println(solution)
-
-	printStats(nil, solution)
-}
-
-func generatePuzzle(g *model.Grid, difficulty model.Difficulty) {
-	fmt.Println("Input:")
-	fmt.Println(g)
-
-	solution := model.Generate(g.Width, g.Height)
-	fmt.Println("Solution:")
-	fmt.Println(solution)
-
-	puzzle := model.GenerateFrom(solution, difficulty)
-	fmt.Println("Puzzle:")
-	fmt.Println(puzzle)
-
-	printStats(puzzle, solution)
-}
-
-func generateRandom(width int, height int, difficulty model.Difficulty) {
-	solution := model.Generate(width, height)
-	fmt.Println("Solution:")
-	fmt.Println(solution)
-
-	puzzle := model.GenerateFrom(solution, difficulty)
-	fmt.Println("Puzzle:")
-	fmt.Println(puzzle)
-
-	printStats(puzzle, solution)
 }
 
 func printStats(puzzle *model.Grid, solution *model.Grid) {
@@ -136,36 +98,6 @@ func printStats(puzzle *model.Grid, solution *model.Grid) {
 
 	if solution != nil {
 		fmt.Println(" > Interestingness:", solution.Interestingness())
-	}
-}
-
-func solve(g *model.Grid, difficulty model.Difficulty) {
-	type solver func(g *model.Grid) (*model.Grid, *model.SolveResult)
-
-	solvers := []struct {
-		name   string
-		solver solver
-	}{
-		{name: "Solve", solver: func(g *model.Grid) (*model.Grid, *model.SolveResult) {
-			return model.SolveHuman(g, difficulty)
-		}},
-		{name: "SolveDk", solver: model.SolveDk},
-		{name: "SolveBf", solver: model.SolveBf},
-	}
-
-	for _, s := range solvers {
-		fmt.Println("-> Using solver algorithm:", s.name)
-		solved, solveResult := s.solver(g)
-		if solved == nil || solveResult.Difficulty > difficulty {
-			fmt.Println("   No solution found. Reasons can be: the puzzle is too difficult, puzzle has no distinct solution...")
-			continue
-		}
-		fmt.Println("Solved:")
-		fmt.Println(solved)
-		if solveResult != nil {
-			fmt.Println("> Permutations:", solveResult.MaxPerm)
-		}
-		break
 	}
 }
 

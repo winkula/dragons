@@ -50,12 +50,11 @@ func Generate(width int, height int) *Grid {
 }
 
 // GenerateFrom creates a puzzle from a given solved or partially solved puzzle and also takes a difficulty parameter.
-func GenerateFrom(g *Grid, difficulty Difficulty) *Grid {
-	if g.Size() == g.CountSquares(SquareUndefined) {
+func GenerateFrom(g *Grid, difficulty Difficulty, duration float64) *Grid {
+	if g.IsUndefined() {
 		panic("generateInternal: all squares undefined")
 	}
 
-	duration := 5.0 // the generation can last this many seconds
 	best := g.Clone()
 	mostUndefined := 0
 	tries := 100
