@@ -1,10 +1,14 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/winkula/dragons/pkg/model"
 )
+
+var solveCmd = flag.NewFlagSet("solve", flag.ExitOnError)
+var solArgDifficulty = solveCmd.String("difficulty", "easy", "difficulty of the puzzle")
 
 func solve(g *model.Grid, difficulty model.Difficulty) {
 	type solver func(g *model.Grid) (*model.Grid, *model.SolveResult)

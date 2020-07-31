@@ -39,5 +39,5 @@ var squareInterestingness = map[Square]int{
 	SquareOut:       0,
 	SquareEmpty:     0,
 	SquareFire:      1,
-	SquareDragon:    3,
+	SquareDragon:    1,
 }

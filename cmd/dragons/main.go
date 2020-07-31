@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"math/rand"
 	"os"
@@ -9,20 +8,6 @@ import (
 
 	"github.com/winkula/dragons/pkg/model"
 )
-
-var parseCmd = flag.NewFlagSet("parse", flag.ExitOnError)
-
-var enumerateCmd = flag.NewFlagSet("enumerate", flag.ExitOnError)
-
-var generateCmd = flag.NewFlagSet("generate", flag.ExitOnError)
-var genArgDifficulty = generateCmd.String("difficulty", "easy", "difficulty of the puzzle")
-var genArgWidth = generateCmd.Int("w", 3, "the puzzles width")
-var genArgHeight = generateCmd.Int("h", 3, "the puzzles height")
-
-var solveCmd = flag.NewFlagSet("solve", flag.ExitOnError)
-var solArgDifficulty = solveCmd.String("difficulty", "easy", "difficulty of the puzzle")
-
-var validateCmd = flag.NewFlagSet("validate", flag.ExitOnError)
 
 func main() {
 	seed()
@@ -60,7 +45,7 @@ func main() {
 	case "enumerate":
 		enumerateCmd.Parse(os.Args[2:])
 		g := parse(enumerateCmd.Arg(0), true)
-		enumerate(g)
+		enumerate(g, *enuArgMost)
 
 	case "solve":
 		solveCmd.Parse(os.Args[2:])
@@ -77,15 +62,6 @@ func main() {
 	fmt.Printf("Executed in %s", elapsed)
 }
 
-func parse(s string, print bool) *model.Grid {
-	g := model.Parse(s)
-	if print {
-		fmt.Println("Grid:")
-		fmt.Println(g)
-	}
-	return g
-}
-
 func printStats(puzzle *model.Grid, solution *model.Grid) {
 	if puzzle != nil {
 		undef := puzzle.CountSquares(model.SquareUndefined)
@@ -99,11 +75,6 @@ func printStats(puzzle *model.Grid, solution *model.Grid) {
 	if solution != nil {
 		fmt.Println(" > Interestingness:", solution.Interestingness())
 	}
-}
-
-func validate(g *model.Grid) {
-	valid := model.Validate(g)
-	fmt.Println("Valid:", valid)
 }
 
 func seed() {
