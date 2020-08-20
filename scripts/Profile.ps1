@@ -5,7 +5,7 @@ param(
 
 clear
 
-& go test `
+go test `
 -cpuprofile $env:TEMP\cpu.prof `
 -bench "^$Func" `
 'github.com/winkula/dragons/pkg/model'
@@ -14,4 +14,4 @@ clear
 #& go tool pprof -top -hide runtime $env:TEMP\cpu.prof
 #& go tool pprof -list Validate $env:TEMP\cpu.prof
 
-& go tool pprof $env:TEMP\cpu.prof
+go tool pprof $env:TEMP\cpu.prof
