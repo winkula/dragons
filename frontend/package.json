@@ -8,10 +8,11 @@
     "build": "parcel build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Mathias Winkler",
+  "license": "MIT",
   "devDependencies": {
     "parcel-bundler": "^1.12.4",
-    "sass": "^1.26.10"
+    "sass": "^1.26.10",
+    "typescript": "^4.0.2"
   }
 }

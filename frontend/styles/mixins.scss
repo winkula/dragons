@@ -5,3 +5,7 @@
 @mixin interactive {
   cursor: pointer;
 }
+
+@mixin disabled {
+  cursor: default;
+}

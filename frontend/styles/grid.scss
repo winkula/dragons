@@ -21,23 +21,32 @@
     align-items: center;
 
     // hovered items
-    &:hover {
-      @include shadow(#000);
-	}
-	
-	// icons
-	& > img {
-		width: 100%;		
-	}
+    &:not(.static):hover {
+      background-color: lighten($color-cell-dark, 15%);
+      @include shadow(darken($color-cell-dark, 15%));
+    }
+
+    // icons
+    & > img {
+      width: 100%;
+    }
   }
 
   .dragon {
-    background-color: $color-dragon;
-    @include shadow($color-dragon-dark);
+    //background-color: $color-cell;
+    //background-image: radial-gradient(circle, $color-dragon 0%, rgba(255, 255, 255, 0) 65%);
+    //@include shadow($color-dragon-dark);
   }
 
   .fire {
-    background-color: $color-fire;
-    @include shadow($color-fire-dark);
+    //background-color: $color-cell;
+    //background-image: radial-gradient(circle, $color-fire 0%, rgba(255, 255, 255, 0) 65%);
+    //@include shadow($color-fire-dark);
+  }
+
+  .static {
+    background-color: $color-static;
+    @include shadow($color-static-dark);
+    @include disabled;
   }
 }

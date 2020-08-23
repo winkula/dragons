@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="en">
 
 <head>
@@ -10,35 +9,13 @@
     <meta name="author" content="Mathias Winkler">
 
     <link rel="stylesheet" href="styles/main.scss">
-
 </head>
 
 <body>
     <header id="header">
         <span>dragons</span>
     </header>
-    <section id="grid">
-        <div>
-            <div></div>
-            <div class="dragon">
-                <img src="assets/dragon.svg" alt="dragon" />
-            </div>
-            <div class="fire">
-                <img src="assets/fire.svg" alt="fire" />
-            </div>
-        </div>
-        <div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-        <div>
-            <div class="dragon">
-                <img src="assets/dragon.svg" alt="dragon" />
-            </div>
-            <div></div>
-            <div></div>
-        </div>
+    <section id="grid">        
     </section>
     <section id="menu">
         <button id="btn-new" type="button">
@@ -51,11 +28,18 @@
             Help
         </button>
     </section>
+    <section id="help" style="display: none;">
+        <div>
+            <h1>Rules</h1>
+
+            <p>...</p>
+        </div>
+    </section>
     <footer id="footer">
         (C) 2020 Mathias Winkler
     </footer>
 
-    <script src="scripts/main.js"></script>
+    <script src="scripts/main.ts"></script>
 </body>
 
 </html>
