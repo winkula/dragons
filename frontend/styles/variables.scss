@@ -1,0 +1,9 @@
+$color-background: #EBE5D2;
+$color-font: adjust-color($color-background, $lightness: -30%);
+
+$color-cell: #fff;
+$color-cell-dark: darken($color-background, 10%); // #c7c0a9;
+$color-fire: #f9b688;
+$color-fire-dark: darken($color-fire, 20%);
+$color-dragon: lighten(#817785, 10%); // #6a6a6a
+$color-dragon-dark: darken($color-dragon, 20%);

@@ -1,0 +1,26 @@
+html {
+  background-color: $color-background;
+  color: $color-font;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+header,
+footer,
+section#menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+header,
+footer {
+  padding: 2rem 0;
+}
+
+header {
+  font-size: 3rem;
+}

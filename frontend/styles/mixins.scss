@@ -1,0 +1,7 @@
+@mixin shadow($color) {
+  box-shadow: 0px 1vw $color;
+}
+
+@mixin interactive {
+  cursor: pointer;
+}
