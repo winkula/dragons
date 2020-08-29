@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel serve ./src/index.html",
-    "build": "parcel build -d ../docs ./src/index.html",
+    "build": "parcel build --out-dir ../docs --public-url . ./src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Mathias Winkler",
