@@ -1,5 +1,9 @@
 // grid rows
-#grid {
+.grid {
+  &.invalid {
+    background-color: red;
+  }
+
   & > div {
     display: flex;
     justify-content: center;
@@ -21,7 +25,7 @@
     align-items: center;
 
     // hovered items
-    &:not(.static):hover {
+    &:not(.given):hover {
       background-color: lighten($color-cell-dark, 15%);
       @include shadow(darken($color-cell-dark, 15%));
     }
@@ -44,7 +48,13 @@
     //@include shadow($color-fire-dark);
   }
 
-  .static {
+  .given {
+    background-color: $color-static;
+    @include shadow($color-static-dark);
+    @include disabled;
+  }
+
+  .selected {
     background-color: $color-static;
     @include shadow($color-static-dark);
     @include disabled;

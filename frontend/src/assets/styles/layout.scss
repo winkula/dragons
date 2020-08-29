@@ -11,7 +11,7 @@ body {
 
 header,
 footer,
-section#menu {
+section.el-menu {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,16 +26,6 @@ header {
   font-size: 3rem;
 }
 
-section#help {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 1rem;
-  box-sizing: border-box;
-
-  & > div {
-    background-color: #fff;
-	padding: 1rem;
-  }
+section.el-grid-select {
+  margin: 2rem;
 }
