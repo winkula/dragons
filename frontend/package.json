@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel serve ./src/index.html",
-    "build": "parcel build ./src/index.html",
+    "build": "parcel build -d ../docs ./src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Mathias Winkler",
@@ -16,6 +16,7 @@
   "devDependencies": {
     "@vue/component-compiler-utils": "^3.2.0",
     "parcel-bundler": "^1.12.4",
+    "parcel-plugin-clean-dist": "0.0.6",
     "sass": "^1.26.10",
     "typescript": "^4.0.2",
     "vue-template-compiler": "^2.6.12"

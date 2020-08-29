@@ -28,8 +28,6 @@ import {
 } from "../logic";
 import { GameStatus } from "../logic/game";
 
-let game = createGame();
-
 export default Vue.extend({
   components: {
     Header,
@@ -41,7 +39,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      game: game,
+      game: null,
       isValid: true,
       isSolved: false,
       fillType: getCellType(CellType.Empty).value,
@@ -77,11 +75,16 @@ export default Vue.extend({
     },
     newGame() {
       this.game = createGame();
+      this.isValid = true;
+      this.isSolved = false;
     },
     changeDifficulty() {},
     showHelp() {
       this.helpVisible = !this.helpVisible;
     },
   },
+  created() {
+    this.newGame();
+  }  
 });
 </script>
