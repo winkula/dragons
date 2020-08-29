@@ -29,3 +29,16 @@ header {
 section.el-grid-select {
   margin: 2rem;
 }
+
+body {
+  & > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    & > * {
+
+    }
+  }
+}
