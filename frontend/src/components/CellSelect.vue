@@ -1,6 +1,6 @@
 <template>
-  <section class="el-grid-select grid">
-    <div>
+  <div class="grid-select grid">
+    <div class="grid-row">
       <Cell
         v-for="button in buttons"
         :key="button.id"
@@ -11,7 +11,7 @@
         @clicked="updateValue(button)"
       ></Cell>
     </div>
-  </section>
+  </div>
 </template>
 
 <script lang="ts">

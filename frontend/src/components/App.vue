@@ -1,22 +1,26 @@
 <template>
-  <div>
-    <Header></Header>
-    <Menu @new="newGame" @difficulty="changeDifficulty" @help="showHelp"></Menu>
-    <Grid :grid="game.puzzle" @filled="fillCell" :is-valid="isValid" :is-solved="isSolved"></Grid>
-    <CellSelect v-model="fillType"></CellSelect>
-    <Footer :copyright="copyright"></Footer>
-    <Help :visible="helpVisible"></Help>
+  <div class="wrapper">
+    <header>
+      <Menu @new="newGame" @difficulty="changeDifficulty" @help="showHelp" @solve="solve"></Menu>
+    </header>
+    <main>
+      <Grid :grid="game.puzzle" @filled="fillCell" :is-valid="isValid" :is-solved="isSolved"></Grid>
+      <Help :visible="helpVisible"></Help>
+      <div class="overlay" :class="[{'invalid': !isValid}, {'solved': isSolved}]"></div>
+    </main>
+    <footer>
+      <CellSelect v-model="fillType"></CellSelect>
+      <div class="copyright">{{ copyright }}</div>
+    </footer>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 
-import Header from "./Header.vue";
-import Grid from "./Grid.vue";
 import Menu from "./Menu.vue";
+import Grid from "./Grid.vue";
 import CellSelect from "./CellSelect.vue";
-import Footer from "./Footer.vue";
 import Help from "./Help.vue";
 
 import {
@@ -30,11 +34,9 @@ import { GameStatus } from "../logic/game";
 
 export default Vue.extend({
   components: {
-    Header,
     Menu,
     Grid,
     CellSelect,
-    Footer,
     Help,
   },
   data() {
@@ -78,6 +80,10 @@ export default Vue.extend({
       this.isValid = true;
       this.isSolved = false;
     },
+    solve() {
+      this.isValid = true;
+      this.isSolved = true;
+    },
     changeDifficulty() {},
     showHelp() {
       this.helpVisible = !this.helpVisible;
@@ -85,6 +91,6 @@ export default Vue.extend({
   },
   created() {
     this.newGame();
-  }  
+  },
 });
 </script>

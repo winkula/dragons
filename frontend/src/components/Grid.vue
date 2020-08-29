@@ -1,6 +1,6 @@
 <template>
-  <section :class="['grid', { 'invalid': !isValid }, {'solved': isSolved}]">
-    <div v-for="row in grid.rows" :key="row.id">
+  <div :class="['grid', { 'invalid': !isValid }, {'solved': isSolved}]">
+    <div class="grid-row" v-for="row in grid.rows" :key="row.id">
       <Cell
         v-for="cell in row.cells"
         :key="cell.id"
@@ -11,7 +11,7 @@
         @clicked="clicked(cell)"
       ></Cell>
     </div>
-  </section>
+  </div>
 </template>
 
 <script lang="ts">

@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{ 'given': given || selected }"
+    :class="['grid-cell', { 'given': given || selected }]"
     :tabindex="tabindex"
     :role="role"
     :aria-pressed="ariaPressed"

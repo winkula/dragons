@@ -1,0 +1,24 @@
+{
+	"lang": "en",
+	"short_name": "Dragons",
+	"name": "Dragons Puzzle",
+	"description": "...",
+	"icons": [
+		{
+			"src": "/assets/icons/app-icon-192.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "/assets/icons/app-icon-512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		}
+	],
+	"start_url": "/",
+	"background_color": "#EBE5D2",
+	"display": "fullscreen",
+	"orientation": "portrait",
+	"scope": "/",
+	"theme_color": "#EBE5D2"
+}

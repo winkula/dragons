@@ -1,5 +1,7 @@
 $color-background: #EBE5D2;
-$color-font: adjust-color($color-background, $lightness: -30%);
+$color-font: adjust-color($color-background, $lightness: -50%);
+$color-font-dark: adjust-color($color-background, $lightness: -70%);
+$color-copyright: adjust-color($color-background, $lightness: -20%);
 
 $color-cell: #fff;
 $color-cell-dark: darken($color-background, 10%); // #c7c0a9;

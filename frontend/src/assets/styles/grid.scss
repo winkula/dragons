@@ -1,68 +1,99 @@
-// grid rows
+@keyframes bounce {
+  0% {
+    top: 0px;
+  }
+  25% {
+    top: 4px;
+  }
+  100% {
+    top: 0px;
+  }
+}
+
 .grid {
-  &.invalid {
-    background-color: red;
+}
+
+.grid-row {
+  display: flex;
+  justify-content: center;
+}
+
+// grid item
+.grid-cell {
+  position: relative;
+  background-color: $color-cell;
+  box-sizing: border-box;
+  outline: none;
+  border: 0.1rem solid $color-cell-dark;
+  @include interactive;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  // hovered items and focused items
+  &:not(.given):hover,
+  &:focus {
+    background-color: lighten($color-cell-dark, 15%);
+    @include shadow(darken($color-cell-dark, 15%), 1vmin);
   }
 
-  &.solved {
-    background-color: green;
+  &:active {
+    animation-duration: 0.5s;
+    animation-name: bounce;
   }
 
-  & > div {
-    display: flex;
-    justify-content: center;
+  &.dragon {
+    //background-color: $color-cell;
+    //background-image: radial-gradient(circle, $color-dragon 0%, rgba(255, 255, 255, 0) 65%);
+    //@include shadow($color-dragon-dark);
   }
 
-  // grid item
-  & > div > div {
-    width: 10vw;
-    height: 10vw;
-    margin: 1vw;
-    background-color: $color-cell;
-    box-sizing: border-box;
-    padding: 1vw;
-    outline: none;
-    @include interactive;
-    @include shadow($color-cell-dark);
+  &.fire {
+    //background-color: $color-cell;
+    //background-image: radial-gradient(circle, $color-fire 0%, rgba(255, 255, 255, 0) 65%);
+    //@include shadow($color-fire-dark);
+  }
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  &.given {
+    background-color: $color-static;
+    @include shadow($color-static-dark, 1vmin);
+    @include disabled;
+  }
 
-    // hovered items and focused items    
-    &:not(.given):hover,
-    &:focus {
-      background-color: lighten($color-cell-dark, 15%);
-      @include shadow(darken($color-cell-dark, 15%));
-    }
+  &.selected {
+    background-color: $color-static;
+    @include shadow($color-static-dark, 1vmin);
+    @include disabled;
+  }
 
-    &.dragon {
-      //background-color: $color-cell;
-      //background-image: radial-gradient(circle, $color-dragon 0%, rgba(255, 255, 255, 0) 65%);
-      //@include shadow($color-dragon-dark);
-    }
-  
-    &.fire {
-      //background-color: $color-cell;
-      //background-image: radial-gradient(circle, $color-fire 0%, rgba(255, 255, 255, 0) 65%);
-      //@include shadow($color-fire-dark);
-    }
-  
-    &.given {
-      background-color: $color-static;
-      @include shadow($color-static-dark);
-      @include disabled;
-    }
-  
-    &.selected {
-      background-color: $color-static;
-      @include shadow($color-static-dark);
-      @include disabled;
-    }
+  // icons
+  & > img {
+    width: 100%;
+    transition: width 1s;
+  }
+}
 
-    // icons
-    & > img {
-      width: 100%;
-    }
+.grid-cell {
+  width: 10vmin;
+  height: 10vmin;
+  margin: 1vmin;
+  padding: 1vmin;
+  @include shadow($color-cell-dark, 1vmin);
+
+  @media (min-aspect-ratio: 7/10) {
+    width: 6.5vmin;
+    height: 6.5vmin;
+    margin: 0.65vmin;
+    padding: 0.65vmin;
+    @include shadow($color-cell-dark, 0.65vmin);
   }
 }

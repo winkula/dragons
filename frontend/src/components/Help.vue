@@ -1,11 +1,11 @@
 <template>
-  <section :class="['el-help', { 'visible': visible } ]">
+  <div :class="['app-help', { 'visible': visible } ]">
     <div>
       <h1>Rules </h1>
 
       <p>...</p>
     </div>
-  </section>
+  </div>
 </template>
 
 <script lang="ts">

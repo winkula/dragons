@@ -1,0 +1,21 @@
+.overlay {
+  pointer-events: none;
+  background: none;
+  z-index: 10;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  &.invalid {
+    background-color: rgba($color: #de4741, $alpha: 0.5);
+    transition: background 0.5s;
+  }
+
+  &.solved {
+    background-color: rgba($color: green, $alpha: 0.5);
+    transition: background 0.5s;
+  }
+}
