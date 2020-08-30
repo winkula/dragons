@@ -1,3 +1,3 @@
 cls
-:: go run -tags debug cmd/dragons/main.go %*
+:: go run -tags debug ./cmd/dragons %*
 go run ./cmd/dragons %*

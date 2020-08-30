@@ -7,12 +7,15 @@ enum CellType {
 	Undefined,
 	Empty,
 	Dragon,
-	Fire
+	Fire,
+
+	Point
 }
 
 interface CellDefinition {
 	value: number;
 	name: CellType;
+	desc?: string;
 	symbol: string;
 	isDefined: boolean;
 	icon?: string;
@@ -29,6 +32,7 @@ const cellDefinitions: CellDefinition[] = [
 	{
 		value: 1,
 		name: CellType.Empty,
+		desc: "empty",
 		icon: iconEmpty,
 		symbol: "x",
 		isDefined: true
@@ -36,6 +40,7 @@ const cellDefinitions: CellDefinition[] = [
 	{
 		value: 2,
 		name: CellType.Dragon,
+		desc: "dragon",
 		icon: iconDragon,
 		symbol: "d",
 		isDefined: true
@@ -43,9 +48,18 @@ const cellDefinitions: CellDefinition[] = [
 	{
 		value: 3,
 		name: CellType.Fire,
+		desc: "fire",
 		icon: iconFire,
 		symbol: "f",
 		isDefined: true
+	},
+	{
+		value: 4,
+		name: CellType.Point,
+		desc: "point",
+		icon: iconPoint,
+		symbol: ".",
+		isDefined: false
 	}
 ];
 
@@ -59,11 +73,11 @@ class Cell {
 	value: number;
 	neighbours: Cell[] = [];
 
-	constructor(id: number, symbol: string) {
+	constructor(id: number, symbol: string, notGiven: boolean = false) {
 		const definition = getCellTypeBySymbol(symbol);
 		this.id = id;
 		this.value = definition.value;
-		this.given = definition.isDefined;
+		this.given = (definition.isDefined && !notGiven);
 	}
 
 	get type() {

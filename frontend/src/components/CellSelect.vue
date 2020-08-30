@@ -1,5 +1,5 @@
 <template>
-  <div class="grid-select grid">
+  <div class="grid-select grid grid-interactive">
     <div class="grid-row">
       <Cell
         v-for="button in buttons"

@@ -4,14 +4,20 @@
       <Menu @new="newGame" @difficulty="changeDifficulty" @help="showHelp" @solve="solve"></Menu>
     </header>
     <main>
-      <Grid :grid="game.puzzle" @filled="fillCell" :is-valid="isValid" :is-solved="isSolved"></Grid>
-      <Help :visible="helpVisible"></Help>
-      <div class="overlay" :class="[{'invalid': !isValid}, {'solved': isSolved}]"></div>
+      <Grid
+        :grid="game.puzzle"
+        @filled="fillCell"
+        :is-valid="status !== 'valid'"
+        :is-solved="status === 'solved'"
+        interactive
+      ></Grid>
     </main>
     <footer>
       <CellSelect v-model="fillType"></CellSelect>
       <div class="copyright">{{ copyright }}</div>
     </footer>
+    <Help v-model="helpVisible"></Help>
+    <Overlay :state="status" @close="overlayClosed"></Overlay>
   </div>
 </template>
 
@@ -22,6 +28,7 @@ import Menu from "./Menu.vue";
 import Grid from "./Grid.vue";
 import CellSelect from "./CellSelect.vue";
 import Help from "./Help.vue";
+import Overlay from "./Overlay.vue";
 
 import {
   createGame,
@@ -38,12 +45,14 @@ export default Vue.extend({
     Grid,
     CellSelect,
     Help,
+    Overlay,
   },
   data() {
     return {
       game: null,
-      isValid: true,
+      status: null,
       isSolved: false,
+      isValid: true,
       fillType: getCellType(CellType.Empty).value,
       helpVisible: false,
       copyright: "© 2020 Mathias Winkler",
@@ -70,27 +79,68 @@ export default Vue.extend({
       }
 
       // validate game
-      const status = this.game.status;
-
-      this.isValid = status !== GameStatus.Invalid;
-      this.isSolved = status === GameStatus.Solved;
+      this.status = this.game.status;
     },
     newGame() {
       this.game = createGame();
-      this.isValid = true;
-      this.isSolved = false;
+      this.status = "unsolved";
     },
     solve() {
-      this.isValid = true;
-      this.isSolved = true;
+      this.status = "solved";
     },
     changeDifficulty() {},
     showHelp() {
       this.helpVisible = !this.helpVisible;
     },
+    overlayClosed() {
+      this.status = "unsolved";
+    }
   },
   created() {
     this.newGame();
   },
 });
 </script>
+
+<style lang="scss">
+@import "./src/assets/styles/globals";
+
+html,
+body,
+.wrapper {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  & > header {
+    padding: 1rem 0;
+  }
+
+  & > main {
+    padding: 1rem 0;
+    background: lighten($color-background, 10%);
+  }
+
+  & > footer {
+    padding: 1rem 0;
+  }
+}
+
+html {
+  background-color: $color-background;
+  color: $color-font;
+  user-select: none;
+}
+
+.copyright {
+  margin-top: 1rem;
+  text-align: center;
+  color: $color-copyright;
+}
+</style>

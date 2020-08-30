@@ -3,9 +3,9 @@ import { cellCoords } from "./util";
 import { Grid } from "./grid";
 
 enum GameStatus {
-	Unsolved,
-	Invalid,
-	Solved
+	Unsolved = "unsolved",
+	Invalid = "invalid",
+	Solved = "solved"
 }
 
 class Game {

@@ -1,4 +1,4 @@
-$color-background: #EBE5D2;
+$color-background: #ebe5d2;
 $color-font: adjust-color($color-background, $lightness: -50%);
 $color-font-dark: adjust-color($color-background, $lightness: -70%);
 $color-copyright: adjust-color($color-background, $lightness: -20%);
@@ -12,5 +12,5 @@ $color-fire-dark: darken($color-fire, 20%);
 $color-dragon: lighten(#817785, 10%); // #6a6a6a
 $color-dragon-dark: darken($color-dragon, 20%);
 
-$color-static: darken(#EBE5D2, 10%); // #6a6a6a
+$color-static: darken(#ebe5d2, 10%); // #6a6a6a
 $color-static-dark: darken($color-static, 20%);

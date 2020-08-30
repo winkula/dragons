@@ -1,0 +1,30 @@
+@mixin shadow($color, $size) {
+  box-shadow: 0px $size $color;
+}
+
+@mixin interactive {
+  cursor: pointer;
+}
+
+@mixin disabled {
+  cursor: default;
+}
+
+@mixin notSelectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@mixin shine($color) {
+  background-color: $color-cell;
+  background-image: radial-gradient(
+    circle,
+    $color 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}

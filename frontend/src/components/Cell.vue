@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['grid-cell', { 'given': given || selected }]"
+    :class="['grid-cell', { 'given': given || selected }, cellType]"
     :tabindex="tabindex"
     :role="role"
     :aria-pressed="ariaPressed"
@@ -35,9 +35,9 @@ export default Vue.extend({
     role() {
       return this.given ? null : "button";
     },
-  },
-  data() {
-    return {};
+    cellType() {
+      return getCellTypeByValue(this.value)?.desc;
+    },
   },
   methods: {
     clicked() {

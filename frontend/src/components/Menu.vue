@@ -34,3 +34,44 @@
 import Vue from "vue";
 export default Vue.extend({});
 </script>
+
+<style lang="scss">
+@import "./src/assets/styles/globals";
+
+.menu {
+  display: flex;
+  justify-content: center;
+
+  button {
+    background: none;
+    border: 0;
+    outline: none;
+
+    &:hover {
+      @include interactive;
+
+      svg {
+        stroke: $color-font-dark;
+      }
+    }
+
+    svg {
+      fill: none;
+      stroke: $color-font;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.5;
+
+      width: 6vmin;
+      height: 6vmin;
+      margin: 2vmin;
+
+      @media (min-aspect-ratio: 7/10) {
+        width: 3vmin;
+        height: 3vmin;
+        margin: 1vmin;
+      }
+    }
+  }
+}
+</style>

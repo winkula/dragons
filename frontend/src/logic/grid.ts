@@ -12,17 +12,17 @@ class Grid {
 	get width() { return this.rows[0]?.cells.length ?? 0; }
 	get height() { return this.rows.length; }
 
-	constructor(serialized: string) {
-		this.rows = this.parse(serialized);
+	constructor(serialized: string, notGiven = false) {
+		this.rows = this.parse(serialized, notGiven);
 		this.setNeighbourCells();
 	}
 
-	private parse(serialized: string) {
+	private parse(serialized: string, notGiven: boolean) {
 		const rowSeparator = ',';
 		const rows = serialized.split(rowSeparator);
 		return rows.map((row, rowIndex) => <Row>{
 			id: rowIndex,
-			cells: row.split('').map((cell, cellIndex) => new Cell(cellIndex, cell))
+			cells: row.split('').map((cell, cellIndex) => new Cell(cellIndex, cell, notGiven))
 		});
 	}
 
