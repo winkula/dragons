@@ -4,13 +4,7 @@
       <Menu @new="newGame" @difficulty="changeDifficulty" @help="showHelp" @solve="solve"></Menu>
     </header>
     <main>
-      <Grid
-        :grid="game.puzzle"
-        @filled="fillCell"
-        :is-valid="status !== 'valid'"
-        :is-solved="status === 'solved'"
-        interactive
-      ></Grid>
+      <Grid :grid="game.puzzle" @filled="fillCell" :stataus="status" interactive></Grid>
     </main>
     <footer>
       <CellSelect v-model="fillType"></CellSelect>
@@ -94,7 +88,7 @@ export default Vue.extend({
     },
     overlayClosed() {
       this.status = "unsolved";
-    }
+    },
   },
   created() {
     this.newGame();

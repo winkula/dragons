@@ -2,52 +2,43 @@
 	"easy": [
 		{
 			"size": 8,
-			"puzzle": "___x_f__,ff_____x,x___ff_f,_f___fd_,___x____,__x_____,____fdf_,_d_xf___",
-			"solution": "xdxxxfxx,fffxdfdx,xdxfffff,ffxxdfdx,dxxxxfxx,xxxxfxfx,xxfdfdfd,xdfxfxfx"
+			"puzzle": "________,_df_f___,ff__fx_d,x_______,___d_d__,_x______,d__x_d_d,__d_____",
+			"solution": "xxfxfxxx,xdfdfdfx,fffxfxfd,xdfxfxfx,xxfdfdxx,xxxxfffx,dfxxxdfd,xfdxxxfx"
 		},
 		{
 			"size": 8,
-			"puzzle": "____f_f_,_d___d__,___xf___,__x_____,_ff_d_d_,__xx___f,____xf__,_d____x_",
-			"solution": "xxfxfxfx,xdfdfdfd,fffxfxfx,xdxxxfxx,fffxdfdx,xdxxxfff,fffxxfdx,xdxxdfxx"
+			"puzzle": "_d______,x__df__d,____fx__,_df_f___,____fdfx,_d____f_,__f_fx__,x_x_f___",
+			"solution": "xdfxfxfx,xxfdfdfd,xxfxfxfx,xdfxfxxx,fffdfdfx,xdfxfxfd,xxfxfxfx,xxxdfdxx"
 		},
 		{
 			"size": 8,
-			"puzzle": "_______x,_f_fdf__,_f____f_,__d__xd_,___f___f,d_xf_x__,xf__f__x,___x____",
-			"solution": "xxdfxfxx,xfxfdfdx,dfxfxfff,xfdxxxdx,xfxfxfff,dfxfdxxd,xfdffffx,xxxxxdxx"
-		}
-	],
-	"medium": [
-		{
-			"size": 8,
-			"puzzle": "",
-			"solution": ""
+			"puzzle": "_d__x___,___d_ff_,x____x__,_d_d____,ff_____x,___xx_ff,ff___f_x,___xxf__",
+			"solution": "xdfxxxdx,xxfdxfff,xxfffxdx,xdfdxfff,fffxxxdx,xdxxxfff,fffxdfdx,xdxxxfxx"
 		},
 		{
 			"size": 8,
-			"puzzle": "",
-			"solution": ""
+			"puzzle": "_d____x_,___ffff_,__d__df_,xf____f_,_x_d__f_,_____d__,_d_____d,___d____",
+			"solution": "xdxxdxxd,xffffffx,xxdxxdfx,xffffxfd,dxxdfxfx,fffxfdfx,xdfxfxfd,xxfdxxxx"
 		},
 		{
 			"size": 8,
-			"puzzle": "",
-			"solution": ""
-		}
-	],
-	"hard": [
-		{
-			"size": 8,
-			"puzzle": "",
-			"solution": ""
+			"puzzle": "_fx___d_,_f__d___,_______x,____xfd_,_fd__f__,_f___x_d,_x_xf_f_,d___f_x_",
+			"solution": "xfxfxfdx,dfdfdfxx,xfxfxfxx,xfxfxfdx,dfdfdfff,xfxfxxxd,xxxxfxfx,dxxdfdxx"
 		},
 		{
 			"size": 8,
-			"puzzle": "",
-			"solution": ""
+			"puzzle": "_____fx_,_f__xf__,_fd_____,____d__d,d___ff__,xf__x___,_ff_____,_d__d__d",
+			"solution": "xxxxdfxx,dfxfxfdx,xfdfxfff,xfxfdxxd,dfxffffx,xfdxxdxx,xffffffx,xdxxdxxd"
 		},
 		{
 			"size": 8,
-			"puzzle": "",
-			"solution": ""
+			"puzzle": "____d__d,ff______,__x_d__x,_ffx___x,__fx__ff,x___x__x,___ff___,d_____d_",
+			"solution": "xdxxdxxd,ffffffxx,xdxxdfxx,fffxxfdx,xdfxxfff,xxfdxxdx,xxffffff,dxxdxxdx"
+		},
+		{
+			"size": 8,
+			"puzzle": "_d______,______fx,_d__fd__,___xf__d,_x_xfx__,d___f___,ff_f__fx,________",
+			"solution": "xdxxxxxd,fffxfxfx,xdfdfdfx,xxfxfxfd,xxxxfxfx,dxxdfdxx,fffffffx,xdxxdxxd"
 		}
 	]
 }

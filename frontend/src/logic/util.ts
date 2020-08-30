@@ -20,6 +20,9 @@ function cellCoords(width: number, height: number) {
 	return Array.from(iterateCells(width, height));
 }
 
+const randomInteger = (length: number) => Math.floor(Math.random() * length);
+
 export {
-	cellCoords
+	cellCoords,
+	randomInteger
 }

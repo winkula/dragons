@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['grid', { 'invalid': !isValid }, {'solved': isSolved}, {'grid-interactive': interactive}, {'grid-small': small}]"
+    :class="['grid', { 'invalid': status === 'invalid' }, {'solved': status === 'solved'}, {'grid-interactive': interactive}, {'grid-small': small}]"
   >
     <div class="grid-row" v-for="row in grid.rows" :key="row.id">
       <Cell
@@ -27,8 +27,7 @@ export default Vue.extend({
   },
   props: {
     grid: Object,
-    isValid: { type: Boolean, default: true },
-    isSolved: Boolean,
+    status: String,
     interactive: Boolean,
     small: { type: Boolean, default: false },
   },
@@ -85,7 +84,6 @@ export default Vue.extend({
   box-sizing: border-box;
   border: 1px solid $color-cell-dark;
   outline: none;
-  @include notSelectable;
 
   @include cell(10vmin);
   border-color: $color-cell-dark;
@@ -117,7 +115,6 @@ export default Vue.extend({
   // icons
   & > img {
     width: 100%;
-    transition: width 1s;
   }
 }
 

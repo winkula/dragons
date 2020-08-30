@@ -1,5 +1,5 @@
 import grids from "../assets/data/grids.json";
-import { cellCoords } from "./util";
+import { cellCoords, randomInteger } from "./util";
 import { Grid } from "./grid";
 
 enum GameStatus {
@@ -48,11 +48,21 @@ enum Difficulty {
 	Hard = "hard"
 }
 
+function createGameBuilder() {
+	let index = randomInteger(8);
+
+	return function (difficulty: Difficulty = Difficulty.Easy, size: number = 8) {
+		const filteredGrids = grids[difficulty].filter(x => x.size === size);
+		index = (index + 1) % filteredGrids.length; // wrap around
+		const chosen = filteredGrids[index];
+		return new Game(chosen.size, chosen.puzzle, chosen.solution);
+	}
+}
+
+const builder = createGameBuilder();
+
 function createGame(difficulty: Difficulty = Difficulty.Easy, size: number = 8) {
-	const chooseRandom = (arr) => arr[~~(Math.random() * arr.length)];
-	const filteredGrids = grids[difficulty].filter(x => x.size === size);
-	const chosen = chooseRandom(filteredGrids);
-	return new Game(chosen.size, chosen.puzzle, chosen.solution);
+	return builder(difficulty, size);
 }
 
 export {

@@ -4,6 +4,7 @@
 
 @mixin interactive {
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 @mixin disabled {
@@ -17,7 +18,6 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  -webkit-tap-highlight-color: transparent;
 }
 
 @mixin shine($color) {

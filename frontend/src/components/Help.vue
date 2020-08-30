@@ -5,26 +5,30 @@
       <h1>Rules</h1>
 
       <p>
-        This is a puzzle about dragons. Try to find out, where the dragons are hiding on the grid. A square can eighter be a dragon
+        This is a puzzle about dragons. Try to find out, where the dragons are hiding on the grid. A square can either be a dragon
         <Grid class="grid-inline" :grid="dragon" small></Grid>, fire
         <Grid class="grid-inline" :grid="fire" small></Grid>or empty
         <Grid class="grid-inline" :grid="empty" small></Grid>.
       </p>
-      <p>There are only 3 rules:</p>
+      <p>There are only three rules:</p>
 
       <h2>The territory rule</h2>
       <p>
-        Dragons can not have other dragons in their territory. Territory means the 8 squares that are around itself. Squares where no dragon can be are marked with a point
-        <Grid class="grid-inline" :grid="point" small></Grid>. This is a automatic hint of the game.
+        Every dragon has its own territory - the eight squares surrounding him. <strong>Inside ones territory there can't be other dragons</strong>. The game automatically marks territory squares with a point
+        <Grid class="grid-inline" :grid="point" small></Grid>.
       </p>
       <Grid :grid="example1" small></Grid>
 
       <h2>The fight rule</h2>
-      <p>Overlapping territories must be fire. Every square that is part of multiple territories must be fire - and only then.</p>
+      <p>Dragons don't like each other. That's why squares of <strong>overlapping territories must always be fire</strong> - but only then.</p>
       <Grid :grid="example2" small></Grid>
 
       <h2>The survive rule</h2>
-      <p>At least 2 of the adjacent squares of a dragon must be empty. If a dragon is at the edge or in the corner of the grid, the possible number of adjacent squares is reduced.</p>
+      <p>
+        Dragons like it hot - but they also need air to survive.
+        That's why <strong>at least two</strong> of the four <strong>directly adjacent squares</strong> of a dragon <strong>must be empty</strong>.
+        Squares outside the grid don't count as "empty".
+      </p>
       <Grid :grid="example3" small></Grid>
     </div>
   </div>
@@ -83,26 +87,29 @@ export default Vue.extend({
     margin-block-end: 0.5rem;
   }
 
+  display: none;
+  opacity: 0;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   padding: 1rem;
   box-sizing: border-box;
-  display: none;
   background-color: #fff;
 
   &.visible {
     display: block;
+    transition: all 5s;
+    opacity: 1;
   }
 
   .close {
     float: right;
-    @include interactive;
     width: 7vmin;
     height: 7vmin;
     text-align: center;
     vertical-align: middle;
+    @include interactive;
   }
 }
 </style>

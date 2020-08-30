@@ -44,8 +44,7 @@ export default Vue.extend({
 @mixin overlay($color) {
   background-color: rgba($color: $color, $alpha: 0.3);
   stroke: $color;
-  backdrop-filter: blur(0.1rem);
-  transition: all 0.5s;
+  transition: background 0.5s;
 }
 
 .overlay {
@@ -81,6 +80,7 @@ export default Vue.extend({
   &.solved {
     @include overlay(green);
     pointer-events: auto;
+    backdrop-filter: blur(0.2rem);
 
     svg {
       animation-name: flyin;
