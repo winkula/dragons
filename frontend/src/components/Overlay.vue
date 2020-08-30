@@ -63,6 +63,7 @@ export default Vue.extend({
   height: 100%;
 
   svg {
+    display: none;
     position: absolute;
     fill: none;
     stroke-linecap: round;
@@ -83,6 +84,7 @@ export default Vue.extend({
     backdrop-filter: blur(0.2rem);
 
     svg {
+      display: block;
       animation-name: flyin;
       animation-duration: 1s;
     }

@@ -45,4 +45,4 @@ module.exports="point.cfec3f2e.svg";
 },{"vue":"QPfz","./Menu.vue":"tEtN","./Grid.vue":"w6vT","./CellSelect.vue":"L5Xb","./Help.vue":"s5du","./Overlay.vue":"aDsg","../logic":"poFb"}],"ZCfc":[function(require,module,exports) {
 "use strict";var e=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0});var t=e(require("vue")),r=e(require("./components/App.vue"));new t.default({render:function(e){return e(r.default)}}).$mount("#app");
 },{"vue":"QPfz","./components/App.vue":"TC2m"}]},{},["ZCfc"], null)
-//# sourceMappingURL=main.3ef37da6.js.map
+//# sourceMappingURL=main.6abb3feb.js.map
