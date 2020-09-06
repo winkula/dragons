@@ -1,5 +1,5 @@
-<template>
-  <div :class="['help', { 'visible': value } ]">
+<template v-cloak>
+  <div class="help" v-if="value">
     <div class="close" @click="close">&#10006;</div>
     <div>
       <h1>Rules</h1>
@@ -27,9 +27,15 @@
       <p>
         Dragons like it hot - but they also need air to survive.
         That's why <strong>at least two</strong> of the four <strong>directly adjacent squares</strong> of a dragon <strong>must be empty</strong>.
-        Squares outside the grid don't count as "empty".
+        Squares outside the grid don't count as "empty".        
       </p>
-      <Grid :grid="example3" small></Grid>
+      <p>In this example, the survive rule is satisfied - two of the four directly adjacent squares are empty:</p>
+      <Grid :grid="example3_1" small></Grid>
+      <p>Here, the survive rule is violated - only one of the two directly adjacent squares are empty:</p>
+      <Grid :grid="example3_2" small></Grid>
+      <p class="copyright">
+        © 2020 Mathias Winkler
+      </p>
     </div>
   </div>
 </template>
@@ -56,7 +62,8 @@ export default Vue.extend({
 
       example1: new Grid("___,_d_,___", true),
       example2: new Grid("_____,_df__,__fd_,_____", true),
-      example3: new Grid("xfx,dfd,xfx", true),
+      example3_1: new Grid("_x_,xdf,_f_", true),
+      example3_2: new Grid("df_,x__,___", true),
     };
   },
   computed: {
@@ -87,8 +94,6 @@ export default Vue.extend({
     margin-block-end: 0.5rem;
   }
 
-  display: none;
-  opacity: 0;
   position: absolute;
   top: 0;
   left: 0;
@@ -96,12 +101,6 @@ export default Vue.extend({
   padding: 1rem;
   box-sizing: border-box;
   background-color: #fff;
-
-  &.visible {
-    display: block;
-    transition: all 5s;
-    opacity: 1;
-  }
 
   .close {
     float: right;

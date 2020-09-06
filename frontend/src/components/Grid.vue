@@ -55,7 +55,7 @@ export default Vue.extend({
 }
 
 @mixin cell($size) {
-  $padding: $size * 0.1;
+  $padding: $size * 0; // 0.1
   $shadow: $size * 0.1;
   $gap: $size * 0.2;
 
@@ -64,7 +64,9 @@ export default Vue.extend({
   margin: (($gap - $shadow) / 2) ($gap / 2);
   padding: $padding;
   position: relative;
-  border-bottom: $shadow solid $color-cell-dark; // 1vmin
+
+  //border: 1px solid $color-cell-border;
+  border-bottom: $shadow solid $color-cell-border; // 1vmin
 }
 
 .grid-row {
@@ -82,33 +84,24 @@ export default Vue.extend({
   align-items: center;
   background-color: $color-cell;
   box-sizing: border-box;
-  border: 1px solid $color-cell-dark;
   outline: none;
 
   @include cell(10vmin);
-  border-color: $color-cell-dark;
+  border-color: $color-cell-border;
 
   @media (min-aspect-ratio: 7/10) {
     @include cell(7vmin);
   }
 
-  &.dragon {
-    @include shine($color-dragon);
-  }
-
-  &.fire {
-    @include shine($color-fire);
-  }
-
   &.given {
-    background-color: $color-static;
-    border-color: $color-static-dark;
+    background-color: $color-cell-given;
+    border-color: $color-cell-border-given;
     @include disabled;
   }
 
   &.selected {
-    background-color: $color-static;
-    border-color: $color-static-dark;
+    background-color: $color-cell-given;
+    border-color: $color-cell-border-given;
     @include disabled;
   }
 
@@ -125,20 +118,18 @@ export default Vue.extend({
 }
 
 .grid-interactive {
-  .grid-cell {
+  .grid-cell:not(.given) {
     @include interactive;
 
-    &:not(.given) {
-      &:hover,
-      &:focus {
-        background-color: lighten($color-cell-dark, 15%);
-        border-color: darken($color-cell-dark, 15%);
-      }
+    &:hover,
+    &:focus {
+      background-color: lighten($color-cell-border, 15%);
+      border-color: darken($color-cell-border, 15%);
+    }
 
-      :active {
-        animation-name: bounce;
-        animation-duration: 0.2s;
-      }
+    &:active {
+      animation-name: bounce;
+      animation-duration: 0.2s;
     }
   }
 }

@@ -8,7 +8,7 @@
 }
 
 @mixin disabled {
-  cursor: default;
+  cursor: unset;
 }
 
 @mixin notSelectable {

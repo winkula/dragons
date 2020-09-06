@@ -1,16 +1,22 @@
-$color-background: #ebe5d2;
-$color-font: adjust-color($color-background, $lightness: -50%);
-$color-font-dark: adjust-color($color-background, $lightness: -70%);
-$color-copyright: adjust-color($color-background, $lightness: -20%);
+// common
+
+$color-main: #ebe5d2;
+
+$color-background: $color-main;
+$color-background-inner: lighten($color-background, 5%);
+
+$color-font: darken($color-main, 50%);
+$color-font-dark: darken($color-main, 70%);
+$color-copyright: darken($color-main, 20%);
+
+
+// grid, cells
 
 $color-cell: #fff;
-$color-cell-dark: darken($color-background, 10%); // #c7c0a9;
+$color-cell-border: darken($color-main, 10%);
 
-$color-fire: #f9b688;
-$color-fire-dark: darken($color-fire, 20%);
+$color-cell-hover: green;
+$color-cell-border-hover: darkgreen;
 
-$color-dragon: lighten(#817785, 10%); // #6a6a6a
-$color-dragon-dark: darken($color-dragon, 20%);
-
-$color-static: darken(#ebe5d2, 10%); // #6a6a6a
-$color-static-dark: darken($color-static, 20%);
+$color-cell-given: darken(#ebe5d2, 10%);
+$color-cell-border-given: darken($color-cell-given, 20%);

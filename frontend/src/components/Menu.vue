@@ -50,9 +50,12 @@ export default Vue.extend({
   justify-content: center;
 
   button {
+    margin: 0;
+    padding: 0 1vmin;
     background: none;
     border: 0;
     outline: none;
+    line-height: 0;
 
     &:hover {
       @include interactive;
@@ -74,8 +77,8 @@ export default Vue.extend({
       margin: 2vmin;
 
       @media (min-aspect-ratio: 7/10) {
-        width: 3vmin;
-        height: 3vmin;
+        width: 5vmin;
+        height: 5vmin;
         margin: 1vmin;
       }
     }

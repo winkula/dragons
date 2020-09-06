@@ -8,7 +8,6 @@
     </main>
     <footer>
       <CellSelect v-model="fillType"></CellSelect>
-      <div class="copyright">{{ copyright }}</div>
     </footer>
     <Help v-model="helpVisible"></Help>
     <Overlay :state="status" @close="overlayClosed"></Overlay>
@@ -49,7 +48,6 @@ export default Vue.extend({
       isValid: true,
       fillType: getCellType(CellType.Empty).value,
       helpVisible: false,
-      copyright: "© 2020 Mathias Winkler",
     };
   },
   methods: {
@@ -113,16 +111,16 @@ body,
   justify-content: center;
 
   & > header {
-    padding: 1rem 0;
+    padding: 1vmin 0;
   }
 
   & > main {
-    padding: 1rem 0;
-    background: lighten($color-background, 10%);
+    padding: 1vmin 0;
+    background: $color-background-inner;
   }
 
   & > footer {
-    padding: 1rem 0;
+    padding: 1vmin 0;
   }
 }
 
@@ -132,7 +130,7 @@ html {
   user-select: none;
 }
 
-.copyright {
+p.copyright {
   margin-top: 1rem;
   text-align: center;
   color: $color-copyright;
