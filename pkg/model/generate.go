@@ -19,8 +19,7 @@ const (
 
 // Generate generates a random but solved grid with the given dimensions.
 // TODO: rework this implementation!
-func Generate(width int, height int) *Grid {
-	duration := 5.0 // the generation can last this many seconds
+func Generate(width int, height int, duration float64) *Grid {
 	maxFails := 10000
 	var best *Grid
 

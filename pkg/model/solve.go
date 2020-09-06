@@ -281,9 +281,9 @@ var solveRules = []solveRule{
 func getMaxPermsByDifficulty(difficulty Difficulty) int {
 	switch difficulty {
 	case DifficultyEasy:
-		return 9 // 3^2 (all possibilities for 2 fields)
+		return 1 // only one valid possibilities
 	case DifficultyMedium:
-		return 27 // 3^3 (all possibilities for 3 fields)
+		return 9 // 3^2 (all possibilities for 2 fields)
 	default:
 		return math.MaxUint32
 	}

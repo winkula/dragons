@@ -27,10 +27,10 @@ func main() {
 		difficultyEnum := parseDifficulty(*genArgDifficulty)
 
 		if len(generateCmd.Args()) > 0 {
-			g := parse(generateCmd.Arg(0), true)
-			generateFrom(g, difficultyEnum)
+			g := parse(generateCmd.Arg(0), false)
+			generateFrom(g, difficultyEnum, *genArgDuration)
 		} else {
-			generate(*genArgWidth, *genArgHeight, difficultyEnum)
+			generate(*genArgWidth, *genArgHeight, difficultyEnum, *genArgDuration * 0.5)
 		}
 
 	case "validate":

@@ -1,3 +1,3 @@
 module github.com/winkula/dragons
 
-go 1.14
+go 1.15

@@ -2,7 +2,7 @@
 	"lang": "en",
 	"short_name": "Dragons",
 	"name": "Dragons Puzzle",
-	"description": "This is a puzzle about dragons. Try to find out, where the dragons are hiding on the grid.",
+	"description": "Logic puzzle about dragons.",
 	"icons": [
 		{
 			"src": "/assets/icons/app-icon-128.png",
@@ -15,8 +15,7 @@
 			"sizes": "192x192"
 		}
 	],
-	"scope": "/dragons/",
-	"start_url": "/dragons/",
+	"start_url": "/",
 	"background_color": "#f3efe4",
 	"display": "fullscreen",
 	"orientation": "portrait",
