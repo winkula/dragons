@@ -48,7 +48,23 @@ enum Difficulty {
 	Hard = "hard"
 }
 
+function checkGridData(difficulties: Difficulty[]) {
+	const validateSerializeData = (str, size) => str.split(',').length === size && str.split(',').every(row => row.length === size);
+
+	for (const difficulty of difficulties) {
+		for (const grid of grids[difficulty]) {
+			if (!validateSerializeData(grid.puzzle, grid.size) ||
+				!validateSerializeData(grid.solution, grid.size)) {
+				throw "Invalid grid data";
+			}
+		}
+	}
+
+}
+
 function createGameBuilder() {
+	checkGridData([Difficulty.Easy, Difficulty.Medium, Difficulty.Hard]);
+
 	let index = randomInteger(8);
 
 	return function (difficulty: Difficulty = Difficulty.Easy, size: number = 8) {
@@ -58,17 +74,20 @@ function createGameBuilder() {
 		return new Game(chosen.size, chosen.puzzle, chosen.solution);
 	}
 }
-
 const builder = createGameBuilder();
 
 function createGame(difficulty: Difficulty = Difficulty.Easy, size: number = 8) {
 	return builder(difficulty, size);
 }
 
+const emptyGrid = "________,________,________,________,________,________,________,________";
+const emptyGame = new Game(8, emptyGrid, emptyGrid);
+
 export {
 	Game,
 	GameStatus,
 	Difficulty,
 
-	createGame
+	createGame,
+	emptyGame
 }

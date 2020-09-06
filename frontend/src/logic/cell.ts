@@ -1,5 +1,5 @@
-import iconDragon from "../assets/icons/dragon-dark.png";
-import iconFire from "../assets/icons/fire.png";
+import iconDragon from "../assets/icons/dragon-s2.png";
+import iconFire from "../assets/icons/fire.svg";
 import iconEmpty from "../assets/icons/empty.svg";
 import iconPoint from "../assets/icons/point.svg";
 

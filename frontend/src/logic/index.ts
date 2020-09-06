@@ -1,4 +1,4 @@
-import { Game, createGame } from "./game";
+import { Game, createGame, emptyGame } from "./game";
 import { CellDefinition, CellType, getCellType, getCellTypeByValue, Cell } from "./cell";
 
 export {
@@ -9,5 +9,6 @@ export {
 
 	getCellType,
 	getCellTypeByValue,
-	createGame
+	createGame,
+	emptyGame
 }

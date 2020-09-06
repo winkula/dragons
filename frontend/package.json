@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "parcel serve ./src/index.html",
+    "start": "parcel serve  --out-dir ../docs ./src/index.html",
     "prebuild": "rmdir ..\\docs /s /q",
     "build": "parcel build --out-dir ../docs --public-url . ./src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"

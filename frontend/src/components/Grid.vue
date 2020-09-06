@@ -46,8 +46,8 @@ export default Vue.extend({
   0% {
     top: 0px;
   }
-  20% {
-    top: 4px;
+  30% {
+    top: 3px;
   }
   100% {
     top: 0px;
@@ -67,6 +67,7 @@ export default Vue.extend({
 
   //border: 1px solid $color-cell-border;
   border-bottom: $shadow solid $color-cell-border; // 1vmin
+  box-shadow: 0 0 10px $color-cell-border;
 }
 
 .grid-row {
@@ -118,18 +119,17 @@ export default Vue.extend({
 }
 
 .grid-interactive {
-  .grid-cell:not(.given) {
-    @include interactive;
+  @include interactive;
 
-    &:hover,
-    &:focus {
-      background-color: lighten($color-cell-border, 15%);
-      border-color: darken($color-cell-border, 15%);
+  .grid-cell {
+    &:not(.given):hover {
+      background-color: $color-cell-hover;
+      border-color: $color-cell-border-hover;
     }
 
     &:active {
       animation-name: bounce;
-      animation-duration: 0.2s;
+      animation-duration: 0.15s;
     }
   }
 }

@@ -1,13 +1,20 @@
 // common
 
 $color-main: #ebe5d2;
+//$color-main: lighten(#C7D2DD, 3%);
 
-$color-background: $color-main;
-$color-background-inner: lighten($color-background, 5%);
+$color-background-inner: lighten($color-main, 5%);
+$color-background: darken($color-background-inner, 10%);
 
 $color-font: darken($color-main, 50%);
-$color-font-dark: darken($color-main, 70%);
-$color-copyright: darken($color-main, 20%);
+$color-font-copyright: darken($color-main, 30%);
+
+
+// buttons
+
+$color-button: darken($color-main, 50%);
+$color-button-hover: darken($color-main, 60%);
+$button-size: 8.5vmin;
 
 
 // grid, cells
@@ -15,8 +22,8 @@ $color-copyright: darken($color-main, 20%);
 $color-cell: #fff;
 $color-cell-border: darken($color-main, 10%);
 
-$color-cell-hover: green;
-$color-cell-border-hover: darkgreen;
+$color-cell-hover: lighten($color-main, 5%);
+$color-cell-border-hover: darken($color-cell-hover, 20%);
 
-$color-cell-given: darken(#ebe5d2, 10%);
+$color-cell-given: darken($color-main, 7%);
 $color-cell-border-given: darken($color-cell-given, 20%);

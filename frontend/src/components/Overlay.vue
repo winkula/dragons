@@ -81,7 +81,7 @@ export default Vue.extend({
   &.solved {
     @include overlay(green);
     pointer-events: auto;
-    backdrop-filter: blur(0.2rem);
+    backdrop-filter: blur(1px);
 
     svg {
       display: block;

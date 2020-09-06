@@ -1,7 +1,7 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" v-cloak>
     <header>
-      <Menu @new="newGame" @difficulty="changeDifficulty" @help="showHelp" @solve="solve"></Menu>
+      <Menu @new="openStartDialog" @help="showHelp" @solve="solve"></Menu>
     </header>
     <main>
       <Grid :grid="game.puzzle" @filled="fillCell" :stataus="status" interactive></Grid>
@@ -11,6 +11,7 @@
     </footer>
     <Help v-model="helpVisible"></Help>
     <Overlay :state="status" @close="overlayClosed"></Overlay>
+    <StartDialog v-model="startDialogVisible" @start="start"></StartDialog>
   </div>
 </template>
 
@@ -22,15 +23,17 @@ import Grid from "./Grid.vue";
 import CellSelect from "./CellSelect.vue";
 import Help from "./Help.vue";
 import Overlay from "./Overlay.vue";
+import StartDialog from "./StartDialog.vue";
 
 import {
   createGame,
+  emptyGame,
   Cell,
   CellDefinition,
   CellType,
   getCellType,
 } from "../logic";
-import { GameStatus } from "../logic/game";
+import { Difficulty, GameStatus } from "../logic/game";
 
 export default Vue.extend({
   components: {
@@ -39,15 +42,19 @@ export default Vue.extend({
     CellSelect,
     Help,
     Overlay,
+    StartDialog,
   },
   data() {
     return {
-      game: null,
-      status: null,
+      game: emptyGame,
+      size: 8,
+      difficulty: "easy",
+      status: "unsolved",
       isSolved: false,
       isValid: true,
       fillType: getCellType(CellType.Empty).value,
       helpVisible: false,
+      startDialogVisible: true,
     };
   },
   methods: {
@@ -74,22 +81,26 @@ export default Vue.extend({
       this.status = this.game.status;
     },
     newGame() {
-      this.game = createGame();
+      this.game = createGame(this.difficulty as Difficulty, this.size);
       this.status = "unsolved";
     },
     solve() {
       this.status = "solved";
     },
-    changeDifficulty() {},
     showHelp() {
       this.helpVisible = !this.helpVisible;
     },
     overlayClosed() {
       this.status = "unsolved";
     },
-  },
-  created() {
-    this.newGame();
+    start(difficulty) {
+      this.difficulty = difficulty;
+      this.startDialogVisible = false;
+      this.newGame();
+    },
+    openStartDialog() {
+      this.startDialogVisible = true;
+    },
   },
 });
 </script>
@@ -111,28 +122,37 @@ body,
   justify-content: center;
 
   & > header {
-    padding: 1vmin 0;
+    padding: 2vmin 0;
   }
 
   & > main {
-    padding: 1vmin 0;
+    padding: 2vmin 0;
     background: $color-background-inner;
   }
 
   & > footer {
-    padding: 1vmin 0;
+    padding: 2vmin 0;
   }
 }
 
 html {
-  background-color: $color-background;
   color: $color-font;
   user-select: none;
+}
+
+body {
+  background-color: $color-background;
+  background: linear-gradient(
+    $color-background-inner,
+    $color-background,
+    $color-background,
+    $color-background-inner
+  );
 }
 
 p.copyright {
   margin-top: 1rem;
   text-align: center;
-  color: $color-copyright;
+  color: $color-font-copyright;
 }
 </style>
