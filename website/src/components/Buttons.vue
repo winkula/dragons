@@ -5,9 +5,8 @@
       @click="$emit('click', button.id)"
       v-for="button in buttons"
       :key="button.id"
-    >
-      <svg viewBox="0 0 24 24" v-html="button.icon" />
-    </button>
+      v-html="button.icon"
+    ></button>
   </div>
 </template>
 
