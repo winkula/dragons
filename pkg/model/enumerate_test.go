@@ -1,6 +1,9 @@
 package model
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestEnumerate(t *testing.T) {
 	tables := []struct {
@@ -39,6 +42,7 @@ func TestEnumerateSquare(t *testing.T) {
 	}{
 		{Parse("x_,xd"), 1, 1},
 		{Parse("xx,x_"), 3, 2},
+		{Parse("d_,__"), 0, 1}, // only one possible: enumerating an already defined square
 	}
 
 	for _, table := range tables {
@@ -48,6 +52,49 @@ func TestEnumerateSquare(t *testing.T) {
 			t.Errorf("Enumerate was incorrect, got: %d, want: %d. Grid: \n%s",
 				length,
 				table.count,
+				table.grid)
+		}
+	}
+}
+
+func TestIsDistinct(t *testing.T) {
+	tables := []struct {
+		grid     *Grid
+		expected bool
+	}{
+		{Parse("___,d__,___"), false},
+		{Parse("___,d_d,___"), true},
+		{Parse("___,dd_,___"), false}, // invalid grid
+	}
+
+	for _, table := range tables {
+		result := IsDistinct(table.grid)
+
+		if result != table.expected {
+			t.Errorf("IsDistinct was incorrect, got: %t, want: %t. Grid: \n%s",
+				result,
+				table.expected,
+				table.grid)
+		}
+	}
+}
+
+func TestMostInteresting(t *testing.T) {
+	tables := []struct {
+		grid     *Grid
+		expected *Grid
+	}{
+		{Parse("___,d__,___"), Parse("xfx,dfd,xfx")},
+		{Parse("____,__f_,_d__,____"), Parse("xdxx,fffx,xdfd,xxfx")},
+	}
+
+	for _, table := range tables {
+		result := MostInteresting(table.grid)
+
+		if !reflect.DeepEqual(result, table.expected) {
+			t.Errorf("MostInteresting was incorrect, got: %s, want: %s. Grid: \n%s",
+				result,
+				table.expected,
 				table.grid)
 		}
 	}
