@@ -1,6 +1,9 @@
 package model
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestNewGrid(t *testing.T) {
 	tables := []struct {
@@ -21,6 +24,48 @@ func TestNewGrid(t *testing.T) {
 		if grid.Height != table.height {
 			t.Errorf("TestNewGrid was incorrect, got: %d, want: %d. Grid: \n%s",
 				grid.Height, table.height, grid)
+		}
+	}
+}
+
+func TestSquare(t *testing.T) {
+	tables := []struct {
+		grid     *Grid
+		x        int
+		y        int
+		expected Square
+	}{
+		{Parse("dx,xx"), 0, 0, SquareDragon},
+		{Parse("dx,xx"), 1, 1, SquareEmpty},
+		{Parse("dx,xx"), 5, 5, SquareOut},
+	}
+
+	for _, table := range tables {
+		result := table.grid.Square(table.x, table.y)
+
+		if result != table.expected {
+			t.Errorf("TestSquare was incorrect, got: %d, want: %d. Grid: \n%s",
+				result, table.expected, table.grid)
+		}
+	}
+}
+
+func TestString(t *testing.T) {
+	tables := []struct {
+		grid              *Grid
+		expectedSubstring string
+	}{
+		{Parse("dx,xx"), "Size: 2x2"},
+		{Parse("dx,xx"), "Code: dx,xx"},
+		{Parse("dx,xx"), "│ D - │"},
+	}
+
+	for _, table := range tables {
+		result := table.grid.String()
+
+		if !strings.Contains(result, table.expectedSubstring) {
+			t.Errorf("TestString was incorrect, got: %s, want: %s. Grid: \n%s",
+				result, table.expectedSubstring, table.grid)
 		}
 	}
 }

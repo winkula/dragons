@@ -56,7 +56,7 @@ func GenerateFrom(g *Grid, difficulty Difficulty, duration float64) *Grid {
 
 	best := g.Clone()
 	mostUndefined := 0
-	tries := 100
+	tries := 10000
 
 	executeTimeBound(duration, func() {
 		suc := obfuscate(g, tries, difficulty)
@@ -74,7 +74,7 @@ func GenerateFrom(g *Grid, difficulty Difficulty, duration float64) *Grid {
 // After every step, it verifies if the puzzle is still solvable (i.e. has a distinct solution).
 func obfuscate(g *Grid, tries int, difficulty Difficulty) *Grid {
 	size := g.Size()
-	for i := 0; i < tries; {
+	for i := 0; i < tries; i++ {
 		index := rand.Intn(size)
 		if g.Squarei(index) == SquareUndefined {
 			continue
@@ -85,7 +85,6 @@ func obfuscate(g *Grid, tries int, difficulty Difficulty) *Grid {
 			g = suc
 			i = 0
 		}
-		i++
 	}
 	return g
 }
