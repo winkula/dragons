@@ -1,89 +1,124 @@
 package model
 
 import (
+	"context"
 	"math/rand"
+	"runtime"
+	"sync"
 	"time"
 )
 
-// Difficulty represents possible difficulty levels.
-type Difficulty int
-
-const (
-	// DifficultyEasy represents "easy" puzzles.
-	DifficultyEasy = iota
-	// DifficultyMedium represents "medium" puzzles.
-	DifficultyMedium
-	// DifficultyHard represents "hard" puzzles.
-	DifficultyHard
-)
-
 // Generate generates a random but solved grid with the given dimensions.
-// TODO: rework this implementation!
-func Generate(width int, height int, duration float64) *Grid {
-	maxFails := 10000
-	var best *Grid
-
-	executeTimeBound(duration, func() {
-		g := New(width, height).Fill(SquareEmpty)
-		size := g.Size()
-		fails := 0
-		for fails < maxFails {
-			i := rand.Intn(size)
-			if g.Squarei(i) != SquareEmpty || g.CountNeighbors(i, SquareDragon) > 0 {
-				fails++
-				continue
-			}
-			suc := g.Clone().SetDragon(i)
-			if !Validate(suc) {
-				fails++
-				continue
-			}
-			g = suc
-		}
-		if best == nil || g.Interestingness() > best.Interestingness() {
-			best = g
-		}
+// The duration parameter controls the time that is invested in generating
+// the best or most interesting grid possible.
+func Generate(width int, height int, duration time.Duration) *Grid {
+	c := executeTimeBoundParallel(duration, func(ctx context.Context) *Grid {
+		return generateBest(ctx, width, height)
 	})
+
+	// take the best result
+	var best *Grid
+	bestScore := 0
+	for candidate := range c {
+		score := candidate.Interestingness()
+		if score > bestScore {
+			best = candidate
+			bestScore = score
+		}
+	}
 
 	return best
 }
 
-// GenerateFrom creates a puzzle from a given solved or partially solved puzzle and also takes a difficulty parameter.
-func GenerateFrom(g *Grid, difficulty Difficulty, duration float64) *Grid {
+func generateBest(ctx context.Context, width int, height int) *Grid {
+	var best *Grid
+	bestScore := 0
+	for {
+		if isTimeout(ctx) {
+			break
+		}
+		candidate := generate(ctx, width, height)
+		score := candidate.Interestingness()
+		if score > bestScore {
+			best = candidate
+			bestScore = score
+		}
+	}
+	return best
+}
+
+// TODO: rework this implementation!
+func generate(ctx context.Context, width int, height int) *Grid {
+	g := New(width, height).Fill(SquareEmpty)
+	failsMax := 10000
+	fails := 0
+	size := g.Size()
+	for fails < failsMax {
+		if isTimeout(ctx) {
+			break
+		}
+		i := rand.Intn(size)
+		if g.Squarei(i) != SquareEmpty || g.CountNeighbors(i, SquareDragon) > 0 {
+			fails++
+			continue
+		}
+		suc := g.Clone().SetDragon(i)
+		if !Validate(suc) {
+			fails++
+			continue
+		}
+		g = suc
+	}
+	return g
+}
+
+// Obfuscate creates a puzzle from a given solved or partially solved puzzle.
+// The difficulty parameter controls how hard the puzzle would be to solve for a human.
+//
+// The algorithm works like this:
+// It takes a grid state and incrementally sets random squares to "undefined".
+// After every step, it verifies if the puzzle is still solvable (i.e. has a distinct solution).
+func Obfuscate(g *Grid, difficulty Difficulty, duration time.Duration) *Grid {
 	if g.IsUndefined() {
 		panic("generateInternal: all squares undefined")
 	}
 
-	best := g.Clone()
-	mostUndefined := 0
-	tries := 10000
-
-	executeTimeBound(duration, func() {
-		suc := obfuscate(g, tries, difficulty)
-		undefCount := suc.CountSquares(SquareUndefined)
-		if undefCount > mostUndefined {
-			best = suc
-		}
+	c := executeTimeBoundParallel(duration, func(ctx context.Context) *Grid {
+		return obfuscate(ctx, g, difficulty)
 	})
 
+	// take the best result
+	var best *Grid
+	bestScore := 0
+	for candidate := range c {
+		score := candidate.CountSquares(SquareUndefined)
+		if score > bestScore {
+			best = candidate
+			bestScore = score
+		}
+	}
 	return best
 }
 
-// obfuscate takes a grid state and incrementally sets squares to "undefined".
-// This is done choosing random squares (with a timeout of n tries).
-// After every step, it verifies if the puzzle is still solvable (i.e. has a distinct solution).
-func obfuscate(g *Grid, tries int, difficulty Difficulty) *Grid {
+func obfuscate(ctx context.Context, g *Grid, difficulty Difficulty) *Grid {
 	size := g.Size()
-	for i := 0; i < tries; i++ {
-		index := rand.Intn(size)
-		if g.Squarei(index) == SquareUndefined {
-			continue
+	seed := rand.Intn(size)
+	increment := 997 // must be a prime number, see: https://en.wikipedia.org/wiki/Full_cycle
+	for try := 0; try < size; try++ {
+		if isTimeout(ctx) {
+			break
 		}
-		suc := g.Clone()
-		suc.SetSquarei(index, SquareUndefined)
-		if checkSolvable(suc, index, difficulty) {
-			g = suc
-			i = 0
+		index := seed + try
+		for i := 0; i < size; i++ {
+			index = (index + increment) % size
+			if g.Squarei(index) != SquareUndefined {
+				suc := g.Clone()
+				suc.SetSquarei(index, SquareUndefined)
+				if checkSolvable(suc, index, difficulty) {
+					g = suc
+					break
+				}
+			}
 		}
 	}
 	return g
@@ -106,12 +141,38 @@ func checkSolvable(g *Grid, index int, difficulty Difficulty) bool {
 	return true
 }
 
-func executeTimeBound(timeout float64, action func()) {
-	start := time.Now()
-	for {
-		action()
-		if time.Since(start).Seconds() > timeout {
-			break
-		}
+func executeTimeBoundParallel(timeout time.Duration, action func(ctx context.Context) *Grid) chan *Grid {
+	n := runtime.NumCPU()
+	c := make(chan *Grid)
+
+	var wg sync.WaitGroup
+	wg.Add(n)
+
+	// start go routines (one for each CPU)
+	for i := 0; i < n; i++ {
+		go func() {
+			ctx, cancel := context.WithTimeout(context.TODO(), timeout)
+			defer cancel() // releases resources
+			c <- action(ctx)
+			wg.Done()
+		}()
+	}
+
+	// close the channel when all go routines are finish
+	go func() {
+		wg.Wait()
+		close(c)
+	}()
+
+	return c
+}
+
+func isTimeout(ctx context.Context) bool {
+	// check context to see if we should terminate
+	select {
+	case <-ctx.Done():
+		return true
+	default:
+		return false
 	}
 }

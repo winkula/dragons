@@ -14,11 +14,11 @@ Dragons
 
 ## Introduction
 
-Dragons is a logic-based puzzle inspired by [Battleship](<https://en.wikipedia.org/wiki/Battleship_(puzzle)>), [Minesweeper](https://en.wikipedia.org/wiki/Microsoft_Minesweeper) and [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
+_Dragons_ is a logic-based puzzle inspired by [Battleship](<https://en.wikipedia.org/wiki/Battleship_(puzzle)>), [Minesweeper](https://en.wikipedia.org/wiki/Microsoft_Minesweeper) and [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
 
 The objective is to fill a grid - where some squares are given from the start. A square can either be a dragon (`D`), fire (`F`) or empty (`X`).
 
-There are three rules that dictate how the grid muss be completed. Only one valid solution exists for a given puzzle.
+There are three rules that dictate how the grid must be completed. Only one valid solution exists for a given puzzle.
 
 ## Demo
 
@@ -78,6 +78,7 @@ Here, the survive rule is violated - only one of the two directly adjacent squar
 └───────┘
 ```
 
-## ToDos
+## To-do list
 
 - [ ] Implement text/PDF generation function for the CLI
+- [ ] Improve overall performance

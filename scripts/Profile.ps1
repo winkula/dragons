@@ -1,9 +1,10 @@
 [CmdletBinding()]
 param(
+	[Parameter(Position=0)]
 	[string] $Func = 'BenchmarkValidate$'
 )
 
-clear
+Clear-Host
 
 go test `
 -cpuprofile $env:TEMP\cpu.prof `

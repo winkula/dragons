@@ -1,17 +1,22 @@
 package model
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
+
+var duration = time.Second / 2
 
 func TestGenerate(t *testing.T) {
-	grid := Generate(3, 3, .5)
+	grid := Generate(3, 3, duration)
 
 	if !IsDistinct(grid) {
 		t.Errorf("TestGenerate was incorrect, grid is not distinct. Grid: \n%s", grid)
 	}
 }
 
-func TestGenerateFrom(t *testing.T) {
-	grid := GenerateFrom(Parse("xfx,dfd,xfx"), DifficultyEasy, .5)
+func TestObfuscate(t *testing.T) {
+	grid := Obfuscate(Parse("xfx,dfd,xfx"), DifficultyEasy, duration)
 
 	if !IsDistinct(grid) {
 		t.Errorf("TestGenerateFrom was incorrect, grid is not distinct. Grid: \n%s", grid)
@@ -25,7 +30,7 @@ func TestGenerateFrom_WithUndefinedGrid_ShouldPanic(t *testing.T) {
 		}
 	}()
 
-	GenerateFrom(Parse("___,___,___"), DifficultyEasy, .5)
+	Obfuscate(Parse("___,___,___"), DifficultyEasy, duration)
 }
 
 func BenchmarkGenerate(b *testing.B) {
@@ -38,10 +43,10 @@ func BenchmarkGenerate(b *testing.B) {
 // history:
 // - 16471082 ns/op
 //
-func BenchmarkGenerateFrom(b *testing.B) {
+func BenchmarkObfuscate(b *testing.B) {
 	difficulty := Difficulty(DifficultyEasy)
 	template := Parse("_f_,___,___")
 	for i := 0; i < b.N; i++ {
-		GenerateFrom(template, difficulty, 5)
+		Obfuscate(template, difficulty, 5)
 	}
 }

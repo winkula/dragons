@@ -24,13 +24,13 @@ func main() {
 
 	case "generate":
 		generateCmd.Parse(os.Args[2:])
-		difficultyEnum := parseDifficulty(*genArgDifficulty)
+		difficultyEnum := model.ParseDifficulty(*genArgDifficulty)
 
 		if len(generateCmd.Args()) > 0 {
 			g := parse(generateCmd.Arg(0), false)
 			generateFrom(g, difficultyEnum, *genArgDuration)
 		} else {
-			generate(*genArgWidth, *genArgHeight, difficultyEnum, *genArgDuration * 0.5)
+			generate(*genArgWidth, *genArgHeight, difficultyEnum, *genArgDuration/2)
 		}
 
 	case "validate":
@@ -49,9 +49,12 @@ func main() {
 
 	case "solve":
 		solveCmd.Parse(os.Args[2:])
-		difficultyEnum := parseDifficulty(*solArgDifficulty)
+		difficultyEnum := model.ParseDifficulty(*solArgDifficulty)
 		g := parse(solveCmd.Arg(0), true)
 		solve(g, difficultyEnum)
+
+	case "play":
+		play()
 
 	default:
 		help()
@@ -80,19 +83,6 @@ func printStats(puzzle *model.Grid, solution *model.Grid) {
 func seed() {
 	// seed the random generator
 	rand.Seed(time.Now().UnixNano())
-}
-
-func parseDifficulty(str string) model.Difficulty {
-	switch str {
-	case "easy":
-		return model.DifficultyEasy
-	case "medium":
-		return model.DifficultyMedium
-	case "hard":
-		return model.DifficultyHard
-	default:
-		return model.DifficultyEasy
-	}
 }
 
 func getDifficulty(puzzle *model.Grid) (model.Difficulty, string) {

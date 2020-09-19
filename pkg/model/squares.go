@@ -22,7 +22,7 @@ var squareSymbols = map[Square]rune{
 	SquareUndefined: ' ',
 	SquareOut:       '#',
 	SquareEmpty:     '-',
-	SquareFire:      '●', // 🔥
+	SquareFire:      '▲', // 🔥
 	SquareDragon:    'D', // 🐲
 }
 
