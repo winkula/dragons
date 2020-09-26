@@ -2,6 +2,7 @@ package model
 
 import (
 	"context"
+	"math"
 	"math/rand"
 	"runtime"
 	"sync"
@@ -12,91 +13,53 @@ import (
 // The duration parameter controls the time that is invested in generating
 // the best or most interesting grid possible.
 func Generate(width int, height int, duration time.Duration) *Grid {
-	c := executeTimeBoundParallel(duration, func(ctx context.Context) *Grid {
-		return generateBest(ctx, width, height)
+	c := executeParallel(duration, func(ctx context.Context, c chan<- *Grid) {
+		for {
+			if isTimeout(ctx) {
+				break
+			}
+			g := tryGenerate(width, height)
+			if g != nil {
+				c <- g
+			}
+		}
 	})
 
-	// take the best result
-	var best *Grid
-	bestScore := -1
-	for candidate := range c {
-		score := candidate.Interestingness()
-		if score > bestScore {
-			best = candidate
-			bestScore = score
-		}
-	}
-
-	return best
+	// take the most interesting result
+	return best(c, func(g *Grid) int {
+		return g.Interestingness()
+	})
 }
 
-func generateBest(ctx context.Context, width int, height int) *Grid {
-	var best *Grid
-	bestScore := -1
-	for {
-		if isTimeout(ctx) {
-			break
-		}
-		candidate := generateRandomized(ctx, width, height)
-		score := candidate.Interestingness()
-		if score > bestScore {
-			best = candidate
-			bestScore = score
-		}
-	}
-	return best
-}
-
-func generateInSequence(ctx context.Context, width int, height int) *Grid {
-	chanceToSkip := 0.4
+func tryGenerate(width int, height int) *Grid {
+	start := rand.Intn(width)
+	fuzzyness := 3 * rand.Float64()
 	g := New(width, height)
-	for row := 0; row < height; row++ {
-		for col := 0; col < width; col++ {
-			i := g.Index(col, row)
-
-			if g.Squarei(i) != SquareUndefined {
-				continue // square already filled
-			}
-
-			if g.CountNeighbors(i, SquareDragon) > 0 {
-				continue // already dragons in the neighbour squares
-			}
-
-			skipField := rand.Float64() <= chanceToSkip
-			if skipField {
-				continue // randomly skip field to make the generate algorithm non deterministic
-			}
-
-			// finally set the dragon
-			g.SetDragon(i)
-		}
-	}
-	return g
-}
-
-// TODO: rework this implementation!
-func generateRandomized(ctx context.Context, width int, height int) *Grid {
-	g := New(width, height).Fill(SquareEmpty)
-	failsMax := 10000
-	fails := 0
 	size := g.Size()
-	for fails < failsMax {
-		if isTimeout(ctx) {
-			break
+	for i := start; i < size; i++ {
+		index := fuzzyIndex(i, size, height, fuzzyness)
+
+		if g.Squarei(index) != SquareUndefined {
+			continue // square already filled
 		}
-		i := rand.Intn(size)
-		if g.Squarei(i) != SquareEmpty || g.CountNeighbors(i, SquareDragon) > 0 {
-			fails++
-			continue
+		if g.CountNeighbors(index, SquareDragon) > 0 {
+			continue // already dragons in the neighbour squares
 		}
-		suc := g.Clone().SetDragon(i)
-		if !Validate(suc) {
-			fails++
-			continue
+
+		// set the dragon and validate the grid
+		// TODO: use ValidatePartial??
+		work := g.Clone().SetDragon(index)
+		if Validate(work) {
+			g = work
 		}
-		g = suc
 	}
-	return g
+
+	g.FillUndefined(SquareEmpty)
+	if Validate(g) {
+		return g
+	}
+
+	return nil // so valid solution found
 }
 
 // Obfuscate creates a puzzle from a given solved or partially solved puzzle.
@@ -110,21 +73,14 @@ func Obfuscate(g *Grid, difficulty Difficulty, duration time.Duration) *Grid {
 		panic("generateInternal: all squares undefined")
 	}
 
-	c := executeTimeBoundParallel(duration, func(ctx context.Context) *Grid {
-		return obfuscate(ctx, g, difficulty)
+	c := executeParallel(duration, func(ctx context.Context, c chan<- *Grid) {
+		c <- obfuscate(ctx, g, difficulty)
 	})
 
 	// take the best result
-	var best *Grid
-	bestScore := 0
-	for candidate := range c {
-		score := candidate.CountSquares(SquareUndefined)
-		if score > bestScore {
-			best = candidate
-			bestScore = score
-		}
-	}
-	return best
+	return best(c, func(g *Grid) int {
+		return g.CountSquares(SquareUndefined)
+	})
 }
 
 func obfuscate(ctx context.Context, g *Grid, difficulty Difficulty) *Grid {
@@ -137,12 +93,12 @@ func obfuscate(ctx context.Context, g *Grid, difficulty Difficulty) *Grid {
 		}
 		index := seed + try
 		for i := 0; i < size; i++ {
-			index = (index + increment) % size
+			index = (index + increment) % size // next prng value
 			if g.Squarei(index) != SquareUndefined {
-				suc := g.Clone()
-				suc.SetSquarei(index, SquareUndefined)
-				if checkSolvable(suc, index, difficulty) {
-					g = suc
+				work := g.Clone()
+				work.SetSquarei(index, SquareUndefined)
+				if checkSolvable(work, index, difficulty) {
+					g = work
 					break
 				}
 			}
@@ -168,7 +124,7 @@ func checkSolvable(g *Grid, index int, difficulty Difficulty) bool {
 	return true
 }
 
-func executeTimeBoundParallel(timeout time.Duration, action func(ctx context.Context) *Grid) chan *Grid {
+func executeParallel(timeout time.Duration, action func(ctx context.Context, c chan<- *Grid)) <-chan *Grid {
 	n := runtime.NumCPU()
 	c := make(chan *Grid)
 
@@ -178,9 +134,9 @@ func executeTimeBoundParallel(timeout time.Duration, action func(ctx context.Con
 	// start go routines (one for each CPU)
 	for i := 0; i < n; i++ {
 		go func() {
-			ctx, cancel := context.WithTimeout(context.TODO(), timeout)
+			ctx, cancel := context.WithTimeout(context.Background(), timeout)
 			defer cancel() // releases resources
-			c <- action(ctx)
+			action(ctx, c)
 			wg.Done()
 		}()
 	}
@@ -202,4 +158,33 @@ func isTimeout(ctx context.Context) bool {
 	default:
 		return false
 	}
+}
+
+func best(c <-chan *Grid, evalFun func(*Grid) int) *Grid {
+	var best *Grid
+	bestScore := -1
+	for candidate := range c {
+		score := evalFun(candidate)
+		if score > bestScore {
+			best = candidate
+			bestScore = score
+		}
+	}
+	return best
+}
+
+func fuzzyIndex(i int, size int, height int, fuzzyness float64) int {
+	index := i
+
+	index += int(math.Round(rand.NormFloat64()*fuzzyness)) * height // skip rows
+	index += int(math.Round(rand.NormFloat64() * fuzzyness))        // skip columns
+
+	if index < 0 {
+		return 0
+	}
+	if index >= size {
+		return size - 1
+	}
+
+	return index
 }

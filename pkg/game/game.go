@@ -30,6 +30,20 @@ func NewGame(width int, height int, duration time.Duration) *Game {
 	}
 }
 
+// NewGameFromPuzzle creates a new game from a given puzzle.
+func NewGameFromPuzzle(g *model.Grid) *Game {
+	puzzle := g
+	solution := model.Solve(puzzle)
+
+	return &Game{
+		Puzzle:   puzzle,
+		Solution: solution,
+		State:    puzzle.Clone(),
+		CursorX:  0,
+		CursorY:  0,
+	}
+}
+
 func (g *Game) Left() {
 	if g.CursorX > 0 {
 		g.CursorX--

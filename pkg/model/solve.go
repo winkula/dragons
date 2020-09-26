@@ -17,7 +17,7 @@ func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 		return nil // no distinct solution exists
 	}
 
-	maxPermutations := getMaxPermsByDifficulty(difficulty)
+	maxPerm := maxPermCount(difficulty)
 
 	work := g.Clone()
 	k := newKnowledge(work)
@@ -68,18 +68,19 @@ func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 
 				// we compute all permutations that are possible when the neighbour squares are taken into account
 				nis := test.NeighborIndicesi(i, false)
-				permRes := k.getPermutations(test, nis)
+				permCount := k.getPermCount(test, nis)
 
 				// too much permutations...
 				// this algorithm should simulate the human that solves the puzzle
 				// with the maxPermutationsToEvaluate parameter, we can fine tune how many permutations the human can/will evaluate
-				if permRes.total > maxPermutations {
+				if permCount > maxPerm {
 					debug("   -> option", string(squareSymbols[o]), "[ OK] (max permutations is too big for the difficulty level, so we can't exclude this option)")
-					debug("      permutations of", nis, "valid:", permRes.valid, "total:", permRes.total)
+					debug("      permCount:", permCount, "maxPerm:", maxPerm)
 					ok = append(ok, o)
 					continue
 				}
 
+				permRes := k.getPermutations(test, nis)
 				if permRes.valid == 0 {
 					// not a valid option for this square: update knowledge
 					debug("   -> option", string(squareSymbols[o]), "[NOK] (no valid permutations)")
@@ -275,7 +276,7 @@ var solveRules = []solveRule{
 	},
 }
 
-func getMaxPermsByDifficulty(difficulty Difficulty) int {
+func maxPermCount(difficulty Difficulty) int {
 	switch difficulty {
 	case DifficultyEasy:
 		return 1 // only one valid possibilities

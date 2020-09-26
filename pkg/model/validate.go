@@ -3,7 +3,6 @@ package model
 type rule struct {
 	name  string
 	check func(g *Grid, i int) bool
-	apply func(g *Grid, i int, s Square)
 }
 
 // rules represents the rules that defines, if a dragons puzzle is valid or not.
@@ -70,7 +69,7 @@ func Validate(g *Grid) bool {
 	return true
 }
 
-// TODO
+// ValidateFast validates the grid using a lookup table to be more performant than Validate.
 func ValidateFast(g *Grid) bool {
 	count := len(AllFields)
 	for i := range g.Squares {

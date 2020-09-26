@@ -6,8 +6,6 @@ import (
 	"math/rand"
 	"os"
 	"time"
-
-	"github.com/winkula/dragons/pkg/model"
 )
 
 var commands = map[string]command{}
@@ -46,21 +44,6 @@ func main() {
 	} else {
 		help()
 		os.Exit(1)
-	}
-}
-
-func printStats(puzzle *model.Grid, solution *model.Grid) {
-	if puzzle != nil {
-		undef := puzzle.CountSquares(model.SquareUndefined)
-		all := puzzle.Size()
-		fmt.Printf(" > Undefinedness: %.2f (%v/%v)\n", (100.0 * float64(undef) / float64(all)), undef, all)
-
-		difficulty := model.GetDifficulty(puzzle).String()
-		fmt.Println(" > Difficulty:", difficulty)
-	}
-
-	if solution != nil {
-		fmt.Println(" > Interestingness:", solution.Interestingness())
 	}
 }
 

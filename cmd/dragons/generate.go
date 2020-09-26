@@ -11,32 +11,37 @@ import (
 func init() {
 	cmd := flag.NewFlagSet("generate", flag.ExitOnError)
 	difficulty := cmd.String("difficulty", "easy", "difficulty of the puzzle")
-	size := cmd.Int("s", 8, "the puzzles size")
-	width := cmd.Int("w", 0, "the puzzles width")
-	height := cmd.Int("h", 0, "the puzzles height")
-	duration := cmd.Duration("duration", 2*time.Second, "the available time to generate the puzzle")
+	size := cmd.Int("size", 8, "the puzzles size")
+	duration := cmd.Duration("duration", time.Second, "the available time to generate the puzzle")
+	solutionOnly := cmd.Bool("solution", false, "generates only a solution")
 
 	registerCommand("generate", cmd, func() {
 		difficultyEnum := model.ParseDifficulty(*difficulty)
 
-		if *width == 0 {
-			*width = *size
-		}
-		if *height == 0 {
-			*height = *size
+		if *solutionOnly {
+			solution := model.Generate(*size, *size, *duration)
+			fmt.Println("Solution:")
+			fmt.Println(solution)
+			printStats(nil, solution)
+			return
 		}
 
 		if len(cmd.Args()) > 0 {
 			g := parse(cmd.Arg(0), false)
 			generateFrom(g, difficultyEnum, *duration)
 		} else {
-			generate(*width, *height, difficultyEnum, *duration/2)
+			generate(*size, *size, difficultyEnum, *duration/2)
 		}
 	})
 }
 
 func generate(width int, height int, difficulty model.Difficulty, duration time.Duration) {
 	solution := model.Generate(width, height, duration)
+	if solution == nil {
+		fmt.Println("No puzzle could be generated with the given constraints.")
+		return
+	}
+
 	generateFrom(solution, difficulty, duration)
 }
 
@@ -54,4 +59,19 @@ func generateFrom(solution *model.Grid, difficulty model.Difficulty, duration ti
 	fmt.Println(puzzle)
 
 	printStats(puzzle, solution)
+}
+
+func printStats(puzzle *model.Grid, solution *model.Grid) {
+	if puzzle != nil {
+		difficulty := model.GetDifficulty(puzzle).String()
+		fmt.Println(" > Difficulty:", difficulty)
+
+		undef := puzzle.CountSquares(model.SquareUndefined)
+		all := puzzle.Size()
+		fmt.Printf(" > Undefinedness: %.2f (%v/%v)\n", (100.0 * float64(undef) / float64(all)), undef, all)
+	}
+
+	if solution != nil {
+		fmt.Println(" > Interestingness:", solution.Interestingness())
+	}
 }

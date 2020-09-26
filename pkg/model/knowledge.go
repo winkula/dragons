@@ -76,6 +76,15 @@ func (k *knowledge) getPermutations(g *Grid, is []int) *permRes {
 	return result
 }
 
+func (k *knowledge) getPermCount(g *Grid, is []int) int {
+	count := 1
+	for _, i := range is {
+		options := k.getOptions(g, i)
+		count *= len(options)
+	}
+	return count
+}
+
 func permRecur(k *knowledge, result *permRes, g *Grid, indexes []int, i int) {
 	if i >= len(indexes) {
 		if Validate(g) {

@@ -101,9 +101,23 @@ func (g *Grid) HasSquare(val Square) bool {
 }
 
 // Fill fills all squares of a grid with the specified value.
+//
+// TODO: move to Builder type
 func (g *Grid) Fill(s Square) *Grid {
 	for i := range g.Squares {
 		g.Squares[i] = s
+	}
+	return g
+}
+
+// FillUndefined fills all undefined squares of a grid with the specified value.
+//
+// TODO: move to Builder type
+func (g *Grid) FillUndefined(s Square) *Grid {
+	for i := range g.Squares {
+		if g.Squares[i] == SquareUndefined {
+			g.Squares[i] = s
+		}
 	}
 	return g
 }
@@ -180,7 +194,7 @@ func (g *Grid) Clone() *Grid {
 
 // SetDragon sets a dragon to a specific square and computes where fire must be.
 //
-// TODO: move this into a Builder class
+// TODO: move this into a Builder type
 func (g *Grid) SetDragon(i int) *Grid {
 	g.SetSquarei(i, SquareDragon)
 	for _, ni := range g.NeighborIndicesi(i, false) {

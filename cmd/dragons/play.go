@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"os/exec"
@@ -12,25 +13,36 @@ import (
 )
 
 func init() {
-	registerCommand("play", nil, func() {
-		play()
+	cmd := flag.NewFlagSet("play", flag.ExitOnError)
+
+	registerCommand("play", cmd, func() {
+		if cmd.NArg() > 0 {
+			g := parse(cmd.Arg(0), true)
+			playGiven(g)
+		} else {
+			playNew()
+		}
 	})
 }
 
-func play() {
+func playGiven(g *model.Grid) {
+	game := game.NewGameFromPuzzle(g)
+	play(game)
+}
+
+func playNew() {
 	fmt.Println("Loading game...")
-
-	duration := 1 * time.Second
+	duration := 3 * time.Second
 	game := game.NewGame(8, 8, duration)
+	play(game)
+}
 
+func play(game *game.Game) {
 	for {
-		// clean
-		cmd := exec.Command("cmd", "/c", "cls") //Windows example, its tested
-		cmd.Stdout = os.Stdout
-		cmd.Run()
+		clean()
 
 		// render game
-		index := game.State.Height*game.CursorY + game.CursorX
+		index := game.State.Index(game.CursorX, game.CursorY)
 		fmt.Println(model.Render(game.State, nil, index))
 		fmt.Println(game)
 
@@ -59,4 +71,10 @@ func play() {
 			game.Set(model.SquareEmpty)
 		}
 	}
+}
+
+func clean() {
+	cmd := exec.Command("cmd", "/c", "cls") //Windows example, its tested
+	cmd.Stdout = os.Stdout
+	cmd.Run()
 }

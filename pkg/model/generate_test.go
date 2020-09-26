@@ -46,7 +46,14 @@ func BenchmarkGenerate(b *testing.B) {
 func BenchmarkObfuscate(b *testing.B) {
 	difficulty := Difficulty(DifficultyEasy)
 	template := Parse("_f_,___,___")
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		Obfuscate(template, difficulty, 5)
+	}
+}
+
+func BenchmarkTryGenerate(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		tryGenerate(8, 8)
 	}
 }
