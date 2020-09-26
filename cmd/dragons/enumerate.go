@@ -8,21 +8,29 @@ import (
 	"github.com/winkula/dragons/pkg/model"
 )
 
-var enumerateCmd = flag.NewFlagSet("enumerate", flag.ExitOnError)
-var enuArgMost = enumerateCmd.Bool("most", false, "only print the most interesting one")
-
 func init() {
-	registerCommand("enumerate", enumerateCmd, func() {
-		g := parse(enumerateCmd.Arg(0), true)
-		enumerate(g, *enuArgMost)
+	cmd := flag.NewFlagSet("enumerate", flag.ExitOnError)
+	most := cmd.Bool("most", false, "only print the most interesting one")
+	interestingness := cmd.Int("i", 0, "minimum interestingness")
+
+	registerCommand("enumerate", cmd, func() {
+		g := parse(cmd.Arg(0), true)
+		enumerate(g, *most, *interestingness)
 	})
 }
 
-func enumerate(g *model.Grid, most bool) {
-	sucs := model.Enumerate(g)
-	sort.Slice(sucs, func(i, j int) bool {
-		return sucs[i].Interestingness() < sucs[j].Interestingness()
-	})
+func enumerate(g *model.Grid, most bool, interestingness int) {
+	minInterestingness := func(g *model.Grid) bool {
+		return g.Interestingness() >= interestingness
+	}
+
+	grids := model.EnumerateFilter(g, minInterestingness)
+
+	sortByInterestingness := func(i, j int) bool {
+		return grids[i].Interestingness() < grids[j].Interestingness()
+	}
+
+	sort.Slice(grids, sortByInterestingness)
 
 	printThem := func(gs []*model.Grid) {
 		for _, s := range gs {
@@ -32,10 +40,10 @@ func enumerate(g *model.Grid, most bool) {
 	}
 
 	if most {
-		printThem(sucs[len(sucs)-1:])
+		printThem(grids[len(grids)-1:])
 	} else {
-		printThem(sucs)
+		printThem(grids)
 	}
 
-	fmt.Printf("%v possible grids found.\n", len(sucs))
+	fmt.Printf("%v possible grids found.\n", len(grids))
 }

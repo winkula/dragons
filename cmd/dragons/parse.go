@@ -7,11 +7,11 @@ import (
 	"github.com/winkula/dragons/pkg/model"
 )
 
-var parseCmd = flag.NewFlagSet("parse", flag.ExitOnError)
-
 func init() {
-	registerCommand("parse", parseCmd, func() {
-		parse(parseCmd.Arg(0), true)
+	cmd := flag.NewFlagSet("parse", flag.ExitOnError)
+
+	registerCommand("parse", cmd, func() {
+		parse(cmd.Arg(0), true)
 	})
 }
 

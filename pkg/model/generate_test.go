@@ -36,7 +36,7 @@ func TestGenerateFrom_WithUndefinedGrid_ShouldPanic(t *testing.T) {
 func BenchmarkGenerate(b *testing.B) {
 	size := 3
 	for i := 0; i < b.N; i++ {
-		Generate(size, size, 10.0)
+		Generate(size, size, 50*time.Millisecond)
 	}
 }
 

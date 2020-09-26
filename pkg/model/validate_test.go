@@ -65,6 +65,15 @@ func TestValidate(t *testing.T) {
 				table.rule,
 				table.grid)
 		}
+
+		valid = ValidateFast(table.grid)
+		if valid != table.valid {
+			t.Errorf("ValidateFast was incorrect, got: %t, want: %t (%s rule). Grid: \n%s",
+				valid,
+				table.valid,
+				table.rule,
+				table.grid)
+		}
 	}
 }
 
@@ -83,5 +92,19 @@ func BenchmarkValidate(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		w := gs[i%len(gs)]
 		Validate(w)
+	}
+}
+
+func BenchmarkValidateFast(b *testing.B) {
+	gs := []*Grid{
+		Parse("_xf_,____,____,_d__"),
+		Parse("_f_f_,df_f_,_fxf_,x___x,_d_d_"),
+		Parse("_____,d__f_,_____,_____,__f__"),
+		Parse("__xdx_,xf____,_fd_xd,_f____,xfx_dx,x_d_x_"),
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		w := gs[i%len(gs)]
+		ValidateFast(w)
 	}
 }

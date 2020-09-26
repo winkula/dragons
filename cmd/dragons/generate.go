@@ -8,29 +8,29 @@ import (
 	"github.com/winkula/dragons/pkg/model"
 )
 
-var generateCmd = flag.NewFlagSet("generate", flag.ExitOnError)
-var genArgDifficulty = generateCmd.String("difficulty", "easy", "difficulty of the puzzle")
-var genArgSize = generateCmd.Int("s", 8, "the puzzles size")
-var genArgWidth = generateCmd.Int("w", 0, "the puzzles width")
-var genArgHeight = generateCmd.Int("h", 0, "the puzzles height")
-var genArgDuration = generateCmd.Duration("duration", 2*time.Second, "the available time to generate the puzzle")
-
 func init() {
-	registerCommand("generate", generateCmd, func() {
-		difficultyEnum := model.ParseDifficulty(*genArgDifficulty)
+	cmd := flag.NewFlagSet("generate", flag.ExitOnError)
+	difficulty := cmd.String("difficulty", "easy", "difficulty of the puzzle")
+	size := cmd.Int("s", 8, "the puzzles size")
+	width := cmd.Int("w", 0, "the puzzles width")
+	height := cmd.Int("h", 0, "the puzzles height")
+	duration := cmd.Duration("duration", 2*time.Second, "the available time to generate the puzzle")
 
-		if *genArgWidth == 0 {
-			*genArgWidth = *genArgSize
+	registerCommand("generate", cmd, func() {
+		difficultyEnum := model.ParseDifficulty(*difficulty)
+
+		if *width == 0 {
+			*width = *size
 		}
-		if *genArgHeight == 0 {
-			*genArgHeight = *genArgSize
+		if *height == 0 {
+			*height = *size
 		}
 
-		if len(generateCmd.Args()) > 0 {
-			g := parse(generateCmd.Arg(0), false)
-			generateFrom(g, difficultyEnum, *genArgDuration)
+		if len(cmd.Args()) > 0 {
+			g := parse(cmd.Arg(0), false)
+			generateFrom(g, difficultyEnum, *duration)
 		} else {
-			generate(*genArgWidth, *genArgHeight, difficultyEnum, *genArgDuration/2)
+			generate(*width, *height, difficultyEnum, *duration/2)
 		}
 	})
 }

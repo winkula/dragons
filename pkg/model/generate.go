@@ -18,7 +18,7 @@ func Generate(width int, height int, duration time.Duration) *Grid {
 
 	// take the best result
 	var best *Grid
-	bestScore := 0
+	bestScore := -1
 	for candidate := range c {
 		score := candidate.Interestingness()
 		if score > bestScore {
@@ -32,7 +32,7 @@ func Generate(width int, height int, duration time.Duration) *Grid {
 
 func generateBest(ctx context.Context, width int, height int) *Grid {
 	var best *Grid
-	bestScore := 0
+	bestScore := -1
 	for {
 		if isTimeout(ctx) {
 			break

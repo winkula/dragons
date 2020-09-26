@@ -7,13 +7,13 @@ import (
 	"github.com/winkula/dragons/pkg/model"
 )
 
-var solveCmd = flag.NewFlagSet("solve", flag.ExitOnError)
-var solArgDifficulty = solveCmd.String("difficulty", "easy", "difficulty of the puzzle")
-
 func init() {
-	registerCommand("solve", solveCmd, func() {
-		difficultyEnum := model.ParseDifficulty(*solArgDifficulty)
-		g := parse(solveCmd.Arg(0), true)
+	cmd := flag.NewFlagSet("solve", flag.ExitOnError)
+	dificulty := cmd.String("difficulty", "easy", "difficulty of the puzzle")
+
+	registerCommand("solve", cmd, func() {
+		difficultyEnum := model.ParseDifficulty(*dificulty)
+		g := parse(cmd.Arg(0), true)
 		solve(g, difficultyEnum)
 	})
 }

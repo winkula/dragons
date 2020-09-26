@@ -18,6 +18,14 @@ const (
 
 const numSquareValues = 5
 
+var AllFields = []Square{
+	SquareUndefined,
+	SquareOut,
+	SquareEmpty,
+	SquareFire,
+	SquareDragon,
+}
+
 var squareSymbols = map[Square]rune{
 	SquareUndefined: ' ',
 	SquareOut:       '#',

@@ -70,6 +70,31 @@ func Validate(g *Grid) bool {
 	return true
 }
 
+// TODO
+func ValidateFast(g *Grid) bool {
+	count := len(AllFields)
+	for i := range g.Squares {
+		x, y := g.Coords(i)
+
+		key := 0
+		key += int(g.Square(x-1, y-1))
+		key += int(g.Square(x, y-1)) * count
+		key += int(g.Square(x+1, y-1)) * count * count
+		key += int(g.Square(x-1, y)) * count * count * count
+		key += int(g.Square(x+1, y)) * count * count * count * count
+		key += int(g.Square(x-1, y+1)) * count * count * count * count * count
+		key += int(g.Square(x, y+1)) * count * count * count * count * count * count
+		key += int(g.Square(x+1, y+1)) * count * count * count * count * count * count * count
+
+		lookupValue := lookupTable[key]
+		currentSquare := g.Squarei(i)
+		if lookupValue&(1<<currentSquare) == 0 {
+			return false
+		}
+	}
+	return true
+}
+
 // ValidatePartial validates only some squares (ixs) of the whole grid.
 // The goal is to optimize performance by validating only squares that were changed.
 // This function is therefore best used when validating incrementally.
@@ -83,3 +108,5 @@ func ValidatePartial(g *Grid, ixs []int) bool {
 	}
 	return true
 }
+
+//go:generate go run ../../cmd/generate

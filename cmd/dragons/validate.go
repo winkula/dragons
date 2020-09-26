@@ -7,11 +7,11 @@ import (
 	"github.com/winkula/dragons/pkg/model"
 )
 
-var validateCmd = flag.NewFlagSet("validate", flag.ExitOnError)
-
 func init() {
-	registerCommand("validate", validateCmd, func() {
-		g := parse(validateCmd.Arg(0), true)
+	cmd := flag.NewFlagSet("validate", flag.ExitOnError)
+
+	registerCommand("validate", cmd, func() {
+		g := parse(cmd.Arg(0), true)
 		validate(g)
 	})
 }

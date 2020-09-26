@@ -9,7 +9,7 @@ func help() {
 	fmt.Println("")
 
 	fmt.Println("Valid subcommands are:")
-	for name, _ := range commands {
+	for name := range commands {
 		fmt.Printf("  %v\n", name)
 	}
 }

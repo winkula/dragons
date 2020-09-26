@@ -11,9 +11,18 @@ var options = []Square{
 	SquareEmpty,
 }
 
+type gridPredicate func(*Grid) bool
+type gridsPredicate func([]*Grid) bool
+
 // Enumerate enumerates all possible successors from a given grid.
 func Enumerate(g *Grid) []*Grid {
-	return enumerate(g, stopNever)
+	return enumerate(g, all, stopNever)
+}
+
+// EnumerateFilter enumerates all possible successors from a given grid and
+// allows to filter only the wanted grids.
+func EnumerateFilter(g *Grid, filter gridPredicate) []*Grid {
+	return enumerate(g, filter, stopNever)
 }
 
 // EnumerateSquare enumerates all possible grids if a specified square is undefined.
@@ -35,7 +44,7 @@ func EnumerateSquare(g *Grid, i int) []*Grid {
 
 // IsDistinct returns true if there is exactly one solution to the given grid.
 func IsDistinct(g *Grid) bool {
-	return len(enumerate(g, stopWhenMultipleSolutions)) == 1
+	return len(enumerate(g, all, stopWhenMultipleSolutions)) == 1
 }
 
 // MostInteresting returns the most interesting possible solution to a puzzle.
@@ -50,24 +59,26 @@ func MostInteresting(g *Grid) *Grid {
 	return sucs[0]
 }
 
-func enumerate(g *Grid, isEarlyStop func([]*Grid) bool) []*Grid {
+func enumerate(g *Grid, filter gridPredicate, isEarlyStop gridsPredicate) []*Grid {
 	res := make([]*Grid, 0)
 	if !Validate(g) {
 		// skip further investigation because the state is invalid
 		return res
 	}
-	return enumRecur(g, res, 0, isEarlyStop)
+	return enumRecur(g, res, 0, filter, isEarlyStop)
 }
 
-func enumRecur(g *Grid, res []*Grid, i int, isEarlyStop func([]*Grid) bool) []*Grid {
+func enumRecur(g *Grid, res []*Grid, i int, filter gridPredicate, isEarlyStop gridsPredicate) []*Grid {
 	if isEarlyStop(res) {
 		// early exit is used to validate, if a distinct solution exists
 		return res
 	}
 
 	if isLeaf(g) {
-		// valid leaf node found, add grid to result
-		res = append(res, g)
+		if filter(g) {
+			// valid leaf node found, add grid to result
+			res = append(res, g)
+		}
 		return res
 	}
 
@@ -83,11 +94,11 @@ func enumRecur(g *Grid, res []*Grid, i int, isEarlyStop func([]*Grid) bool) []*G
 				continue
 			}
 
-			res = enumRecur(suc, res, i+1, isEarlyStop)
+			res = enumRecur(suc, res, i+1, filter, isEarlyStop)
 		}
 	} else {
 		suc := g.Clone()
-		res = enumRecur(suc, res, i+1, isEarlyStop)
+		res = enumRecur(suc, res, i+1, filter, isEarlyStop)
 	}
 	return res
 }
@@ -102,4 +113,8 @@ func stopWhenMultipleSolutions(res []*Grid) bool {
 
 func stopNever(res []*Grid) bool {
 	return false
+}
+
+func all(g *Grid) bool {
+	return true
 }
