@@ -19,31 +19,28 @@ func init() {
 }
 
 func solve(g *model.Grid, difficulty model.Difficulty) {
-	type solver func(g *model.Grid) (*model.Grid, *model.SolveResult)
+	type solver func(g *model.Grid) *model.Grid
 
 	solvers := []struct {
 		name   string
 		solver solver
 	}{
-		{name: "Solve", solver: func(g *model.Grid) (*model.Grid, *model.SolveResult) {
+		{name: "SolveHuman", solver: func(g *model.Grid) *model.Grid {
 			return model.SolveHuman(g, difficulty)
 		}},
-		{name: "SolveDk", solver: model.SolveDk},
-		{name: "SolveBf", solver: model.SolveBf},
+		{name: "SolveDomainKnowledge", solver: model.SolveDk},
+		{name: "SolveBruteForce", solver: model.SolveBf},
 	}
 
 	for _, s := range solvers {
 		fmt.Println("-> Using solver algorithm:", s.name)
-		solved, solveResult := s.solver(g)
-		if solved == nil || solveResult.Difficulty > difficulty {
+		solution := s.solver(g)
+		if solution == nil {
 			fmt.Println("   No solution found. Reasons can be: the puzzle is too difficult, puzzle has no distinct solution...")
 			continue
 		}
-		fmt.Println("Solved:")
-		fmt.Println(solved)
-		if solveResult != nil {
-			fmt.Println("> Permutations:", solveResult.MaxPerm)
-		}
+		fmt.Println("Solution:")
+		fmt.Println(solution)
 		break
 	}
 }

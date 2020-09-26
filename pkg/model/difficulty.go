@@ -34,3 +34,7 @@ func ParseDifficulty(str string) Difficulty {
 	}
 	return DifficultyUnknown
 }
+
+func (difficulty Difficulty) String() string {
+	return []string{"unknown", "easy", "medium", "hard"}[difficulty]
+}

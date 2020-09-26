@@ -12,7 +12,7 @@ func TestSolve(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		solved, _ := Solve(table)
+		solved := Solve(table)
 		if solved == nil || !isSolved(solved) {
 			t.Errorf("TestSolve was incorrect, grid is not solved. Grid: \n%s",
 				table)
@@ -30,7 +30,7 @@ func TestSolveDk(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		solved, _ := SolveDk(table)
+		solved := SolveDk(table)
 		if solved == nil || !isSolved(solved) {
 			t.Errorf("TestSolve was incorrect, grid is not solved. Grid: \n%s",
 				table)
@@ -48,7 +48,7 @@ func TestSolveBf(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		solved, _ := SolveBf(table)
+		solved := SolveBf(table)
 		if !isSolved(solved) {
 			t.Errorf("TestSolve was incorrect, grid is not solved. Grid: \n%s",
 				table)
@@ -69,7 +69,7 @@ func TestSolveHuman(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		solution, _ := SolveHuman(table.grid, table.difficulty)
+		solution := SolveHuman(table.grid, table.difficulty)
 		if isSolved(solution) && !table.solvable {
 			t.Errorf("TestSolveHuman was incorrect, grid is solved, but shouldn't be (difficulty: %v). Grid: \n%v",
 				table.difficulty, table.grid)
@@ -87,7 +87,7 @@ func TestSolveHuman(t *testing.T) {
 func BenchmarkSolve(b *testing.B) {
 	g := Parse("_f_,_f_,_f_")
 	for i := 0; i < b.N; i++ {
-		solved, _ := Solve(g)
+		solved := Solve(g)
 		if solved == nil || !isSolved(solved) {
 			b.Errorf("BenchmarkSolve was incorrect, grid is not solved. Grid: \n%s", g)
 		}
@@ -97,7 +97,7 @@ func BenchmarkSolve(b *testing.B) {
 func BenchmarkSolveDk(b *testing.B) {
 	g := Parse("_f_,_f_,_f_")
 	for i := 0; i < b.N; i++ {
-		solved, _ := SolveDk(g)
+		solved := SolveDk(g)
 		if solved == nil || !isSolved(solved) {
 			b.Errorf("BenchmarkSolve was incorrect, grid is not solved. Grid: \n%s", g)
 		}
@@ -107,7 +107,7 @@ func BenchmarkSolveDk(b *testing.B) {
 func BenchmarkSolveBf(b *testing.B) {
 	g := Parse("_f_,_f_,_f_")
 	for i := 0; i < b.N; i++ {
-		solved, _ := SolveBf(g)
+		solved := SolveBf(g)
 		if solved == nil || !isSolved(solved) {
 			b.Errorf("BenchmarkSolve was incorrect, grid is not solved. Grid: \n%s", g)
 		}

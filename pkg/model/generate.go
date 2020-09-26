@@ -37,7 +37,7 @@ func generateBest(ctx context.Context, width int, height int) *Grid {
 		if isTimeout(ctx) {
 			break
 		}
-		candidate := generate(ctx, width, height)
+		candidate := generateRandomized(ctx, width, height)
 		score := candidate.Interestingness()
 		if score > bestScore {
 			best = candidate
@@ -47,8 +47,35 @@ func generateBest(ctx context.Context, width int, height int) *Grid {
 	return best
 }
 
+func generateInSequence(ctx context.Context, width int, height int) *Grid {
+	chanceToSkip := 0.4
+	g := New(width, height)
+	for row := 0; row < height; row++ {
+		for col := 0; col < width; col++ {
+			i := g.Index(col, row)
+
+			if g.Squarei(i) != SquareUndefined {
+				continue // square already filled
+			}
+
+			if g.CountNeighbors(i, SquareDragon) > 0 {
+				continue // already dragons in the neighbour squares
+			}
+
+			skipField := rand.Float64() <= chanceToSkip
+			if skipField {
+				continue // randomly skip field to make the generate algorithm non deterministic
+			}
+
+			// finally set the dragon
+			g.SetDragon(i)
+		}
+	}
+	return g
+}
+
 // TODO: rework this implementation!
-func generate(ctx context.Context, width int, height int) *Grid {
+func generateRandomized(ctx context.Context, width int, height int) *Grid {
 	g := New(width, height).Fill(SquareEmpty)
 	failsMax := 10000
 	fails := 0
@@ -133,8 +160,8 @@ func checkSolvable(g *Grid, index int, difficulty Difficulty) bool {
 		return true
 	}
 
-	solved, _ := SolveHuman(g, difficulty)
-	if solved == nil {
+	solution := SolveHuman(g, difficulty)
+	if solution == nil {
 		return false
 	}
 

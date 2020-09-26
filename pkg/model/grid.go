@@ -44,6 +44,11 @@ func (g *Grid) Coords(i int) (x int, y int) {
 	return i % g.Width, i / g.Width
 }
 
+// Index returns the square index from its coordinates.
+func (g *Grid) Index(x int, y int) int {
+	return coordsToIndex(g, x, y)
+}
+
 // Square gets the field value at coordinates x, y.
 func (g *Grid) Square(x int, y int) Square {
 	if !coordsExist(g, x, y) {
@@ -174,6 +179,8 @@ func (g *Grid) Clone() *Grid {
 }
 
 // SetDragon sets a dragon to a specific square and computes where fire must be.
+//
+// TODO: move this into a Builder class
 func (g *Grid) SetDragon(i int) *Grid {
 	g.SetSquarei(i, SquareDragon)
 	for _, ni := range g.NeighborIndicesi(i, false) {

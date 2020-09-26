@@ -5,23 +5,16 @@ import (
 	"math/bits"
 )
 
-// SolveResult represents some statistics and metadata when solving a puzzle.
-type SolveResult struct {
-	MaxPerm    int
-	Difficulty Difficulty
-}
-
 // Solve solves a puzzle only using the validation rules of the game.
 // it returns the only possible solution or "nil" otherwise.
-func Solve(g *Grid) (*Grid, *SolveResult) {
+func Solve(g *Grid) *Grid {
 	return SolveHuman(g, DifficultyHard)
 }
 
 // SolveHuman solves a puzzle but only if it is easier than a given difficulty level.
-func SolveHuman(g *Grid, difficulty Difficulty) (*Grid, *SolveResult) {
-	solveRes := &SolveResult{}
+func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 	if !IsDistinct(g) {
-		return nil, solveRes // no distinct solution exists
+		return nil // no distinct solution exists
 	}
 
 	maxPermutations := getMaxPermsByDifficulty(difficulty)
@@ -101,11 +94,6 @@ func SolveHuman(g *Grid, difficulty Difficulty) (*Grid, *SolveResult) {
 				debug("   -> option", string(squareSymbols[o]), "[ OK]")
 				debug("      permutations of", nis, "valid:", permRes.valid, "total:", permRes.total)
 				ok = append(ok, o)
-
-				// update statistics
-				if permRes.total > solveRes.MaxPerm {
-					solveRes.MaxPerm = permRes.total
-				}
 			}
 			// if only one solution works... use it
 			// if not: try the next square...
@@ -121,19 +109,18 @@ func SolveHuman(g *Grid, difficulty Difficulty) (*Grid, *SolveResult) {
 		// after going through all squares, we check if the puzzle is already solved
 		// if not, continue until we reach the tries timeout
 		if isSolved(work) {
-			return work, solveRes
+			return work
 		}
 	}
-	return nil, solveRes
+	return nil
 }
 
 // SolveDk solves a puzzle using domain knowledge.
 // it returns the only possible solution or "nil" otherwise.
-func SolveDk(g *Grid) (*Grid, *SolveResult) {
-	solveRes := &SolveResult{}
+func SolveDk(g *Grid) *Grid {
 	if !IsDistinct(g) {
 		debug("Solver: no distinct solution possible!")
-		return nil, solveRes
+		return nil
 	}
 	cpy := g.Clone()
 	knowledge := newKnowledge(cpy)
@@ -142,23 +129,33 @@ func SolveDk(g *Grid) (*Grid, *SolveResult) {
 			for _, r := range solveRules {
 				r(cpy, i, knowledge)
 				if isSolved(cpy) {
-					return cpy, nil
+					return cpy
 				}
 			}
 		}
 		debug("-----")
 	}
-	return nil, solveRes
+	return nil
 }
 
 // SolveBf solves a puzzle using a brute force strategy (enumerating all possible states).
-func SolveBf(g *Grid) (*Grid, *SolveResult) {
-	solveRes := &SolveResult{}
+func SolveBf(g *Grid) *Grid {
 	solutions := Enumerate(g)
 	if len(solutions) == 1 {
-		return solutions[0], solveRes
+		return solutions[0]
 	}
-	return nil, solveRes
+	return nil
+}
+
+// GetDifficulty gets the difficulty of a puzzle.
+func GetDifficulty(g *Grid) Difficulty {
+	for _, difficulty := range []Difficulty{DifficultyEasy, DifficultyMedium} {
+		solution := SolveHuman(g, difficulty)
+		if solution != nil {
+			return difficulty
+		}
+	}
+	return DifficultyHard
 }
 
 func isSolved(g *Grid) bool {

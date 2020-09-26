@@ -55,7 +55,7 @@ func printStats(puzzle *model.Grid, solution *model.Grid) {
 		all := puzzle.Size()
 		fmt.Printf(" > Undefinedness: %.2f (%v/%v)\n", (100.0 * float64(undef) / float64(all)), undef, all)
 
-		_, difficulty := getDifficulty(puzzle)
+		difficulty := model.GetDifficulty(puzzle).String()
 		fmt.Println(" > Difficulty:", difficulty)
 	}
 
@@ -67,18 +67,4 @@ func printStats(puzzle *model.Grid, solution *model.Grid) {
 func seed() {
 	// seed the random generator
 	rand.Seed(time.Now().UnixNano())
-}
-
-func getDifficulty(puzzle *model.Grid) (model.Difficulty, string) {
-	solution, _ := model.SolveHuman(puzzle, model.DifficultyEasy)
-	if solution != nil {
-		return model.DifficultyEasy, "easy"
-	}
-
-	solution, _ = model.SolveHuman(puzzle, model.DifficultyMedium)
-	if solution != nil {
-		return model.DifficultyMedium, "medium"
-	}
-
-	return model.DifficultyHard, "hard"
 }
