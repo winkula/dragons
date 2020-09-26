@@ -11,6 +11,13 @@ import (
 var enumerateCmd = flag.NewFlagSet("enumerate", flag.ExitOnError)
 var enuArgMost = enumerateCmd.Bool("most", false, "only print the most interesting one")
 
+func init() {
+	registerCommand("enumerate", enumerateCmd, func() {
+		g := parse(enumerateCmd.Arg(0), true)
+		enumerate(g, *enuArgMost)
+	})
+}
+
 func enumerate(g *model.Grid, most bool) {
 	sucs := model.Enumerate(g)
 	sort.Slice(sucs, func(i, j int) bool {

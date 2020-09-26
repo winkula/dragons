@@ -9,6 +9,12 @@ import (
 
 var parseCmd = flag.NewFlagSet("parse", flag.ExitOnError)
 
+func init() {
+	registerCommand("parse", parseCmd, func() {
+		parse(parseCmd.Arg(0), true)
+	})
+}
+
 func parse(s string, print bool) *model.Grid {
 	g := model.Parse(s)
 	if print {

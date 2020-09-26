@@ -10,6 +10,14 @@ import (
 var solveCmd = flag.NewFlagSet("solve", flag.ExitOnError)
 var solArgDifficulty = solveCmd.String("difficulty", "easy", "difficulty of the puzzle")
 
+func init() {
+	registerCommand("solve", solveCmd, func() {
+		difficultyEnum := model.ParseDifficulty(*solArgDifficulty)
+		g := parse(solveCmd.Arg(0), true)
+		solve(g, difficultyEnum)
+	})
+}
+
 func solve(g *model.Grid, difficulty model.Difficulty) {
 	type solver func(g *model.Grid) (*model.Grid, *model.SolveResult)
 

@@ -11,6 +11,12 @@ import (
 	"github.com/winkula/dragons/pkg/model"
 )
 
+func init() {
+	registerCommand("play", nil, func() {
+		play()
+	})
+}
+
 func play() {
 	fmt.Println("Loading game...")
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"math/rand"
 	"os"
@@ -8,6 +9,20 @@ import (
 
 	"github.com/winkula/dragons/pkg/model"
 )
+
+var commands = map[string]command{}
+
+type command struct {
+	flags  *flag.FlagSet
+	action func()
+}
+
+func registerCommand(name string, flags *flag.FlagSet, action func()) {
+	commands[name] = command{
+		flags:  flags,
+		action: action,
+	}
+}
 
 func main() {
 	seed()
@@ -18,51 +33,20 @@ func main() {
 		return
 	}
 
-	start := time.Now()
-
-	switch os.Args[1] {
-
-	case "generate":
-		generateCmd.Parse(os.Args[2:])
-		difficultyEnum := model.ParseDifficulty(*genArgDifficulty)
-
-		if len(generateCmd.Args()) > 0 {
-			g := parse(generateCmd.Arg(0), false)
-			generateFrom(g, difficultyEnum, *genArgDuration)
-		} else {
-			generate(*genArgWidth, *genArgHeight, difficultyEnum, *genArgDuration/2)
+	key := os.Args[1]
+	if command, found := commands[key]; found {
+		args := os.Args[2:]
+		if command.flags != nil {
+			command.flags.Parse(args)
 		}
-
-	case "validate":
-		validateCmd.Parse(os.Args[2:])
-		g := parse(validateCmd.Arg(0), true)
-		validate(g)
-
-	case "parse":
-		parseCmd.Parse(os.Args[2:])
-		parse(parseCmd.Arg(0), true)
-
-	case "enumerate":
-		enumerateCmd.Parse(os.Args[2:])
-		g := parse(enumerateCmd.Arg(0), true)
-		enumerate(g, *enuArgMost)
-
-	case "solve":
-		solveCmd.Parse(os.Args[2:])
-		difficultyEnum := model.ParseDifficulty(*solArgDifficulty)
-		g := parse(solveCmd.Arg(0), true)
-		solve(g, difficultyEnum)
-
-	case "play":
-		play()
-
-	default:
+		start := time.Now()
+		command.action()
+		elapsed := time.Since(start)
+		fmt.Printf("Executed in %s", elapsed)
+	} else {
 		help()
 		os.Exit(1)
 	}
-
-	elapsed := time.Since(start)
-	fmt.Printf("Executed in %s", elapsed)
 }
 
 func printStats(puzzle *model.Grid, solution *model.Grid) {
