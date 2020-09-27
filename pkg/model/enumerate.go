@@ -1,9 +1,5 @@
 package model
 
-import (
-	"sort"
-)
-
 // Options defines possible square values when enumerating valid grids.
 var options = []Square{
 	SquareDragon,
@@ -45,18 +41,6 @@ func EnumerateSquare(g *Grid, i int) []*Grid {
 // IsDistinct returns true if there is exactly one solution to the given grid.
 func IsDistinct(g *Grid) bool {
 	return len(enumerate(g, all, stopWhenMultipleSolutions)) == 1
-}
-
-// MostInteresting returns the most interesting possible solution to a puzzle.
-// TODO: optimize this (this only works for small grids)
-func MostInteresting(g *Grid) *Grid {
-	sucs := Enumerate(g)
-	byInterestingnessDesc := func(i, j int) bool {
-		return sucs[i].Interestingness() > sucs[j].Interestingness()
-	}
-	// sort by interestingness
-	sort.Slice(sucs, byInterestingnessDesc)
-	return sucs[0]
 }
 
 func enumerate(g *Grid, filter gridPredicate, isEarlyStop gridsPredicate) []*Grid {

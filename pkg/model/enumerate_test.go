@@ -1,7 +1,6 @@
 package model
 
 import (
-	"reflect"
 	"testing"
 )
 
@@ -72,27 +71,6 @@ func TestIsDistinct(t *testing.T) {
 
 		if result != table.expected {
 			t.Errorf("IsDistinct was incorrect, got: %t, want: %t. Grid: \n%s",
-				result,
-				table.expected,
-				table.grid)
-		}
-	}
-}
-
-func TestMostInteresting(t *testing.T) {
-	tables := []struct {
-		grid     *Grid
-		expected *Grid
-	}{
-		{Parse("___,d__,___"), Parse("xfx,dfd,xfx")},
-		{Parse("____,__f_,_d__,____"), Parse("xdxx,fffx,xdfd,xxfx")},
-	}
-
-	for _, table := range tables {
-		result := MostInteresting(table.grid)
-
-		if !reflect.DeepEqual(result, table.expected) {
-			t.Errorf("MostInteresting was incorrect, got: %s, want: %s. Grid: \n%s",
 				result,
 				table.expected,
 				table.grid)
