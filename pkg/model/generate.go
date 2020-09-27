@@ -42,7 +42,7 @@ func tryGenerate(width int, height int) *Grid {
 		if g.Squarei(index) != SquareUndefined {
 			continue // square already filled
 		}
-		if g.CountNeighbors(index, SquareDragon) > 0 {
+		if g.NeighborCount8(index, SquareDragon) > 0 {
 			continue // already dragons in the neighbour squares
 		}
 

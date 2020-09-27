@@ -104,16 +104,6 @@ func (g *Grid) HasSquare(val Square) bool {
 	return false
 }
 
-// Fill fills all squares of a grid with the specified value.
-//
-// TODO: move to Builder type
-func (g *Grid) Fill(s Square) *Grid {
-	for i := range g.Squares {
-		g.Squares[i] = s
-	}
-	return g
-}
-
 // FillUndefined fills all undefined squares of a grid with the specified value.
 //
 // TODO: move to Builder type
@@ -174,17 +164,13 @@ func (g *Grid) NeighborCount(i int, square Square, adjacentOnly bool, includeUnd
 	return
 }
 
-// CountNeighbors counts the neighboured squares that match the given type.
-//
-// Deprecated: use NeighborCount
-func (g *Grid) CountNeighbors(i int, square Square) int {
+// NeighborCount8 counts the 8 neighboured squares that match the given type.
+func (g *Grid) NeighborCount8(i int, square Square) int {
 	return g.NeighborCount(i, square, false, false)
 }
 
-// CountAdjacentNeighbours counts the adacent neighboured squares that match the given type.
-//
-// Deprecated: use NeighborCount
-func (g *Grid) CountAdjacentNeighbours(i int, square Square) int {
+// NeighborCount4 counts the adacent neighboured squares that match the given type.
+func (g *Grid) NeighborCount4(i int, square Square) int {
 	return g.NeighborCount(i, square, true, false)
 }
 
@@ -202,7 +188,7 @@ func (g *Grid) Clone() *Grid {
 func (g *Grid) SetDragon(i int) *Grid {
 	g.SetSquarei(i, SquareDragon)
 	for _, ni := range g.NeighborIndicesi(i, false) {
-		if g.CountNeighbors(ni, SquareDragon) > 1 {
+		if g.NeighborCount8(ni, SquareDragon) > 1 {
 			g.SetSquarei(ni, SquareFire)
 		}
 	}

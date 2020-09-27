@@ -181,8 +181,8 @@ var solveRules = []solveRule{
 	// if a dragon is set, at least two adjacent quares must be empty
 	func(g *Grid, i int, k *knowledge) *Grid {
 		if g.Squarei(i) == SquareDragon {
-			empty := g.CountAdjacentNeighbours(i, SquareEmpty)
-			undef := g.CountAdjacentNeighbours(i, SquareUndefined)
+			empty := g.NeighborCount4(i, SquareEmpty)
+			undef := g.NeighborCount4(i, SquareUndefined)
 			if empty < 2 && empty+undef == 2 {
 				for _, ni := range g.NeighborIndicesi(i, true) {
 					if g.Squarei(ni) == SquareUndefined {
@@ -194,8 +194,8 @@ var solveRules = []solveRule{
 			}
 		}
 		if g.Squarei(i) == SquareUndefined {
-			empty := g.CountAdjacentNeighbours(i, SquareEmpty)
-			undef := g.CountAdjacentNeighbours(i, SquareUndefined)
+			empty := g.NeighborCount4(i, SquareEmpty)
+			undef := g.NeighborCount4(i, SquareUndefined)
 			if empty+undef < 2 {
 				k.squareCannotBe(i, SquareDragon)
 				debug("-> [ar] square connot be a dragon because there could not be 2 empty adjacent square")
@@ -207,8 +207,8 @@ var solveRules = []solveRule{
 	// if a fire square is set, there must be at least 2 dragons around it
 	func(g *Grid, i int, k *knowledge) *Grid {
 		if g.Squarei(i) == SquareFire {
-			dragons := g.CountNeighbors(i, SquareDragon)
-			undef := g.CountNeighbors(i, SquareUndefined)
+			dragons := g.NeighborCount8(i, SquareDragon)
+			undef := g.NeighborCount8(i, SquareUndefined)
 			if dragons < 2 && dragons+undef == 2 {
 				for _, ni := range g.NeighborIndicesi(i, false) {
 					if g.Squarei(ni) == SquareUndefined {
@@ -225,7 +225,7 @@ var solveRules = []solveRule{
 	// if a undefined square is surrounded by more than one dragon, there must be fire
 	func(g *Grid, i int, k *knowledge) *Grid {
 		if g.Squarei(i) == SquareUndefined {
-			dragons := g.CountNeighbors(i, SquareDragon)
+			dragons := g.NeighborCount8(i, SquareDragon)
 			if dragons > 1 {
 				g.SetSquarei(i, SquareFire)
 				debug("-> [ar] set fire if more than 1 dragon around square")
@@ -238,8 +238,8 @@ var solveRules = []solveRule{
 	// if a undefined square cannot be surrounded be at least 2 dragons, there can not be fire
 	func(g *Grid, i int, k *knowledge) *Grid {
 		if g.Squarei(i) == SquareUndefined {
-			dragons := g.CountNeighbors(i, SquareDragon)
-			undef := g.CountNeighbors(i, SquareUndefined)
+			dragons := g.NeighborCount8(i, SquareDragon)
+			undef := g.NeighborCount8(i, SquareUndefined)
 			if dragons+undef < 2 {
 				k.squareCannotBe(i, SquareFire)
 				debug("-> [ar] square cannot be fire if not at least 2 dragons could be around it")
@@ -252,7 +252,7 @@ var solveRules = []solveRule{
 	func(g *Grid, i int, k *knowledge) *Grid {
 		square := g.Squarei(i)
 		if square == SquareEmpty {
-			dragons := g.CountNeighbors(i, SquareDragon)
+			dragons := g.NeighborCount8(i, SquareDragon)
 			if dragons == 1 {
 				k.squaresCannotBe(g.NeighborIndicesi(i, false), SquareDragon)
 				debug("-> [ar] if a empty square is set, there can maximum be one dragon around it")
