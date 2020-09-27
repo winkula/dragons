@@ -21,19 +21,32 @@ func TestSolve(t *testing.T) {
 }
 
 func TestSolveDk(t *testing.T) {
-	tables := []*Grid{
-		Parse("dx,_x"),
-		Parse("dx,__"),
-		Parse("_f_,_f_,_f_"),
-		//Parse("_f_,___,___"), // not solvable
-		Parse("d__,___,__d"),
+	tables := []struct {
+		grid     *Grid
+		solvable bool
+	}{
+		{Parse("dx,_x"), true},
+		{Parse("dx,__"), true},
+		{Parse("_f_,_f_,_f_"), true},
+		{Parse("d__,___,__d"), true},
+
+		{Parse("_f_,___,___"), false}, // not solvable
+		{Parse("___,_f_,___"), false}, // no distinct solution possible
 	}
 
 	for _, table := range tables {
-		solved := SolveDk(table)
-		if solved == nil || !isSolved(solved) {
-			t.Errorf("TestSolve was incorrect, grid is not solved. Grid: \n%s",
-				table)
+		solved := SolveDk(table.grid)
+
+		if table.solvable {
+			if solved == nil || !isSolved(solved) {
+				t.Errorf("TestSolve was incorrect, grid is not solved. Grid: \n%s",
+					table.grid)
+			}
+		} else {
+			if solved != nil {
+				t.Errorf("TestSolve was incorrect, grid is solved. Grid: \n%s",
+					table.grid)
+			}
 		}
 	}
 }

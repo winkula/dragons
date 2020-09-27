@@ -117,20 +117,6 @@ func (g *Grid) FillUndefined(s Square) *Grid {
 	return g
 }
 
-// Neighbors gets the neighbours field values.
-func (g *Grid) Neighbors(x int, y int) []Square {
-	return []Square{
-		g.Square(x-1, y-1),
-		g.Square(x, y-1),
-		g.Square(x+1, y-1),
-		g.Square(x-1, y),
-		g.Square(x+1, y),
-		g.Square(x-1, y+1),
-		g.Square(x, y+1),
-		g.Square(x+1, y+1),
-	}
-}
-
 // NeighborIndicesi gets the indices of all neighbor squares.
 func (g *Grid) NeighborIndicesi(i int, adjacentOnly bool) []int {
 	res := make([]int, 0, maxNumNeighbors)
@@ -141,16 +127,6 @@ func (g *Grid) NeighborIndicesi(i int, adjacentOnly bool) []int {
 		}
 	}
 	return res
-}
-
-// GetAdjacentNeighbors gets the adjacent neighbours field values.
-func (g *Grid) GetAdjacentNeighbors(x int, y int) []Square {
-	return []Square{
-		g.Square(x, y-1),
-		g.Square(x-1, y),
-		g.Square(x+1, y),
-		g.Square(x, y+1),
-	}
 }
 
 // NeighborCount counts the neighboured squares (all 8 or the 4 adjacent) that match the given type.
