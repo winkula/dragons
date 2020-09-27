@@ -70,6 +70,34 @@ func TestString(t *testing.T) {
 	}
 }
 
+func TestIndex(t *testing.T) {
+	tables := []struct {
+		grid  *Grid
+		x     int
+		y     int
+		index int
+		ok    bool
+	}{
+		{New(3, 3), 0, 0, 0, true},
+		{New(3, 3), 1, 1, 4, true},
+		{New(3, 3), 0, 3, -1, false},
+		{New(3, 3), 3, 0, -1, false},
+	}
+
+	for _, table := range tables {
+		i, ok := table.grid.Index(table.x, table.y)
+
+		if i != table.index {
+			t.Errorf("Index was incorrect, got: %v, want: %v. Grid: \n%s",
+				i, table.index, table.grid)
+		}
+		if ok != table.ok {
+			t.Errorf("Index was incorrect, got: %v, want: %v. Grid: \n%s",
+				i, table.ok, table.grid)
+		}
+	}
+}
+
 func BenchmarkNeighbors(b *testing.B) {
 	g := Parse("__xdx_,xf____,_fd_xd,_f____,xfx_dx,x_d_x_")
 	b.ResetTimer()

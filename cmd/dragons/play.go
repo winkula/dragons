@@ -42,7 +42,7 @@ func play(game *game.Game) {
 		clean()
 
 		// render game
-		index := game.State.Index(game.CursorX, game.CursorY)
+		index, _ := game.State.Index(game.CursorX, game.CursorY)
 		fmt.Println(model.Render(game.State, nil, index))
 		fmt.Println(game)
 

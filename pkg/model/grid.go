@@ -45,8 +45,12 @@ func (g *Grid) Coords(i int) (x int, y int) {
 }
 
 // Index returns the square index from its coordinates.
-func (g *Grid) Index(x int, y int) int {
-	return coordsToIndex(g, x, y)
+func (g *Grid) Index(x int, y int) (int, bool) {
+	if !coordsExist(g, x, y) {
+		return -1, false // index does not exist
+	}
+	i := coordsToIndex(g, x, y)
+	return i, true
 }
 
 // Square gets the field value at coordinates x, y.
