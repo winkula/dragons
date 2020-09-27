@@ -108,4 +108,25 @@ func ValidatePartial(g *Grid, ixs []int) bool {
 	return true
 }
 
+// ValidateIncr validates only the changed squares and the squares around it.
+// The goal is to optimize performance by validating only squares that were changed.
+// This function is therefore best used when validating incrementally.
+func ValidateIncr(g *Grid, i int, border int) bool {
+	x, y := g.Coords(i)
+	for dx := -border; dx < border; dx++ {
+		for dy := -border; dy < border; dy++ {
+			i, ok := g.Index(x+dx, y+dy)
+			if ok {
+				for _, rule := range rules {
+					if !rule.check(g, i) {
+						return false
+
+					}
+				}
+			}
+		}
+	}
+	return true
+}
+
 //go:generate go run ../../cmd/generate

@@ -77,6 +77,38 @@ func TestValidate(t *testing.T) {
 	}
 }
 
+func TestValidateIncr(t *testing.T) {
+	tables := []struct {
+		grid   *Grid
+		valid  bool
+		index  int
+		border int
+	}{
+		// Is valid as the center of the grid (3*3) is valid
+		{Parse("_fdf_,_fff_,__d__,_fff_,_fdf_"), true, 12, 1},
+		// Is invalid as the center of whole the grid (5*5) is invalid
+		{Parse("_fdf_,_fff_,__d__,_fff_,_fdf_"), false, 12, 2},
+
+		// Is valid as the dragon field itself is valid.
+		{Parse("fff,xdx,___"), true, 4, 0},
+		// Is invalid as the whole grid is invalid (border 1)
+		{Parse("fff,xdx,___"), false, 4, 1},
+
+		// Don't crash if checking out of grid bounds
+		{Parse("___,_d_,___"), true, 4, 2},
+	}
+
+	for _, table := range tables {
+		valid := ValidateIncr(table.grid, table.index, table.border)
+		if valid != table.valid {
+			t.Errorf("ValidateIncr was incorrect, got: %t, want: %t. Grid: \n%s",
+				valid,
+				table.valid,
+				table.grid)
+		}
+	}
+}
+
 // History
 // - 1904 ns/op
 // - 1591 ns/op (after switching from int to uint8 for square values)
