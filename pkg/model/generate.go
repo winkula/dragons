@@ -47,9 +47,8 @@ func tryGenerate(width int, height int) *Grid {
 		}
 
 		// set the dragon and validate the grid
-		// TODO: use ValidatePartial??
 		work := g.Clone().SetDragon(index)
-		if Validate(work) {
+		if ValidateIncr(work, index, 2) {
 			g = work
 		}
 	}

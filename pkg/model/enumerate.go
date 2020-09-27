@@ -73,8 +73,7 @@ func enumRecur(g *Grid, res []*Grid, i int, filter gridPredicate, isEarlyStop gr
 			suc.SetSquarei(i, option)
 
 			// check all neighbor square plus the square that was changed
-			toCheck := append(suc.NeighborIndicesi(i, false), i)
-			if !ValidatePartial(suc, toCheck) {
+			if !ValidateIncr(suc, i, 1) {
 				continue
 			}
 

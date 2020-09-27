@@ -96,12 +96,37 @@ func TestValidateIncr(t *testing.T) {
 
 		// Don't crash if checking out of grid bounds
 		{Parse("___,_d_,___"), true, 4, 2},
+
+		// Correctly validate rule violations on the outer edge
+		{Parse("___,__d,__d"), false, 4, 1},
 	}
 
 	for _, table := range tables {
 		valid := ValidateIncr(table.grid, table.index, table.border)
 		if valid != table.valid {
 			t.Errorf("ValidateIncr was incorrect, got: %t, want: %t. Grid: \n%s",
+				valid,
+				table.valid,
+				table.grid)
+		}
+	}
+}
+
+func TestValidatePartial(t *testing.T) {
+	tables := []struct {
+		grid  *Grid
+		valid bool
+		index int
+	}{
+		{Parse("___,_d_,___"), true, 4},
+		{Parse("___,_d_,_d_"), false, 4},
+	}
+
+	for _, table := range tables {
+		ixs := append(table.grid.NeighborIndicesi(table.index, false), table.index)
+		valid := ValidatePartial(table.grid, ixs)
+		if valid != table.valid {
+			t.Errorf("ValidatePartial was incorrect, got: %t, want: %t. Grid: \n%s",
 				valid,
 				table.valid,
 				table.grid)
@@ -124,6 +149,34 @@ func BenchmarkValidate(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		w := gs[i%len(gs)]
 		Validate(w)
+	}
+}
+
+func BenchmarkValidatePartial(b *testing.B) {
+	gs := []*Grid{
+		Parse("_xf_,____,____,_d__"),
+		Parse("_f_f_,df_f_,_fxf_,x___x,_d_d_"),
+		Parse("_____,d__f_,_____,_____,__f__"),
+		Parse("__xdx_,xf____,_fd_xd,_f____,xfx_dx,x_d_x_"),
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		w := gs[i%len(gs)]
+		ValidatePartial(w, []int{1})
+	}
+}
+
+func BenchmarkValidateIncr(b *testing.B) {
+	gs := []*Grid{
+		Parse("_xf_,____,____,_d__"),
+		Parse("_f_f_,df_f_,_fxf_,x___x,_d_d_"),
+		Parse("_____,d__f_,_____,_____,__f__"),
+		Parse("__xdx_,xf____,_fd_xd,_f____,xfx_dx,x_d_x_"),
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		w := gs[i%len(gs)]
+		ValidateIncr(w, 1, 0)
 	}
 }
 

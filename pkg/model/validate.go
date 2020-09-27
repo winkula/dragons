@@ -113,14 +113,13 @@ func ValidatePartial(g *Grid, ixs []int) bool {
 // This function is therefore best used when validating incrementally.
 func ValidateIncr(g *Grid, i int, border int) bool {
 	x, y := g.Coords(i)
-	for dx := -border; dx < border; dx++ {
-		for dy := -border; dy < border; dy++ {
+	for dx := -border; dx <= border; dx++ {
+		for dy := -border; dy <= border; dy++ {
 			i, ok := g.Index(x+dx, y+dy)
 			if ok {
 				for _, rule := range rules {
 					if !rule.check(g, i) {
 						return false
-
 					}
 				}
 			}

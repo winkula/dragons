@@ -88,10 +88,11 @@ func (g *Grid) SetSquarei(i int, val Square) *Grid {
 }
 
 // SetSquareiAndValidate sets a square to the specified value and validates the grid partially (only the changed square and its neighbors).
+//
+// TODO: move to builde type
 func (g *Grid) SetSquareiAndValidate(i int, val Square) bool {
 	g.SetSquarei(i, val)
-	ixs := append(g.NeighborIndicesi(i, false), i)
-	return ValidatePartial(g, ixs)
+	return ValidateIncr(g, i, 1)
 }
 
 // HasSquare returns "true" if at least one square with the specified value exists.

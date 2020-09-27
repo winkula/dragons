@@ -99,8 +99,7 @@ func permRecur(k *knowledge, result *permRes, g *Grid, indexes []int, i int) {
 			suc.SetSquarei(currentIndex, v)
 
 			// check all neighbor square plus the square that was changed
-			toCheck := append(suc.NeighborIndicesi(currentIndex, false), currentIndex)
-			if !ValidatePartial(suc, toCheck) {
+			if !ValidateIncr(suc, currentIndex, 1) {
 				continue
 			}
 
