@@ -19,6 +19,7 @@ import Vue from "vue";
 import Cell from "./Cell.vue";
 
 import { getCellType, CellType } from "../logic";
+import { playClick } from "../sfx";
 
 export default Vue.extend({
   components: {
@@ -50,6 +51,7 @@ export default Vue.extend({
   },
   methods: {
     updateValue(button) {
+      playClick();
       this.$emit("input", button.value);
     },
   },

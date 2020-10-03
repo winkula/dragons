@@ -34,6 +34,7 @@ import {
   getCellType,
 } from "../logic";
 import { Difficulty, GameStatus } from "../logic/game";
+import { playClick, playMusic, playError, playWin } from "../sfx";
 
 export default Vue.extend({
   components: {
@@ -69,7 +70,7 @@ export default Vue.extend({
         return;
       }
 
-      if (cell.isDefined) {
+      if (cell.isDefined && (cell.value === this.fillType)) {
         // set back to undeinef
         cell.value = getCellType(CellType.Undefined).value;
       } else {
@@ -79,6 +80,13 @@ export default Vue.extend({
 
       // validate game
       this.status = this.game.status;
+      if (this.status === GameStatus.Invalid) {
+        playError();
+      } else if (this.status === GameStatus.Solved) {
+        playWin();
+      } else {
+        playClick();
+      }
     },
     newGame() {
       this.game = createGame(this.difficulty as Difficulty, this.size);
@@ -94,6 +102,7 @@ export default Vue.extend({
       this.status = "unsolved";
     },
     start(difficulty) {
+      playMusic();
       this.difficulty = difficulty;
       this.startDialogVisible = false;
       this.newGame();
