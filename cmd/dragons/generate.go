@@ -62,16 +62,17 @@ func generateFrom(solution *model.Grid, difficulty model.Difficulty, duration ti
 }
 
 func printStats(puzzle *model.Grid, solution *model.Grid) {
-	if puzzle != nil {
-		difficulty := model.GetDifficulty(puzzle).String()
-		fmt.Println(" > Difficulty:", difficulty)
-
-		undef := puzzle.CountSquares(model.SquareUndefined)
-		all := puzzle.Size()
-		fmt.Printf(" > Undefinedness: %.2f (%v/%v)\n", (100.0 * float64(undef) / float64(all)), undef, all)
-	}
-
 	if solution != nil {
 		fmt.Println(" > Interestingness:", solution.Interestingness())
+		fmt.Println(" > Density:        ", solution.Density())
+		fmt.Printf(" > Randomness:      %.1f%%\n", (100.0 * solution.Randomness()))
+	}
+	if puzzle != nil {
+		undef := puzzle.CountSquares(model.SquareUndefined)
+		all := puzzle.Size()
+		fmt.Printf(" > Undefinedness:   %.1f%% (%v/%v)\n", (100.0 * float64(undef) / float64(all)), undef, all)
+
+		difficulty := model.GetDifficulty(puzzle).String()
+		fmt.Println(" > Difficulty:     ", difficulty)
 	}
 }

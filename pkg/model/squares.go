@@ -42,7 +42,7 @@ var squareSymbolsForCode = map[Square]rune{
 	SquareDragon:    'd',
 }
 
-var squareInterestingness = map[Square]int{
+var squareDensity = map[Square]int{
 	SquareUndefined: 0,
 	SquareOut:       0,
 	SquareEmpty:     0,

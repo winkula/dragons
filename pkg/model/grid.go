@@ -1,10 +1,5 @@
 package model
 
-import (
-	"fmt"
-	"strings"
-)
-
 const maxNumNeighbors = 8
 
 var neighbours = []struct {
@@ -172,15 +167,6 @@ func (g *Grid) SetDragon(i int) *Grid {
 	return g
 }
 
-// Interestingness returns the interestingness of a grid.
-// This is useful if we want to sort possible solved grids.
-func (g *Grid) Interestingness() (interestingness int) {
-	for _, val := range g.Squares {
-		interestingness += squareInterestingness[val]
-	}
-	return
-}
-
 // Size returns a grids number of squares.
 func (g *Grid) Size() int {
 	return g.Width * g.Height
@@ -203,38 +189,7 @@ func (g *Grid) IsUndefined() bool {
 
 // String returns the string representation of a puzzle.
 func (g *Grid) String() string {
-	sb := strings.Builder{}
-	sb.WriteString("   ┌")
-	sb.WriteString(strings.Repeat("─", 2*g.Width+1))
-	sb.WriteString("┐\n")
-	for i, val := range g.Squares {
-		if i%g.Width == 0 {
-			sb.WriteString("   │ ")
-		}
-		sb.WriteRune(getSymbol(val))
-		sb.WriteRune(' ')
-		if i%g.Width == g.Width-1 {
-			sb.WriteString("│")
-
-			if i/g.Width == 0 {
-				sb.WriteString(fmt.Sprintf(" Size: %vx%v", g.Width, g.Height))
-			} else if i/g.Width == 1 {
-				sb.WriteString(" Code: ")
-				for i, val := range g.Squares {
-					sb.WriteRune(getSymbolForCode(val))
-					if i%g.Width == g.Width-1 && i < g.Width*g.Height-1 {
-						sb.WriteString(",")
-					}
-				}
-			}
-
-			sb.WriteString("\n")
-		}
-	}
-	sb.WriteString("   └")
-	sb.WriteString(strings.Repeat("─", 2*g.Width+1))
-	sb.WriteString("┘")
-	return sb.String()
+	return Render(g, -1)
 }
 
 func coordsToIndex(g *Grid, x int, y int) int {

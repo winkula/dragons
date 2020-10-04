@@ -43,7 +43,7 @@ func play(game *game.Game) {
 
 		// render game
 		index, _ := game.State.Index(game.CursorX, game.CursorY)
-		fmt.Println(model.Render(game.State, nil, index))
+		fmt.Println(model.Render(game.State, index))
 		fmt.Println(game)
 
 		// read key

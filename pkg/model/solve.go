@@ -34,7 +34,7 @@ func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 			debug(" ")
 			debug(" ")
 			debug("========== Investigating square", i, "==========")
-			debug(Render(work, k, i))
+			debug(Render(work, i))
 
 			// if only one option is possible for a square.. go for it
 			ops := k.getOptions(work, i)
@@ -45,7 +45,7 @@ func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 			// 	// we don't need to validate here as it's the only possible option anyway
 			// 	// IMPORTANT: this is only correct if we know, that a solution exists!
 			// 	debug("-> set the only possible option")
-			// 	debug(Render(work, k, i))
+			// 	debug(Render(work, i))
 			// 	continue
 			// }
 
@@ -103,7 +103,7 @@ func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 				dirty = true
 				k.squareIs(i, ok[0])
 				debug("-> set the only possible option (after evaluating)")
-				debug("\n" + Render(work, k, i))
+				debug("\n" + Render(work, i))
 			}
 		}
 

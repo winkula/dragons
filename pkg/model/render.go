@@ -6,7 +6,7 @@ import (
 )
 
 // Render returns the string representation of a grid and shows some extra information.
-func Render(g *Grid, k *knowledge, activeSquare int) string {
+func Render(g *Grid, activeSquare int) string {
 	sb := strings.Builder{}
 	sb.WriteString("   ┌")
 	sb.WriteString(strings.Repeat("─", 2*g.Width+1))

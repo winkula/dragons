@@ -33,7 +33,7 @@ func Generate(width int, height int, duration time.Duration) *Grid {
 
 func tryGenerate(width int, height int) *Grid {
 	start := rand.Intn(width)
-	fuzzyness := 3 * rand.Float64()
+	fuzzyness := 4 * rand.Float64()
 	g := New(width, height)
 	size := g.Size()
 	for i := start; i < size; i++ {
@@ -172,6 +172,7 @@ func best(c <-chan *Grid, evalFun func(*Grid) int) *Grid {
 	return best
 }
 
+// TODO: improve
 func fuzzyIndex(i int, size int, height int, fuzzyness float64) int {
 	index := i
 

@@ -98,6 +98,24 @@ func TestIndex(t *testing.T) {
 	}
 }
 
+func TestRandomness(t *testing.T) {
+	tables := []struct {
+		grid *Grid
+		min  float64
+		max  float64
+	}{
+		{New(3, 3), 0.6, 0.7},
+		{Parse("xfx,dfd,xfx"), 0.8, 0.9},
+	}
+	for _, table := range tables {
+		randomness := table.grid.Randomness()
+
+		if randomness < table.min || randomness > table.max {
+			t.Errorf("Randomness was incorrect, got: %v. Must be between %v and %v", randomness, table.min, table.max)
+		}
+	}
+}
+
 func BenchmarkNeighborsi(b *testing.B) {
 	g := Parse("__xdx_,xf____,_fd_xd,_f____,xfx_dx,x_d_x_")
 	b.ResetTimer()
