@@ -1,0 +1,38 @@
+=== 8x8 ========================================================================
+
+> easy
+________,ff__fx_d,_x_d____,_____d__,___f____,__xfd__d,d_____ff,__d_____
+xdxxxdfx,fffxfxfd,dxxdfxfx,xffffdxx,xxdffffx,xfxfdxxd,dfxfxfff,xfdxxxdx
+
+_fx_____,_f__d__x,______ff,________,_d_d__ff,________,__fd__ff,_xf_____
+xfxfxfxx,dfdfdfdx,xfxfxfff,xxfxxxdx,xdfdxfff,fffffxdx,xdfdxfff,xxfxxxdx
+
+> medium
+_x______,__fx_ff_,_ffxf_x_,________,____f___,___x__f_,d_xf_ff_,_______d
+xxfdxxdx,xdfxfffx,fffxfdxx,dxxdfxfx,xffffxfd,xfdxxdfx,dfxffffx,xxxxdxxd
+
+________,_f___f_x,_fd__ff_,____df_x,d_______,________,__f___f_,_xf_f_f_
+xxxxdfxx,dfxfxfdx,xfdfxfff,xfxfdfdx,dxxxxfxx,fffxfxfx,xdfdfdfd,xxfxfxfx
+
+> hard
+________,___f__f_,_f______,________,___f____,d__x___f,_______x,____d___
+xfdxxdxx,dfxffffx,xfxfdxxd,xxdfxfff,xfffxxdx,dfdxxfff,xfxfxfdx,xxxxdfxx
+
+________,_f_f__d_,________,________,_d___f__,________,________,_xf___f_
+dxxxdfxx,xfxfxfdx,xxdfxfff,xfffdfdx,xdxxxfxx,fffxfxfx,xdfdfdfd,xxfxfxfx
+
+
+
+=== 10x10 ======================================================================
+
+> easy
+__________,_fx_xf_ff_,_f_____x_d,_f___fxf__,_fx_xf__d_,d___x_d___,__d_______,_f__d__d_d,_fxf______,_____d____
+xxdfdxxdxx,xfxfxffffx,dfxfxfdxxd,xfdfdfxfff,xfxfxfxfdx,dfxxxxdfxx,xfdfxffffx,xfxfdxxdfd,dfxffffxfx,xfdxxdxxxx
+
+> medium
+__________,_x_xfx_f_x,_f_____d__,____f_____,_f_ffxf_fd,__d_____f_,____dff___,df________,______x__f,__xf_x__d_
+xxxdfdxxdx,dxxxfxfffx,ffxxfxfdxx,dxxdfdfxfx,xffffxfxfd,xxdfxxxdfx,xfxfdffffx,dfxfxfdxxd,xfdfxfxfff,xxxfdxxxdx
+
+> hard
+__________,_fx_f__f__,__xf______,_____f____,__________,_________f,_f__f_____,____x_f___,____f_____,__d_______
+xfdxxdxxdx,dfxffffffx,xfxfdxxdxx,xxdfxffffx,xfffxxdxxd,dxxdxfffff,fffffxdxxd,dxxdxxfffx,xffffxfdxx,xxdxxdfxxx

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/winkula/dragons/pkg/model"
+	"github.com/winkula/dragons/pkg/renderers"
 )
 
 func init() {
@@ -57,6 +58,7 @@ func generateFrom(solution *model.Grid, difficulty model.Difficulty, duration ti
 	puzzle := model.Obfuscate(solution, difficulty, duration)
 	fmt.Println("Puzzle:")
 	fmt.Println(puzzle)
+	renderers.RenderSvg(puzzle, true)
 
 	printStats(puzzle, solution)
 }
