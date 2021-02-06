@@ -169,7 +169,7 @@ func isSolved(g *Grid) bool {
 type solveRule (func(*Grid, int, *knowledge) *Grid)
 
 var solveRules = []solveRule{
-	// if a dragon is set, no neighbour square can be dragons
+	// if a dragon is set, no neighbour square can be dragons too
 	func(g *Grid, i int, k *knowledge) *Grid {
 		if g.Squarei(i) == SquareDragon {
 			k.squaresCannotBe(g.NeighborIndicesi(i, false), SquareDragon)

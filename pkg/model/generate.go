@@ -53,7 +53,7 @@ func tryGenerate(width int, height int) *Grid {
 		}
 	}
 
-	g.FillUndefined(SquareEmpty)
+	g.FillUndefined(SquareAir)
 	if Validate(g) {
 		return g
 	}
