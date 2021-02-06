@@ -30,8 +30,8 @@ var squareSymbols = map[Square]rune{
 	SquareUndefined: ' ',
 	SquareOut:       '#',
 	SquareEmpty:     '-',
-	SquareFire:      '▲', // 🔥
-	SquareDragon:    'D', // 🐲
+	SquareFire:      'Δ', // 🔥
+	SquareDragon:    '▲', // 🐲
 }
 
 var squareSymbolsForCode = map[Square]rune{

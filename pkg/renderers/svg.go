@@ -12,19 +12,17 @@ import (
 var templ = `
 {{- define "fire" }}
 	<g class="fire" transform="translate({{ .X }},{{ .Y }})">
-		<!--<path d="M 50 15 L 85 80 L 15 80 L 50 15 Z"></path>-->
 		<path d="M 50 22 L 80 74 L 20 74 L 50 22 Z"></path>
 	</g>
 {{ end -}}
 {{- define "dragon" }}
 	<g class="dragon" transform="translate({{ .X }},{{ .Y }}) translate(50, 50) scale(0.9) translate(-50,-50)">
-		<path d="M 9.345 54.212 C 30.721 31.007 56.325 25.154 89.64 25.996 C 85.485 80.384 23.579 90.086 9.345 54.212 Z"></path>
-		<circle cx="44.706" cy="29.788" r="22.912" transform="matrix(0.209362, 0, 0, 0.85314, 40.429417, 24.468189)"></circle>
+		<path d="M 50 22 L 80 74 L 20 74 L 50 22 Z"></path>
 	</g>
 {{ end -}}
 {{- define "air" }}
 	<g class="air" transform="translate({{ .X }},{{ .Y }})">
-		<line x1="20" y1="50" x2="80" y2="50"></line>
+		<line x1="30" y1="50" x2="70" y2="50"></line>
 	</g>
 {{ end -}}
 {{- define "value" }}
@@ -52,37 +50,29 @@ var templ = `
 		* {
 			vector-effect: non-scaling-stroke;
 		}
-		.fire path {
-			fill: #fff;
-			stroke: #000;
-			stroke-width: 3;
-		}
 		.square {
 			fill: #fff;
 			stroke: #000;
 			stroke-width: 1;
 		}
-		.dragon path {
-			stroke: #000;
-			stroke-width: 8;
+		.fire path {
 			fill: #fff;
-		}
-		.dragon circle {
 			stroke: #000;
-			stroke-width: 8;
-			fill: #000;
+			stroke-width: 3;
 		}
-		.dragon circle {
+		.dragon path {
 			fill: #000;
+			stroke: #000;
+			stroke-width: 3;
 		}
 		.air line {
 			stroke: #000;
 			stroke-width: 3;
 		}
 		.outline {
+			fill: none;
 			stroke: #000;
 			stroke-width: 7;
-			fill: none;
 		}	
 		]]>
 	</style> 

@@ -31,26 +31,22 @@ func Render(g *Grid, activeSquare int) string {
 		}
 
 		if i%g.Width == g.Width-1 {
-			sb.WriteString("│")
-
-			// additional information on the right side
-			if i/g.Width == 0 {
-				sb.WriteString(fmt.Sprintf(" Size: %vx%v", g.Width, g.Height))
-			} else if i/g.Width == 1 {
-				sb.WriteString(" Code: ")
-				for i, val := range g.Squares {
-					sb.WriteRune(getSymbolForCode(val))
-					if i%g.Width == g.Width-1 && i < g.Width*g.Height-1 {
-						sb.WriteString(",")
-					}
-				}
-			}
-
-			sb.WriteString("\n")
+			sb.WriteString("│\n")
 		}
 	}
 	sb.WriteString("   └")
 	sb.WriteString(strings.Repeat("─", 2*g.Width+1))
-	sb.WriteString("┘")
+	sb.WriteString("┘\n")
+
+	// puzzle metadata
+	sb.WriteString(fmt.Sprintf(" > Size: %vx%v\n", g.Width, g.Height))
+	sb.WriteString(" > Code: ")
+	for i, val := range g.Squares {
+		sb.WriteRune(getSymbolForCode(val))
+		if i%g.Width == g.Width-1 && i < g.Width*g.Height-1 {
+			sb.WriteString(",")
+		}
+	}
+
 	return sb.String()
 }
