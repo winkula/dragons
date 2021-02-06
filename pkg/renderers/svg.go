@@ -12,19 +12,19 @@ import (
 var templ = `
 {{- define "fire" }}
 	<g class="fire" transform="translate({{ .X }},{{ .Y }})">
-		<path d="M 50 15 L 85 80 L 15 80 L 50 15 Z"></path>
+		<!--<path d="M 50 15 L 85 80 L 15 80 L 50 15 Z"></path>-->
+		<path d="M 50 22 L 80 74 L 20 74 L 50 22 Z"></path>
 	</g>
 {{ end -}}
 {{- define "dragon" }}
-	<g class="dragon" transform="translate({{ .X }},{{ .Y }})">
+	<g class="dragon" transform="translate({{ .X }},{{ .Y }}) translate(50, 50) scale(0.9) translate(-50,-50)">
 		<path d="M 9.345 54.212 C 30.721 31.007 56.325 25.154 89.64 25.996 C 85.485 80.384 23.579 90.086 9.345 54.212 Z"></path>
-		<circle style="" cx="44.706" cy="29.788" r="22.912" transform="matrix(0.209362, 0, 0, 0.85314, 40.429417, 24.468189)"></circle>
+		<circle cx="44.706" cy="29.788" r="22.912" transform="matrix(0.209362, 0, 0, 0.85314, 40.429417, 24.468189)"></circle>
 	</g>
 {{ end -}}
-{{- define "empty" }}
-	<g class="empty" transform="translate({{ .X }},{{ .Y }})">
-		<line x1="20" y1="20" x2="80" y2="80"></line>
-		<line x1="20" y1="80" x2="80" y2="20"></line>
+{{- define "air" }}
+	<g class="air" transform="translate({{ .X }},{{ .Y }})">
+		<line x1="20" y1="50" x2="80" y2="50"></line>
 	</g>
 {{ end -}}
 {{- define "value" }}
@@ -32,8 +32,8 @@ var templ = `
 		{{ template "fire" . }}
 	{{ else if eq .Template "dragon" }}
 		{{ template "dragon" . }}
-	{{ else if eq .Template "empty" }}
-		{{ template "empty" . }}	
+	{{ else if eq .Template "air" }}
+		{{ template "air" . }}	
 	{{ end }}
 {{ end -}}
 {{- define "square" }}
@@ -49,8 +49,13 @@ var templ = `
 >
 	<style type="text/css">
 		<![CDATA[
+		* {
+			vector-effect: non-scaling-stroke;
+		}
 		.fire path {
-			fill: #000;
+			fill: #fff;
+			stroke: #000;
+			stroke-width: 3;
 		}
 		.square {
 			fill: #fff;
@@ -59,15 +64,20 @@ var templ = `
 		}
 		.dragon path {
 			stroke: #000;
-			stroke-width: 7;
+			stroke-width: 8;
 			fill: #fff;
+		}
+		.dragon circle {
+			stroke: #000;
+			stroke-width: 8;
+			fill: #000;
 		}
 		.dragon circle {
 			fill: #000;
 		}
-		.empty line {
+		.air line {
 			stroke: #000;
-			stroke-width: 7;
+			stroke-width: 3;
 		}
 		.outline {
 			stroke: #000;
@@ -120,7 +130,7 @@ func RenderSvg(g *model.Grid, border bool) {
 			X:        x * gridSize,
 			Y:        y * gridSize,
 			Fill:     []string{"", "", "white", "red", "black"}[square],
-			Template: []string{"", "", "empty", "fire", "dragon"}[square],
+			Template: []string{"", "", "air", "fire", "dragon"}[square],
 			Size:     gridSize,
 			SizeHalf: gridSize / 2,
 		}
