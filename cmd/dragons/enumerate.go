@@ -21,7 +21,7 @@ func init() {
 
 func enumerate(g *model.Grid, most bool, interestingness int) {
 	minInterestingness := func(g *model.Grid) bool {
-		return g.Interestingness() >= interestingness
+		return g.Interestingness() >= float64(interestingness)
 	}
 
 	grids := model.EnumerateFilter(g, minInterestingness)

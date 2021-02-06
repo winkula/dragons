@@ -6,16 +6,18 @@ import (
 
 // Interestingness returns the interestingness of a grid.
 // This is useful if we want to sort possible solved grids.
-func (g *Grid) Interestingness() int {
-	return int(float64(10.0*g.Density()) * g.Randomness())
+func (g *Grid) Interestingness() float64 {
+	return (g.Density() + g.Randomness()) / 2.0
 }
 
 // Density returns the density of a grid.
-func (g *Grid) Density() (density int) {
+func (g *Grid) Density() float64 {
+	filled := 0
 	for _, val := range g.Squares {
-		density += squareDensity[val]
+		filled += squareDensity[val]
 	}
-	return
+	g.Size()
+	return float64(filled) / float64(g.Size())
 }
 
 // Randomness returns the randomness of a grid.
@@ -51,4 +53,12 @@ func (g *Grid) Randomness() float64 {
 	}
 
 	return 1.0 - (cols+rows)/(float64(g.Size()))/2.0
+}
+
+// Undefinedness returns the undefinedness of a unsolved puzzle grid.
+// This is especially useful to find "interesting" puzzle.
+func (g *Grid) Undefinedness() float64 {
+	undef := g.CountSquares(SquareUndefined)
+	all := g.Size()
+	return float64(undef) / float64(all)
 }

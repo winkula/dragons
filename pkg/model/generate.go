@@ -26,7 +26,7 @@ func Generate(width int, height int, duration time.Duration) *Grid {
 	})
 
 	// take the most interesting result
-	return best(c, func(g *Grid) int {
+	return best(c, func(g *Grid) float64 {
 		return g.Interestingness()
 	})
 }
@@ -72,13 +72,13 @@ func Obfuscate(g *Grid, difficulty Difficulty, duration time.Duration) *Grid {
 		panic("generateInternal: all squares undefined")
 	}
 
-	c := executeParallel(duration, func(ctx context.Context, c chan<- *Grid) {
+	c := executeParallelLoop(duration, func(ctx context.Context, c chan<- *Grid) {
 		c <- obfuscate(ctx, g, difficulty)
 	})
 
 	// take the best result
-	return best(c, func(g *Grid) int {
-		return g.CountSquares(SquareUndefined)
+	return best(c, func(g *Grid) float64 {
+		return float64(g.CountSquares(SquareUndefined))
 	})
 }
 
@@ -149,6 +149,17 @@ func executeParallel(timeout time.Duration, action func(ctx context.Context, c c
 	return c
 }
 
+func executeParallelLoop(timeout time.Duration, action func(ctx context.Context, c chan<- *Grid)) <-chan *Grid {
+	return executeParallel(timeout, func(ctx context.Context, c chan<- *Grid) {
+		for {
+			action(ctx, c)
+			if isTimeout(ctx) {
+				break
+			}
+		}
+	})
+}
+
 func isTimeout(ctx context.Context) bool {
 	// check context to see if we should terminate
 	select {
@@ -159,9 +170,9 @@ func isTimeout(ctx context.Context) bool {
 	}
 }
 
-func best(c <-chan *Grid, evalFun func(*Grid) int) *Grid {
+func best(c <-chan *Grid, evalFun func(*Grid) float64) *Grid {
 	var best *Grid
-	bestScore := -1
+	bestScore := -1.0
 	for candidate := range c {
 		score := evalFun(candidate)
 		if score > bestScore {
