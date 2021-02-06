@@ -49,7 +49,7 @@ func getSquare(square rune) Square {
 	case '_', '.':
 		return SquareUndefined
 	case 'x':
-		return SquareEmpty
+		return SquareAir
 	case 'f':
 		return SquareFire
 	case 'd':

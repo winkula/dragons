@@ -178,27 +178,27 @@ var solveRules = []solveRule{
 		return g
 	},
 
-	// if a dragon is set, at least two adjacent quares must be empty
+	// if a dragon is set, at least two adjacent quares must be air
 	func(g *Grid, i int, k *knowledge) *Grid {
 		if g.Squarei(i) == SquareDragon {
-			empty := g.NeighborCount4(i, SquareEmpty)
+			air := g.NeighborCount4(i, SquareAir)
 			undef := g.NeighborCount4(i, SquareUndefined)
-			if empty < 2 && empty+undef == 2 {
+			if air < 2 && air+undef == 2 {
 				for _, ni := range g.NeighborIndicesi(i, true) {
 					if g.Squarei(ni) == SquareUndefined {
-						g.SetSquarei(ni, SquareEmpty)
+						g.SetSquarei(ni, SquareAir)
 					}
 				}
-				debug("-> [ar] fill adjacent squares to empty")
+				debug("-> [ar] fill adjacent squares to air")
 				debug(g)
 			}
 		}
 		if g.Squarei(i) == SquareUndefined {
-			empty := g.NeighborCount4(i, SquareEmpty)
+			air := g.NeighborCount4(i, SquareAir)
 			undef := g.NeighborCount4(i, SquareUndefined)
-			if empty+undef < 2 {
+			if air+undef < 2 {
 				k.squareCannotBe(i, SquareDragon)
-				debug("-> [ar] square connot be a dragon because there could not be 2 empty adjacent square")
+				debug("-> [ar] square connot be a dragon because there could not be 2 adjacent squares of air")
 			}
 		}
 		return g
@@ -248,14 +248,14 @@ var solveRules = []solveRule{
 		return g
 	},
 
-	// if a empty square is set, there can maximum be one dragon around it
+	// if a air square is set, there can maximum be one dragon around it
 	func(g *Grid, i int, k *knowledge) *Grid {
 		square := g.Squarei(i)
-		if square == SquareEmpty {
+		if square == SquareAir {
 			dragons := g.NeighborCount8(i, SquareDragon)
 			if dragons == 1 {
 				k.squaresCannotBe(g.NeighborIndicesi(i, false), SquareDragon)
-				debug("-> [ar] if a empty square is set, there can maximum be one dragon around it")
+				debug("-> [ar] if a air square is set, there can maximum be one dragon around it")
 			}
 		}
 		return g

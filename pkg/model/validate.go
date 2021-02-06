@@ -31,7 +31,7 @@ var rules = []rule{
 				possibleDragons := g.NeighborCount(i, SquareDragon, false, true)
 				return possibleDragons > 1
 			}
-			if square == SquareEmpty {
+			if square == SquareAir {
 				// if 0 or 1 dragon is around a square, there must NOT be fire
 				// if a square is not fire, there can maximum be one dragon around it
 				dragons := g.NeighborCount(i, SquareDragon, false, false)
@@ -40,15 +40,15 @@ var rules = []rule{
 			return true
 		},
 	},
-	// At least 2 of the adjacent squares of a dragon must be empty.
+	// At least 2 of the adjacent squares of a dragon must be air.
 	// If a dragon is at the edge or in the corner of the grid, the possible number of adjacent squares is reduced.
 	{
 		name: "survive",
 		check: func(g *Grid, i int) bool {
 			square := g.Squarei(i)
 			if square == SquareDragon {
-				possibleEmpty := g.NeighborCount(i, SquareEmpty, true, true)
-				return possibleEmpty >= 2
+				possiblyAir := g.NeighborCount(i, SquareAir, true, true)
+				return possiblyAir >= 2
 			}
 			return true
 		},

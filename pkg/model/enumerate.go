@@ -4,7 +4,7 @@ package model
 var options = []Square{
 	SquareDragon,
 	SquareFire,
-	SquareEmpty,
+	SquareAir,
 }
 
 type gridPredicate func(*Grid) bool

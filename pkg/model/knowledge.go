@@ -9,7 +9,7 @@ func newKnowledge(g *Grid) *knowledge {
 	k := &knowledge{}
 	k.size = g.Size()
 	k.pv = make([]uint8, k.size)
-	all := uint8(1<<SquareDragon | 1<<SquareFire | 1<<SquareEmpty)
+	all := uint8(1<<SquareDragon | 1<<SquareFire | 1<<SquareAir)
 	for i, v := range g.Squares {
 		if v == SquareUndefined {
 			k.pv[i] = all

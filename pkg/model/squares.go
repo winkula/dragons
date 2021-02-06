@@ -4,24 +4,25 @@ package model
 type Square uint8
 
 const (
-	// SquareUndefined represent undefined squares.
+	// SquareUndefined represents undefined squares.
 	SquareUndefined Square = iota
-	// SquareOut represent undefined squares.
+	// SquareOut represents squares that are outside of the grid.
 	SquareOut
-	// SquareEmpty represent empty squares.
-	SquareEmpty
-	// SquareFire represent squares with fire.
+	// SquareAir represents squares with air.
+	SquareAir
+	// SquareFire represents squares with fire.
 	SquareFire
-	// SquareDragon represent squares with dragons.
+	// SquareDragon represents squares with dragons.
 	SquareDragon
 )
 
 const numSquareValues = 5
 
+// AllFields are a list of all possible field values.
 var AllFields = []Square{
 	SquareUndefined,
 	SquareOut,
-	SquareEmpty,
+	SquareAir,
 	SquareFire,
 	SquareDragon,
 }
@@ -29,7 +30,7 @@ var AllFields = []Square{
 var squareSymbols = map[Square]rune{
 	SquareUndefined: ' ',
 	SquareOut:       '#',
-	SquareEmpty:     '-',
+	SquareAir:       '-',
 	SquareFire:      'Δ', // 🔥
 	SquareDragon:    '▲', // 🐲
 }
@@ -37,7 +38,7 @@ var squareSymbols = map[Square]rune{
 var squareSymbolsForCode = map[Square]rune{
 	SquareUndefined: '_',
 	SquareOut:       '#',
-	SquareEmpty:     'x',
+	SquareAir:       'x',
 	SquareFire:      'f',
 	SquareDragon:    'd',
 }
@@ -45,7 +46,7 @@ var squareSymbolsForCode = map[Square]rune{
 var squareDensity = map[Square]int{
 	SquareUndefined: 0,
 	SquareOut:       0,
-	SquareEmpty:     0,
+	SquareAir:       0,
 	SquareFire:      1,
 	SquareDragon:    1,
 }

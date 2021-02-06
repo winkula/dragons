@@ -16,7 +16,7 @@ Dragons
 
 _Dragons_ is a logic-based puzzle inspired by [Battleship](<https://en.wikipedia.org/wiki/Battleship_(puzzle)>), [Minesweeper](https://en.wikipedia.org/wiki/Microsoft_Minesweeper) and [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
 
-The objective is to fill a grid - where some squares are given from the start. A square can either be a dragon (`D`), fire (`F`) or empty (`X`).
+The objective is to fill a grid - where some squares are given from the start. A square can either be a dragon (`▲`), fire (`Δ`) or air (`-`).
 
 There are three rules that dictate how the grid must be completed. Only one valid solution exists for a given puzzle.
 
@@ -32,11 +32,11 @@ Every dragon has its own territory - the eight squares surrounding him.
 **Inside one's territory there can't be other dragons**.
 
 ```
-┌───────┐
-│ . . . │
-│ . D . │
-│ . . . │
-└───────┘
++-------+
+| . . . |
+| . ▲ . |
+| . . . |
++-------+
 ```
 
 ### The fight rule
@@ -45,40 +45,36 @@ Dragons don't like each other. That's why squares of
 **overlapping territories must always be fire** - but only then.
 
 ```
-┌───────────┐
-│ . . F . . │
-│ . D F D . │
-│ . . F . . │
-└───────────┘
++-----------+
+| . . . . . |
+| . ▲ Δ . . |
+| . . Δ ▲ . |
+| . . . . . |
++-----------+
 ```
 
 ### The survive rule
 
 Dragons like it hot - but they also need air to survive.
-That's why **at least two** of the four **directly adjacent squares** of a dragon **must be empty**.
-Squares outside the grid don't count as "empty".
+That's why **at least two** of the four **directly adjacent squares** of a dragon **must be air**.
+Squares outside the grid don't count as air.
 
-In this example, the survive rule is satisfied - two of the four directly adjacent squares are empty:
-
-```
-┌───────┐
-│ . X . │
-│ X D F │
-│ . F . │
-└───────┘
-```
-
-Here, the survive rule is violated - only one of the two directly adjacent squares are empty:
+In this example, the survive rule is satisfied - two of the four directly adjacent squares are air:
 
 ```
-┌───────┐
-│ D F . │
-│ X . . │
-│ . . . │
-└───────┘
++-------+
+| . - . |
+| - ▲ Δ |
+| . Δ . |
++-------+
 ```
 
-## To-do list
+Here, the survive rule is violated - only one of the two directly adjacent squares are air:
 
-- [ ] Implement text/PDF generation function for the CLI
-- [ ] Improve overall performance
+```
++-------+
+| ▲ Δ . |
+| - . . |
+| . . . |
++-------+
+```

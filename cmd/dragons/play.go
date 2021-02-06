@@ -68,7 +68,7 @@ func play(game *game.Game) {
 		case 'f':
 			game.Set(model.SquareFire)
 		case 'e':
-			game.Set(model.SquareEmpty)
+			game.Set(model.SquareAir)
 		}
 	}
 }

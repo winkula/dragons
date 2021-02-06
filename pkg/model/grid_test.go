@@ -36,7 +36,7 @@ func TestSquare(t *testing.T) {
 		expected Square
 	}{
 		{Parse("dx,xx"), 0, 0, SquareDragon},
-		{Parse("dx,xx"), 1, 1, SquareEmpty},
+		{Parse("dx,xx"), 1, 1, SquareAir},
 		{Parse("dx,xx"), 5, 5, SquareOut},
 	}
 
