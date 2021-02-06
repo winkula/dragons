@@ -57,7 +57,8 @@ func TestString(t *testing.T) {
 	}{
 		{Parse("dx,xx"), "Size: 2x2"},
 		{Parse("dx,xx"), "Code: dx,xx"},
-		{Parse("dx,xx"), "│ D - │"},
+		{Parse("dx,xx"), "│ ▲ - │"},
+		{Parse("xfx,dfd,xfx"), "│ ▲ Δ ▲ │"},
 	}
 
 	for _, table := range tables {
