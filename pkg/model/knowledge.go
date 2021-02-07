@@ -1,5 +1,7 @@
 package model
 
+// TODO: add unit tests
+
 type knowledge struct {
 	size int
 	pv   []uint8 // possible values

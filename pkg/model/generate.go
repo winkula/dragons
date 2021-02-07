@@ -78,7 +78,7 @@ func Obfuscate(g *Grid, difficulty Difficulty, duration time.Duration) *Grid {
 
 	// take the best result
 	return best(c, func(g *Grid) float64 {
-		return float64(g.CountSquares(SquareUndefined))
+		return g.InterestingnessOfPuzzle()
 	})
 }
 
@@ -115,7 +115,8 @@ func checkSolvable(g *Grid, index int, difficulty Difficulty) bool {
 		return true
 	}
 
-	solution := SolveHuman(g, difficulty)
+	solution := SolveDk(g)
+	//solution := SolveHuman(g, difficulty)
 	if solution == nil {
 		return false
 	}

@@ -60,7 +60,7 @@ func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 				valid := test.SetSquareiAndValidate(i, o)
 				if !valid {
 					// update knowledge
-					debug("   -> option", string(squareSymbols[o]), "[NOK] (invalid state)")
+					debug("   -> option", string(o.Symbol()), "[NOK] (invalid state)")
 					dirty = true
 					k.squareCannotBe(i, o)
 					continue
@@ -74,7 +74,7 @@ func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 				// this algorithm should simulate the human that solves the puzzle
 				// with the maxPermutationsToEvaluate parameter, we can fine tune how many permutations the human can/will evaluate
 				if permCount > maxPerm {
-					debug("   -> option", string(squareSymbols[o]), "[ OK] (max permutations is too big for the difficulty level, so we can't exclude this option)")
+					debug("   -> option", string(o.Symbol()), "[ OK] (max permutations is too big for the difficulty level, so we can't exclude this option)")
 					debug("      permCount:", permCount, "maxPerm:", maxPerm)
 					ok = append(ok, o)
 					continue
@@ -83,7 +83,7 @@ func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 				permRes := k.getPermutations(test, nis)
 				if permRes.valid == 0 {
 					// not a valid option for this square: update knowledge
-					debug("   -> option", string(squareSymbols[o]), "[NOK] (no valid permutations)")
+					debug("   -> option", string(o.Symbol()), "[NOK] (no valid permutations)")
 					debug("      permutations of", nis, "valid:", permRes.valid, "total:", permRes.total)
 					k.squareCannotBe(i, o)
 					dirty = true
@@ -92,7 +92,7 @@ func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 
 				// at least one valid permutation exists
 
-				debug("   -> option", string(squareSymbols[o]), "[ OK]")
+				debug("   -> option", string(o.Symbol()), "[ OK]")
 				debug("      permutations of", nis, "valid:", permRes.valid, "total:", permRes.total)
 				ok = append(ok, o)
 			}
@@ -263,6 +263,7 @@ var solveRules = []solveRule{
 
 	// if a square is undefined but there is only one value possible (according to the knowledge db)
 	// set the squares value
+	// TODO: move OnesCount8 and TrailingZeros8 into knowledge type
 	func(g *Grid, i int, k *knowledge) *Grid {
 		if g.Squarei(i) == SquareUndefined {
 			if bits.OnesCount8(k.pv[i]) == 1 {

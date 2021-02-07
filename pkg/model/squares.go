@@ -27,26 +27,31 @@ var AllFields = []Square{
 	SquareDragon,
 }
 
-var squareSymbols = map[Square]rune{
-	SquareUndefined: ' ',
-	SquareOut:       '#',
-	SquareAir:       '-',
-	SquareFire:      'Δ', // 🔥
-	SquareDragon:    '▲', // 🐲
+var squareAttributes = map[Square]struct {
+	symbol      rune
+	code        rune
+	density     int
+	puzzleValue int
+}{
+	SquareUndefined: {' ', '_', 0, 100},
+	SquareOut:       {'#', '#', 0, 0},
+	SquareAir:       {'-', 'x', 0, -1},
+	SquareFire:      {'Δ' /* 🔥 */, 'f', 1, -5},
+	SquareDragon:    {'▲' /* 🐲*/, 'd', 1, -50},
 }
 
-var squareSymbolsForCode = map[Square]rune{
-	SquareUndefined: '_',
-	SquareOut:       '#',
-	SquareAir:       'x',
-	SquareFire:      'f',
-	SquareDragon:    'd',
+func (val Square) Symbol() rune {
+	return squareAttributes[val].symbol
 }
 
-var squareDensity = map[Square]int{
-	SquareUndefined: 0,
-	SquareOut:       0,
-	SquareAir:       0,
-	SquareFire:      1,
-	SquareDragon:    1,
+func (val Square) Code() rune {
+	return squareAttributes[val].code
+}
+
+func (val Square) Density() int {
+	return squareAttributes[val].density
+}
+
+func (val Square) PuzzleValue() int {
+	return squareAttributes[val].puzzleValue
 }

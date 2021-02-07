@@ -20,7 +20,7 @@ func Render(g *Grid, activeSquare int) string {
 				sb.WriteRune(' ')
 			}
 		}
-		sb.WriteRune(getSymbol(val))
+		sb.WriteRune(val.Symbol())
 
 		if i == activeSquare {
 			sb.WriteRune(']')
@@ -42,7 +42,7 @@ func Render(g *Grid, activeSquare int) string {
 	sb.WriteString(fmt.Sprintf(" > Size: %vx%v\n", g.Width, g.Height))
 	sb.WriteString(" > Code: ")
 	for i, val := range g.Squares {
-		sb.WriteRune(getSymbolForCode(val))
+		sb.WriteRune(val.Code())
 		if i%g.Width == g.Width-1 && i < g.Width*g.Height-1 {
 			sb.WriteString(",")
 		}

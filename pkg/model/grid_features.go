@@ -14,9 +14,8 @@ func (g *Grid) Interestingness() float64 {
 func (g *Grid) Density() float64 {
 	filled := 0
 	for _, val := range g.Squares {
-		filled += squareDensity[val]
+		filled += val.Density()
 	}
-	g.Size()
 	return float64(filled) / float64(g.Size())
 }
 
@@ -61,4 +60,12 @@ func (g *Grid) Undefinedness() float64 {
 	undef := g.CountSquares(SquareUndefined)
 	all := g.Size()
 	return float64(undef) / float64(all)
+}
+
+func (g *Grid) InterestingnessOfPuzzle() float64 {
+	value := 0
+	for _, val := range g.Squares {
+		value += val.PuzzleValue()
+	}
+	return float64(value) / float64(g.Size())
 }

@@ -41,24 +41,24 @@ func (g *Grid) Coords(i int) (x int, y int) {
 
 // Index returns the square index from its coordinates.
 func (g *Grid) Index(x int, y int) (int, bool) {
-	if !coordsExist(g, x, y) {
+	if !g.coordsExist(x, y) {
 		return -1, false // index does not exist
 	}
-	i := coordsToIndex(g, x, y)
+	i := g.coordsToIndex(x, y)
 	return i, true
 }
 
 // Square gets the field value at coordinates x, y.
 func (g *Grid) Square(x int, y int) Square {
-	if !coordsExist(g, x, y) {
+	if !g.coordsExist(x, y) {
 		return SquareOut
 	}
-	return g.Squares[coordsToIndex(g, x, y)]
+	return g.Squares[g.coordsToIndex(x, y)]
 }
 
 // Squarei gets the field value at the specified index.
 func (g *Grid) Squarei(i int) Square {
-	if !indexExists(g, i) {
+	if !g.indexExists(i) {
 		panic("grid.Squarei: index out of range.")
 	}
 	return g.Squares[i]
@@ -66,16 +66,16 @@ func (g *Grid) Squarei(i int) Square {
 
 // SetSquare sets the squares value at coordinates x, y.
 func (g *Grid) SetSquare(x int, y int, val Square) *Grid {
-	if !coordsExist(g, x, y) {
+	if !g.coordsExist(x, y) {
 		panic("grid.SetSquare: coords out of range.")
 	}
-	g.Squares[coordsToIndex(g, x, y)] = val
+	g.Squares[g.coordsToIndex(x, y)] = val
 	return g
 }
 
 // SetSquarei sets the squares value at the specified index.
 func (g *Grid) SetSquarei(i int, val Square) *Grid {
-	if !indexExists(g, i) {
+	if !g.indexExists(i) {
 		panic("grid.SetSquarei: index out of range.")
 	}
 	g.Squares[i] = val
@@ -117,8 +117,8 @@ func (g *Grid) NeighborIndicesi(i int, adjacentOnly bool) []int {
 	res := make([]int, 0, maxNumNeighbors)
 	x, y := g.Coords(i)
 	for _, n := range neighbours {
-		if (!adjacentOnly || n.adjacent) && coordsExist(g, x+n.x, y+n.y) {
-			res = append(res, coordsToIndex(g, x+n.x, y+n.y))
+		if (!adjacentOnly || n.adjacent) && g.coordsExist(x+n.x, y+n.y) {
+			res = append(res, g.coordsToIndex(x+n.x, y+n.y))
 		}
 	}
 	return res
@@ -192,22 +192,14 @@ func (g *Grid) String() string {
 	return Render(g, -1)
 }
 
-func coordsToIndex(g *Grid, x int, y int) int {
+func (g *Grid) coordsToIndex(x int, y int) int {
 	return g.Width*y + x
 }
 
-func coordsExist(g *Grid, x int, y int) bool {
+func (g *Grid) coordsExist(x int, y int) bool {
 	return x >= 0 && x < g.Width && y >= 0 && y < g.Height
 }
 
-func indexExists(g *Grid, i int) bool {
+func (g *Grid) indexExists(i int) bool {
 	return i >= 0 && i < g.Width*g.Height
-}
-
-func getSymbol(val Square) rune {
-	return squareSymbols[val]
-}
-
-func getSymbolForCode(val Square) rune {
-	return squareSymbolsForCode[val]
 }
