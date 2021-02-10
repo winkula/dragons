@@ -56,20 +56,23 @@ func generateFrom(solution *model.Grid, difficulty model.Difficulty, duration ti
 	fmt.Println(solution)
 
 	puzzle := model.Obfuscate(solution, difficulty, duration)
-	fmt.Println("Puzzle:")
-	fmt.Println(puzzle)
-	renderers.RenderSvg(puzzle, true)
+	if puzzle != nil {
+		fmt.Println("Puzzle:")
+		fmt.Println(puzzle)
+		renderers.RenderSvg(puzzle, true)
+	}
 
 	printStats(puzzle, solution)
 }
 
 func printStats(puzzle *model.Grid, solution *model.Grid) {
 	if solution != nil {
-		fmt.Printf(" > Interestingness: %.1f %%\n", 100.0*solution.Interestingness())
+		fmt.Printf(" > Solution rating: %.1f %%\n", 100.0*solution.SolutionRating())
 		fmt.Printf(" > Density:         %.1f %%\n", 100.0*solution.Density())
 		fmt.Printf(" > Randomness:      %.1f %%\n", 100.0*solution.Randomness())
 	}
 	if puzzle != nil {
+		fmt.Printf(" > Puzzle rating:   %.1f %%\n", puzzle.PuzzleRating())
 		fmt.Printf(" > Undefinedness:   %.1f %%\n", 100.0*puzzle.Undefinedness())
 		fmt.Printf(" > Difficulty:      %s\n", model.GetDifficulty(puzzle).String())
 	}

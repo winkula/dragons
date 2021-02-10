@@ -21,13 +21,13 @@ func init() {
 
 func enumerate(g *model.Grid, most bool, interestingness int) {
 	minInterestingness := func(g *model.Grid) bool {
-		return g.Interestingness() >= float64(interestingness)
+		return g.SolutionRating() >= float64(interestingness)
 	}
 
 	grids := model.EnumerateFilter(g, minInterestingness)
 
 	sortByInterestingness := func(i, j int) bool {
-		return grids[i].Interestingness() < grids[j].Interestingness()
+		return grids[i].SolutionRating() < grids[j].SolutionRating()
 	}
 
 	sort.Slice(grids, sortByInterestingness)
@@ -35,7 +35,7 @@ func enumerate(g *model.Grid, most bool, interestingness int) {
 	printThem := func(gs []*model.Grid) {
 		for _, s := range gs {
 			fmt.Println(s)
-			fmt.Println("Interestingness:", s.Interestingness())
+			fmt.Println("Interestingness:", s.SolutionRating())
 		}
 	}
 

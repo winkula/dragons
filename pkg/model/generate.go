@@ -27,7 +27,7 @@ func Generate(width int, height int, duration time.Duration) *Grid {
 
 	// take the most interesting result
 	return best(c, func(g *Grid) float64 {
-		return g.Interestingness()
+		return g.SolutionRating()
 	})
 }
 
@@ -78,7 +78,7 @@ func Obfuscate(g *Grid, difficulty Difficulty, duration time.Duration) *Grid {
 
 	// take the best result
 	return best(c, func(g *Grid) float64 {
-		return g.InterestingnessOfPuzzle()
+		return g.PuzzleRating()
 	})
 }
 
@@ -108,20 +108,14 @@ func obfuscate(ctx context.Context, g *Grid, difficulty Difficulty) *Grid {
 
 func checkSolvable(g *Grid, index int, difficulty Difficulty) bool {
 	if !IsDistinct(g) {
+		// every puzzle must always have a distinct solution to be solvable
 		return false
 	}
 
-	if difficulty == DifficultyHard {
-		return true
-	}
-
-	solution := SolveDk(g)
-	//solution := SolveHuman(g, difficulty)
-	if solution == nil {
-		return false
-	}
-
-	return true
+	// TODO: optimize the difficulty check
+	// stop early when difficulty is easy, dont check for medium then
+	return CheckDifficulty(g, difficulty)
+	//return difficulty == GetDifficulty(g)
 }
 
 func executeParallel(timeout time.Duration, action func(ctx context.Context, c chan<- *Grid)) <-chan *Grid {
@@ -173,7 +167,7 @@ func isTimeout(ctx context.Context) bool {
 
 func best(c <-chan *Grid, evalFun func(*Grid) float64) *Grid {
 	var best *Grid
-	bestScore := -1.0
+	bestScore := -1000000000000.0
 	for candidate := range c {
 		score := evalFun(candidate)
 		if score > bestScore {

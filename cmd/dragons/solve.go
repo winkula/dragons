@@ -9,38 +9,43 @@ import (
 
 func init() {
 	cmd := flag.NewFlagSet("solve", flag.ExitOnError)
-	dificulty := cmd.String("difficulty", "easy", "difficulty of the puzzle")
+	dificulty := cmd.String("difficulty", "hard", "difficulty of the puzzle")
+	algorithm := cmd.String("algorithm", "all", "algorithm to use (possible values: human, bf, dk)")
 
 	registerCommand("solve", cmd, func() {
 		difficultyEnum := model.ParseDifficulty(*dificulty)
 		g := parse(cmd.Arg(0), true)
-		solve(g, difficultyEnum)
+		solve(g, difficultyEnum, *algorithm)
 	})
 }
 
-func solve(g *model.Grid, difficulty model.Difficulty) {
+func solve(g *model.Grid, difficulty model.Difficulty, algorithm string) {
 	type solver func(g *model.Grid) *model.Grid
 
 	solvers := []struct {
 		name   string
+		key    string
 		solver solver
 	}{
-		{name: "SolveHuman", solver: func(g *model.Grid) *model.Grid {
-			return model.SolveHuman(g, difficulty)
-		}},
-		{name: "SolveDomainKnowledge", solver: model.SolveDk},
-		{name: "SolveBruteForce", solver: model.SolveBf},
+		{name: "SolveDomainKnowledge", key: "dk", solver: func(g *model.Grid) *model.Grid { return model.SolveDk(g, difficulty) }},
+		{name: "SolveHuman", key: "human", solver: func(g *model.Grid) *model.Grid { return model.SolveHuman(g, difficulty) }},
+		{name: "SolveBruteForce", key: "bf", solver: model.SolveBf},
 	}
 
 	for _, s := range solvers {
-		fmt.Println("-> Using solver algorithm:", s.name)
-		solution := s.solver(g)
-		if solution == nil {
-			fmt.Println("   No solution found. Reasons can be: the puzzle is too difficult, puzzle has no distinct solution...")
-			continue
+		if algorithm == "all" || s.key == algorithm {
+			fmt.Println("-> Using solver algorithm:", s.name)
+			solution := s.solver(g)
+			if solution == nil {
+				fmt.Println("   No solution found. Reasons can be: the puzzle is too difficult, puzzle has no distinct solution...")
+				continue
+			} else {
+				fmt.Println("Solution:")
+				fmt.Println(solution)
+				return
+			}
 		}
-		fmt.Println("Solution:")
-		fmt.Println(solution)
-		break
 	}
+
+	fmt.Println("No solver algorithm found with name ", algorithm)
 }

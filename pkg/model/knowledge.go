@@ -1,5 +1,7 @@
 package model
 
+import "math/bits"
+
 // TODO: add unit tests
 
 type knowledge struct {
@@ -57,6 +59,14 @@ func (k *knowledge) getOptions(g *Grid, i int) []Square {
 		}
 	}
 	return res
+}
+
+func (k *knowledge) optionsCount(i int) int {
+	return bits.OnesCount8(k.pv[i])
+}
+
+func (k *knowledge) onlyPossibleValue(i int) Square {
+	return Square(bits.TrailingZeros8(k.pv[i]))
 }
 
 type permRes struct {

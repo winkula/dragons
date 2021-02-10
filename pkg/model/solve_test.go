@@ -35,7 +35,7 @@ func TestSolveDk(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		solved := SolveDk(table.grid)
+		solved := SolveDk(table.grid, DifficultyEasy)
 
 		if table.solvable {
 			if solved == nil || !isSolved(solved) {
@@ -110,7 +110,7 @@ func BenchmarkSolve(b *testing.B) {
 func BenchmarkSolveDk(b *testing.B) {
 	g := Parse("_f_,_f_,_f_")
 	for i := 0; i < b.N; i++ {
-		solved := SolveDk(g)
+		solved := SolveDk(g, DifficultyEasy)
 		if solved == nil || !isSolved(solved) {
 			b.Errorf("BenchmarkSolve was incorrect, grid is not solved. Grid: \n%s", g)
 		}

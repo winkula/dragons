@@ -35,23 +35,27 @@ var squareAttributes = map[Square]struct {
 }{
 	SquareUndefined: {' ', '_', 0, 100},
 	SquareOut:       {'#', '#', 0, 0},
-	SquareAir:       {'-', 'x', 0, -1},
-	SquareFire:      {'Δ' /* 🔥 */, 'f', 1, -5},
-	SquareDragon:    {'▲' /* 🐲*/, 'd', 1, -50},
+	SquareAir:       {'-', 'x', 0, 50},
+	SquareFire:      {'Δ' /* 🔥 */, 'f', 1, 5},
+	SquareDragon:    {'▲' /* 🐲*/, 'd', 1, 1},
 }
 
+// Symbol is the squares representation in the console output and logs.
 func (val Square) Symbol() rune {
 	return squareAttributes[val].symbol
 }
 
+// Code is the squares representation in when serializing grids.
 func (val Square) Code() rune {
 	return squareAttributes[val].code
 }
 
+// Density is the squares density value.
 func (val Square) Density() int {
 	return squareAttributes[val].density
 }
 
+// PuzzleValue is the squares puzzle value.
 func (val Square) PuzzleValue() int {
 	return squareAttributes[val].puzzleValue
 }

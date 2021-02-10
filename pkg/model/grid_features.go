@@ -4,9 +4,9 @@ import (
 	"math"
 )
 
-// Interestingness returns the interestingness of a grid.
+// SolutionRating returns the interestingness of a grid.
 // This is useful if we want to sort possible solved grids.
-func (g *Grid) Interestingness() float64 {
+func (g *Grid) SolutionRating() float64 {
 	return (g.Density() + g.Randomness()) / 2.0
 }
 
@@ -62,10 +62,12 @@ func (g *Grid) Undefinedness() float64 {
 	return float64(undef) / float64(all)
 }
 
-func (g *Grid) InterestingnessOfPuzzle() float64 {
+// PuzzleRating is used to generate puzzles from solutions.
+// This value is used to find the best obfuscated puzzle among others.
+func (g *Grid) PuzzleRating() float64 {
 	value := 0
 	for _, val := range g.Squares {
 		value += val.PuzzleValue()
 	}
-	return float64(value) / float64(g.Size())
+	return float64(value) / float64(g.Size()) / 100.0
 }

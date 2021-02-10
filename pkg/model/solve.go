@@ -2,7 +2,6 @@ package model
 
 import (
 	"math"
-	"math/bits"
 )
 
 // Solve solves a puzzle only using the validation rules of the game.
@@ -12,6 +11,8 @@ func Solve(g *Grid) *Grid {
 }
 
 // SolveHuman solves a puzzle but only if it is easier than a given difficulty level.
+//
+// TODO: rework algorithm naming
 func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 	if !IsDistinct(g) {
 		return nil // no distinct solution exists
@@ -118,28 +119,39 @@ func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 
 // SolveDk solves a puzzle using domain knowledge.
 // it returns the only possible solution or "nil" otherwise.
-func SolveDk(g *Grid) *Grid {
+//
+// TODO: rework algorithm naming
+func SolveDk(g *Grid, difficulty Difficulty) *Grid {
 	if !IsDistinct(g) {
 		debug("Solver: no distinct solution possible!")
 		return nil
 	}
 	cpy := g.Clone()
 	knowledge := newKnowledge(cpy)
-	for try := 0; try < 10; try++ {
+
+	dirty := true // as long as this flag is set, we need to check every square of the grid
+	for dirty {
+		dirty = false
 		for i := range cpy.Squares {
-			for _, r := range solveRules {
-				r(cpy, i, knowledge)
+			for _, rule := range solveRulesEasy {
+				if rule(cpy, i, knowledge) == solveResultFillSquare {
+					// set dirty flag if any rule could be applied
+					dirty = true
+				}
 				if isSolved(cpy) {
 					return cpy
 				}
 			}
 		}
-		debug("-----")
 	}
+	debug("-----")
+
 	return nil
 }
 
 // SolveBf solves a puzzle using a brute force strategy (enumerating all possible states).
+//
+// TODO: rework algorithm naming
 func SolveBf(g *Grid) *Grid {
 	solutions := Enumerate(g)
 	if len(solutions) == 1 {
@@ -148,15 +160,44 @@ func SolveBf(g *Grid) *Grid {
 	return nil
 }
 
+func CheckDifficulty(g *Grid, difficulty Difficulty) bool {
+	switch difficulty {
+	case DifficultyEasy:
+		return SolveDk(g, DifficultyEasy) != nil
+	case DifficultyMedium:
+		return SolveDk(g, DifficultyEasy) == nil && SolveHuman(g, DifficultyEasy) != nil
+	case DifficultyHard:
+		return true
+	}
+	return true
+}
+
 // GetDifficulty gets the difficulty of a puzzle.
 func GetDifficulty(g *Grid) Difficulty {
-	for _, difficulty := range []Difficulty{DifficultyEasy, DifficultyMedium} {
-		solution := SolveHuman(g, difficulty)
-		if solution != nil {
-			return difficulty
+	if SolveDk(g, DifficultyEasy) != nil {
+		// easy puzzles must be solvable with applying solve rules only (domain knowledge)
+		return DifficultyEasy
+	}
+	if SolveHuman(g, DifficultyEasy) != nil {
+		// medium puzzles must be solvable using the SolveHuman algorithm with parameter "easy"
+		// it should not be solvable with "SolveDk"
+		return DifficultyMedium
+	}
+
+	// hard puzzles have no restriction in being solvable using a specific algorithm
+	// sometimes, brute force is the only option to solve a "hard" puzzle
+	return DifficultyHard
+}
+
+func anyRuleApplies(g *Grid, i int) bool {
+	cpy := g.Clone()
+	knowledge := newKnowledge(cpy)
+	for _, rule := range solveRulesEasy {
+		if rule(cpy, i, knowledge) > solveResultNone {
+			return true
 		}
 	}
-	return DifficultyHard
+	return false
 }
 
 func isSolved(g *Grid) bool {
@@ -164,117 +205,6 @@ func isSolved(g *Grid) bool {
 		return false
 	}
 	return g.CountSquares(SquareUndefined) == 0 && Validate(g)
-}
-
-type solveRule (func(*Grid, int, *knowledge) *Grid)
-
-var solveRules = []solveRule{
-	// if a dragon is set, no neighbour square can be dragons too
-	func(g *Grid, i int, k *knowledge) *Grid {
-		if g.Squarei(i) == SquareDragon {
-			k.squaresCannotBe(g.NeighborIndicesi(i, false), SquareDragon)
-			debug("-> [ar] neighbour squares of dragon cannot be dragons")
-		}
-		return g
-	},
-
-	// if a dragon is set, at least two adjacent quares must be air
-	func(g *Grid, i int, k *knowledge) *Grid {
-		if g.Squarei(i) == SquareDragon {
-			air := g.NeighborCount4(i, SquareAir)
-			undef := g.NeighborCount4(i, SquareUndefined)
-			if air < 2 && air+undef == 2 {
-				for _, ni := range g.NeighborIndicesi(i, true) {
-					if g.Squarei(ni) == SquareUndefined {
-						g.SetSquarei(ni, SquareAir)
-					}
-				}
-				debug("-> [ar] fill adjacent squares to air")
-				debug(g)
-			}
-		}
-		if g.Squarei(i) == SquareUndefined {
-			air := g.NeighborCount4(i, SquareAir)
-			undef := g.NeighborCount4(i, SquareUndefined)
-			if air+undef < 2 {
-				k.squareCannotBe(i, SquareDragon)
-				debug("-> [ar] square connot be a dragon because there could not be 2 adjacent squares of air")
-			}
-		}
-		return g
-	},
-
-	// if a fire square is set, there must be at least 2 dragons around it
-	func(g *Grid, i int, k *knowledge) *Grid {
-		if g.Squarei(i) == SquareFire {
-			dragons := g.NeighborCount8(i, SquareDragon)
-			undef := g.NeighborCount8(i, SquareUndefined)
-			if dragons < 2 && dragons+undef == 2 {
-				for _, ni := range g.NeighborIndicesi(i, false) {
-					if g.Squarei(ni) == SquareUndefined {
-						g.SetSquarei(ni, SquareDragon)
-					}
-				}
-				debug("-> [ar] set dragons in neighbour squares if only one solution")
-				debug(g)
-			}
-		}
-		return g
-	},
-
-	// if a undefined square is surrounded by more than one dragon, there must be fire
-	func(g *Grid, i int, k *knowledge) *Grid {
-		if g.Squarei(i) == SquareUndefined {
-			dragons := g.NeighborCount8(i, SquareDragon)
-			if dragons > 1 {
-				g.SetSquarei(i, SquareFire)
-				debug("-> [ar] set fire if more than 1 dragon around square")
-				debug(g)
-			}
-		}
-		return g
-	},
-
-	// if a undefined square cannot be surrounded be at least 2 dragons, there can not be fire
-	func(g *Grid, i int, k *knowledge) *Grid {
-		if g.Squarei(i) == SquareUndefined {
-			dragons := g.NeighborCount8(i, SquareDragon)
-			undef := g.NeighborCount8(i, SquareUndefined)
-			if dragons+undef < 2 {
-				k.squareCannotBe(i, SquareFire)
-				debug("-> [ar] square cannot be fire if not at least 2 dragons could be around it")
-			}
-		}
-		return g
-	},
-
-	// if a air square is set, there can maximum be one dragon around it
-	func(g *Grid, i int, k *knowledge) *Grid {
-		square := g.Squarei(i)
-		if square == SquareAir {
-			dragons := g.NeighborCount8(i, SquareDragon)
-			if dragons == 1 {
-				k.squaresCannotBe(g.NeighborIndicesi(i, false), SquareDragon)
-				debug("-> [ar] if a air square is set, there can maximum be one dragon around it")
-			}
-		}
-		return g
-	},
-
-	// if a square is undefined but there is only one value possible (according to the knowledge db)
-	// set the squares value
-	// TODO: move OnesCount8 and TrailingZeros8 into knowledge type
-	func(g *Grid, i int, k *knowledge) *Grid {
-		if g.Squarei(i) == SquareUndefined {
-			if bits.OnesCount8(k.pv[i]) == 1 {
-				val := Square(bits.TrailingZeros8(k.pv[i]))
-				g.SetSquarei(i, val)
-				debug("-> [ar] set the only posible value of a square")
-				debug(g)
-			}
-		}
-		return g
-	},
 }
 
 func maxPermCount(difficulty Difficulty) int {
