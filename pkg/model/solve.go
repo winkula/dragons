@@ -165,37 +165,34 @@ func SolveBruteForce(g *Grid) *Grid {
 	return nil
 }
 
-// CheckDifficulty checks if a puzzle can be solved given a specific difficulty level.
-func CheckDifficulty(g *Grid, difficulty Difficulty) bool {
-	switch difficulty {
-	case DifficultyEasy:
-		return SolveTechnically(g, DifficultyEasy) != nil
-	case DifficultyMedium:
-		return SolveTechnically(g, DifficultyEasy) == nil && SolveIterative(g, DifficultyEasy) != nil
-	case DifficultyHard:
-		return true
-	}
-	return true
-}
-
 // GetDifficulty gets the difficulty of a puzzle.
 func GetDifficulty(g *Grid) Difficulty {
 	if SolveTechnically(g, DifficultyEasy) != nil {
-		// easy puzzles must be solvable with applying solve rules only (domain knowledge)
+		// easy puzzles must be solvable with applying easy techniques only (domain knowledge)
 		return DifficultyEasy
 	}
+	if SolveTechnically(g, DifficultyMedium) != nil {
+		// easy puzzles must be solvable with applying medium techniques only (domain knowledge)
+		return DifficultyMedium
+	}
+	if SolveIterative(g, DifficultyMedium) != nil {
+		// medium puzzles must be solvable using the SolveIterative algorithm with parameter "easy"
+		// it should not be solvable with "SolveTechnically"
+		return DifficultyHard
+	}
+	/*
 	if SolveIterative(g, DifficultyEasy) != nil {
 		// medium puzzles must be solvable using the SolveIterative algorithm with parameter "easy"
 		// it should not be solvable with "SolveTechnically"
 		return DifficultyMedium
-	}
+	}*/
 
 	// hard puzzles have no restriction in being solvable using a specific algorithm
 	// sometimes, brute force is the only option to solve a "hard" puzzle
-	return DifficultyHard
+	return DifficultyBrutal
 }
 
-func GetStartingPoints(g *Grid, difficulty Difficulty) int {
+func GetStartingPoints(g *Grid, difficulty Difficulty) float64 {
 	count := 0
 	for i := range g.Squares {
 		for _, rule := range solveTechniques[difficulty] {
@@ -206,7 +203,7 @@ func GetStartingPoints(g *Grid, difficulty Difficulty) int {
 			}
 		}
 	}
-	return count
+	return float64(count) / float64(g.Size())
 }
 
 func anyRuleApplies(g *Grid, i int) bool {
@@ -232,6 +229,8 @@ func maxPermCount(difficulty Difficulty) int {
 	case DifficultyEasy:
 		return 1 // only one valid possibilities
 	case DifficultyMedium:
+		return 3 // 3^1 (all possibilities for 1 field)
+	case DifficultyHard:
 		return 9 // 3^2 (all possibilities for 2 fields)
 	default:
 		return math.MaxUint32

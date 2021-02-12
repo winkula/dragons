@@ -59,7 +59,7 @@ func generateFrom(solution *model.Grid, difficulty model.Difficulty, duration ti
 	if puzzle != nil {
 		fmt.Println("Puzzle:")
 		fmt.Println(puzzle)
-		renderers.RenderSvg(puzzle, true, "puzzle_old")
+		//renderers.RenderSvg(puzzle, true, "puzzle_old")
 		renderers.RenderPdf(puzzle, true, "puzzle")
 	}
 
@@ -76,6 +76,6 @@ func printStats(puzzle *model.Grid, solution *model.Grid) {
 		fmt.Printf(" > Puzzle rating:   %.1f %%\n", puzzle.PuzzleRating())
 		fmt.Printf(" > Undefinedness:   %.1f %%\n", 100.0*puzzle.Undefinedness())
 		fmt.Printf(" > Difficulty:      %s\n", model.GetDifficulty(puzzle).String())
-		fmt.Printf(" > Starting points: %v\n", model.GetStartingPoints(puzzle, model.DifficultyEasy))
+		fmt.Printf(" > Starting points: %.3f\n", model.GetStartingPoints(puzzle, model.DifficultyEasy))
 	}
 }

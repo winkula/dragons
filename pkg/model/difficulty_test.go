@@ -23,6 +23,9 @@ func TestParseDifficulty(t *testing.T) {
 
 		{"hard", DifficultyHard},
 		{"h", DifficultyHard},
+
+		{"brutal", DifficultyBrutal},
+		{"b", DifficultyBrutal},
 	}
 
 	for _, table := range tables {
@@ -44,6 +47,7 @@ func TestDifficultyString(t *testing.T) {
 		{DifficultyEasy, "easy"},
 		{DifficultyMedium, "medium"},
 		{DifficultyHard, "hard"},
+		{DifficultyBrutal, "brutal"},
 	}
 
 	for _, table := range tables {

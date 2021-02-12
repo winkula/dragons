@@ -115,10 +115,7 @@ func checkSolvable(g *Grid, index int, difficulty Difficulty) bool {
 		return false
 	}
 
-	// TODO: optimize the difficulty check
-	// stop early when difficulty is easy, dont check for medium then
-	return CheckDifficulty(g, difficulty)
-	//return difficulty == GetDifficulty(g)
+	return GetDifficulty(g) <= difficulty
 }
 
 func executeParallel(timeout time.Duration, action func(ctx context.Context, c chan<- *Grid)) <-chan *Grid {

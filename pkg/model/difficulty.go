@@ -14,6 +14,8 @@ const (
 	DifficultyMedium
 	// DifficultyHard represents "hard" puzzles.
 	DifficultyHard
+	// DifficultyBrutal represents "brutal" puzzles (only solvable using brute force).
+	DifficultyBrutal
 )
 
 // ParseDifficulty takes a string and returns its Difficulty value.
@@ -32,9 +34,12 @@ func ParseDifficulty(str string) Difficulty {
 	if strings.HasPrefix("hard", str) {
 		return DifficultyHard
 	}
+	if strings.HasPrefix("brutal", str) {
+		return DifficultyBrutal
+	}
 	return DifficultyUnknown
 }
 
 func (difficulty Difficulty) String() string {
-	return []string{"unknown", "easy", "medium", "hard"}[difficulty]
+	return []string{"unknown", "easy", "medium", "hard", "brutal"}[difficulty]
 }

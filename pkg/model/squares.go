@@ -33,9 +33,9 @@ var squareAttributes = map[Square]struct {
 	density     int
 	puzzleValue int
 }{
-	SquareUndefined: {' ', '_', 0, 100},
-	SquareAir:       {'-', 'x', 0, 50},
-	SquareFire:      {'Δ' /* 🔥 */, 'f', 1, 5},
+	SquareUndefined: {' ', '_', 0, 10},
+	SquareAir:       {'-', 'x', 0, 9},
+	SquareFire:      {'Δ' /* 🔥 */, 'f', 1, 3},
 	SquareDragon:    {'▲' /* 🐲*/, 'd', 1, 1},
 	SquareOut:       {'#', '#', 0, 0},
 }

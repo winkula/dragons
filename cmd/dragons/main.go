@@ -40,7 +40,7 @@ func main() {
 		start := time.Now()
 		command.action()
 		elapsed := time.Since(start)
-		fmt.Printf("Executed in %s", elapsed)
+		fmt.Printf("Executed in %s\n", elapsed)
 	} else {
 		help()
 		os.Exit(1)
