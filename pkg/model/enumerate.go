@@ -15,6 +15,11 @@ func Enumerate(g *Grid) []*Grid {
 	return enumerate(g, all, stopNever)
 }
 
+// EnumerateLimited enumerates all possible successors from a given grid but stops as soon as there are more than one solution.
+func EnumerateLimited(g *Grid) []*Grid {
+	return enumerate(g, all, stopWhenMultipleSolutions)
+}
+
 // EnumerateFilter enumerates all possible successors from a given grid and
 // allows to filter only the wanted grids.
 func EnumerateFilter(g *Grid, filter gridPredicate) []*Grid {

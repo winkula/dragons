@@ -10,7 +10,7 @@ import (
 func init() {
 	cmd := flag.NewFlagSet("solve", flag.ExitOnError)
 	dificulty := cmd.String("difficulty", "hard", "difficulty of the puzzle")
-	algorithm := cmd.String("algorithm", "all", "algorithm to use (possible values: human, bf, dk)")
+	algorithm := cmd.String("algorithm", "all", "algorithm to use (possible values: t, i, dk)")
 
 	registerCommand("solve", cmd, func() {
 		difficultyEnum := model.ParseDifficulty(*dificulty)
@@ -27,9 +27,9 @@ func solve(g *model.Grid, difficulty model.Difficulty, algorithm string) {
 		key    string
 		solver solver
 	}{
-		{name: "SolveDomainKnowledge", key: "dk", solver: func(g *model.Grid) *model.Grid { return model.SolveDk(g, difficulty) }},
-		{name: "SolveHuman", key: "human", solver: func(g *model.Grid) *model.Grid { return model.SolveHuman(g, difficulty) }},
-		{name: "SolveBruteForce", key: "bf", solver: model.SolveBf},
+		{name: "SolveDomainKnowledge", key: "t", solver: func(g *model.Grid) *model.Grid { return model.SolveTechnically(g, difficulty) }},
+		{name: "SolveIterative", key: "i", solver: func(g *model.Grid) *model.Grid { return model.SolveIterative(g, difficulty) }},
+		{name: "SolveBruteForce", key: "bf", solver: model.SolveBruteForce},
 	}
 
 	for _, s := range solvers {

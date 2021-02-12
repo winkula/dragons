@@ -4,16 +4,23 @@ import (
 	"math"
 )
 
-// Solve solves a puzzle only using the validation rules of the game.
+// Solve solves a puzzle using multiple algorithms if necessary.
 // it returns the only possible solution or "nil" otherwise.
 func Solve(g *Grid) *Grid {
-	return SolveHuman(g, DifficultyHard)
+	solution := SolveIterative(g, DifficultyHard)
+	if solution != nil {
+		return solution
+	}
+
+	// brute force algorithm as fallback
+	return SolveBruteForce(g)
 }
 
-// SolveHuman solves a puzzle but only if it is easier than a given difficulty level.
-//
-// TODO: rework algorithm naming
-func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
+// SolveIterative solves a puzzle by iteratively checking possible options for a given square.
+// It only uses the validation rules of the game - no domain knowledge required.
+// Can be tuned by the maximum number of possible permutations that can exist in order to exclude a option.
+// It returns the only possible solution or "nil" otherwise.
+func SolveIterative(g *Grid, difficulty Difficulty) *Grid {
 	if !IsDistinct(g) {
 		return nil // no distinct solution exists
 	}
@@ -35,7 +42,7 @@ func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 			debug(" ")
 			debug(" ")
 			debug("========== Investigating square", i, "==========")
-			debug(Render(work, i))
+			debugGrid(work, i)
 
 			// if only one option is possible for a square.. go for it
 			ops := k.getOptions(work, i)
@@ -46,7 +53,7 @@ func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 			// 	// we don't need to validate here as it's the only possible option anyway
 			// 	// IMPORTANT: this is only correct if we know, that a solution exists!
 			// 	debug("-> set the only possible option")
-			// 	debug(Render(work, i))
+			// 	debugGrid(work, i)
 			// 	continue
 			// }
 
@@ -117,11 +124,9 @@ func SolveHuman(g *Grid, difficulty Difficulty) *Grid {
 	return nil
 }
 
-// SolveDk solves a puzzle using domain knowledge.
-// it returns the only possible solution or "nil" otherwise.
-//
-// TODO: rework algorithm naming
-func SolveDk(g *Grid, difficulty Difficulty) *Grid {
+// SolveTechnically solves a puzzle applying fix techniques (using domain knowledge).
+// It returns the only possible solution or "nil" otherwise.
+func SolveTechnically(g *Grid, difficulty Difficulty) *Grid {
 	if !IsDistinct(g) {
 		debug("Solver: no distinct solution possible!")
 		return nil
@@ -149,23 +154,24 @@ func SolveDk(g *Grid, difficulty Difficulty) *Grid {
 	return nil
 }
 
-// SolveBf solves a puzzle using a brute force strategy (enumerating all possible states).
-//
-// TODO: rework algorithm naming
-func SolveBf(g *Grid) *Grid {
-	solutions := Enumerate(g)
+// SolveBruteForce solves a puzzle using a brute force strategy (enumerating all possible states).
+// It's the only algorithm that finds solutions to the hardest puzzles.
+// It returns the only possible solution or "nil" otherwise.
+func SolveBruteForce(g *Grid) *Grid {
+	solutions := EnumerateLimited(g)
 	if len(solutions) == 1 {
 		return solutions[0]
 	}
 	return nil
 }
 
+// CheckDifficulty checks if a puzzle can be solved given a specific difficulty level.
 func CheckDifficulty(g *Grid, difficulty Difficulty) bool {
 	switch difficulty {
 	case DifficultyEasy:
-		return SolveDk(g, DifficultyEasy) != nil
+		return SolveTechnically(g, DifficultyEasy) != nil
 	case DifficultyMedium:
-		return SolveDk(g, DifficultyEasy) == nil && SolveHuman(g, DifficultyEasy) != nil
+		return SolveTechnically(g, DifficultyEasy) == nil && SolveIterative(g, DifficultyEasy) != nil
 	case DifficultyHard:
 		return true
 	}
@@ -174,19 +180,33 @@ func CheckDifficulty(g *Grid, difficulty Difficulty) bool {
 
 // GetDifficulty gets the difficulty of a puzzle.
 func GetDifficulty(g *Grid) Difficulty {
-	if SolveDk(g, DifficultyEasy) != nil {
+	if SolveTechnically(g, DifficultyEasy) != nil {
 		// easy puzzles must be solvable with applying solve rules only (domain knowledge)
 		return DifficultyEasy
 	}
-	if SolveHuman(g, DifficultyEasy) != nil {
-		// medium puzzles must be solvable using the SolveHuman algorithm with parameter "easy"
-		// it should not be solvable with "SolveDk"
+	if SolveIterative(g, DifficultyEasy) != nil {
+		// medium puzzles must be solvable using the SolveIterative algorithm with parameter "easy"
+		// it should not be solvable with "SolveTechnically"
 		return DifficultyMedium
 	}
 
 	// hard puzzles have no restriction in being solvable using a specific algorithm
 	// sometimes, brute force is the only option to solve a "hard" puzzle
 	return DifficultyHard
+}
+
+func GetStartingPoints(g *Grid, difficulty Difficulty) int {
+	count := 0
+	for i := range g.Squares {
+		for _, rule := range solveTechniques[difficulty] {
+			cpy := g.Clone()
+			knowledge := newKnowledge(cpy)
+			if rule(cpy, i, knowledge) > solveResultNone {
+				count++
+			}
+		}
+	}
+	return count
 }
 
 func anyRuleApplies(g *Grid, i int) bool {

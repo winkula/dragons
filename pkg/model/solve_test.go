@@ -20,7 +20,7 @@ func TestSolve(t *testing.T) {
 	}
 }
 
-func TestSolveDk(t *testing.T) {
+func TestSolveTechnically(t *testing.T) {
 	tables := []struct {
 		grid       *Grid
 		difficulty Difficulty
@@ -37,7 +37,7 @@ func TestSolveDk(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		solved := SolveDk(table.grid, table.difficulty)
+		solved := SolveTechnically(table.grid, table.difficulty)
 
 		if table.solvable {
 			if solved == nil || !isSolved(solved) {
@@ -53,7 +53,7 @@ func TestSolveDk(t *testing.T) {
 	}
 }
 
-func TestSolveBf(t *testing.T) {
+func TestSolveBruteForce(t *testing.T) {
 	tables := []*Grid{
 		Parse("dx,_x"),
 		Parse("dx,__"),
@@ -63,7 +63,7 @@ func TestSolveBf(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		solved := SolveBf(table)
+		solved := SolveBruteForce(table)
 		if !isSolved(solved) {
 			t.Errorf("TestSolve was incorrect, grid is not solved. Grid: \n%s",
 				table)
@@ -71,7 +71,7 @@ func TestSolveBf(t *testing.T) {
 	}
 }
 
-func TestSolveHuman(t *testing.T) {
+func TestSolveIterative(t *testing.T) {
 	tables := []struct {
 		grid       *Grid
 		difficulty Difficulty
@@ -84,13 +84,13 @@ func TestSolveHuman(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		solution := SolveHuman(table.grid, table.difficulty)
+		solution := SolveIterative(table.grid, table.difficulty)
 		if isSolved(solution) && !table.solvable {
-			t.Errorf("TestSolveHuman was incorrect, grid is solved, but shouldn't be (difficulty: %v). Grid: \n%v",
+			t.Errorf("TestSolveIterative was incorrect, grid is solved, but shouldn't be (difficulty: %v). Grid: \n%v",
 				table.difficulty, table.grid)
 		}
 		if !isSolved(solution) && table.solvable {
-			t.Errorf("TestSolveHuman was incorrect, grid is not solved (difficulty: %v). Grid: \n%v",
+			t.Errorf("TestSolveIterative was incorrect, grid is not solved (difficulty: %v). Grid: \n%v",
 				table.difficulty, table.grid)
 		}
 	}
@@ -109,20 +109,20 @@ func BenchmarkSolve(b *testing.B) {
 	}
 }
 
-func BenchmarkSolveDk(b *testing.B) {
+func BenchmarkSolveTechnically(b *testing.B) {
 	g := Parse("_f_,_f_,_f_")
 	for i := 0; i < b.N; i++ {
-		solved := SolveDk(g, DifficultyEasy)
+		solved := SolveTechnically(g, DifficultyEasy)
 		if solved == nil || !isSolved(solved) {
 			b.Errorf("BenchmarkSolve was incorrect, grid is not solved. Grid: \n%s", g)
 		}
 	}
 }
 
-func BenchmarkSolveBf(b *testing.B) {
+func BenchmarkSolveBruteForce(b *testing.B) {
 	g := Parse("_f_,_f_,_f_")
 	for i := 0; i < b.N; i++ {
-		solved := SolveBf(g)
+		solved := SolveBruteForce(g)
 		if solved == nil || !isSolved(solved) {
 			b.Errorf("BenchmarkSolve was incorrect, grid is not solved. Grid: \n%s", g)
 		}

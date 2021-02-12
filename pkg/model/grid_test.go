@@ -1,6 +1,7 @@
 package model
 
 import (
+	"math/big"
 	"strings"
 	"testing"
 )
@@ -113,6 +114,28 @@ func TestRandomness(t *testing.T) {
 
 		if randomness < table.min || randomness > table.max {
 			t.Errorf("Randomness was incorrect, got: %v. Must be between %v and %v", randomness, table.min, table.max)
+		}
+	}
+}
+
+func TestID(t *testing.T) {
+	tables := []struct {
+		grid *Grid
+		code int64
+	}{
+		{Parse("__,__"), 0b_00010_00010},
+		{Parse("x"), 0b_01_00001_00001},
+		{Parse("f"), 0b_10_00001_00001},
+		{Parse("d"), 0b_11_00001_00001},
+		{Parse("d__"), 0b_11_00001_00011},
+		{Parse("__d"), 0b_11_00_00_00001_00011},
+		{Parse("dx,_f"), 0b_10_00_01_11_00010_00010},
+	}
+	for _, table := range tables {
+		code := table.grid.ID()
+
+		if big.NewInt(table.code).Cmp(code) != 0 {
+			t.Errorf("Code was incorrect, got: %v. Expected %v", code, table.code)
 		}
 	}
 }

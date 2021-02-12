@@ -66,7 +66,7 @@ var rule2inverted = func(g *Grid, i int, k *knowledge) solveResult {
 				}
 			}
 			debug("-> [ar] set dragons in neighbour squares if only one solution")
-			debug(g)
+			debugGrid(g, i)
 			return solveResultFillSquare
 		}
 	}
@@ -104,7 +104,7 @@ var rule3 = func(g *Grid, i int, k *knowledge) solveResult {
 				}
 			}
 			debug("-> [ar] fill adjacent squares to air")
-			debug(g)
+			debugGrid(g, i)
 			return solveResultFillSquare
 		}
 	}
@@ -134,7 +134,7 @@ var applyKnowledge = func(g *Grid, i int, k *knowledge) solveResult {
 		val := k.onlyPossibleValue(i)
 		g.SetSquarei(i, val)
 		debug("-> [ar] set the only posible value of a square")
-		debug(g)
+		debugGrid(g, i)
 		return solveResultFillSquare
 	}
 	return solveResultNone

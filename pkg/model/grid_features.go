@@ -2,6 +2,7 @@ package model
 
 import (
 	"math"
+	"math/big"
 )
 
 // SolutionRating returns the interestingness of a grid.
@@ -70,4 +71,25 @@ func (g *Grid) PuzzleRating() float64 {
 		value += val.PuzzleValue()
 	}
 	return float64(value) / float64(g.Size()) / 100.0
+}
+
+// ID creates a unique identifier for a puzzle.
+// This helps when we want to normalize puzzles.
+//
+// Code is constructed as follows:
+//
+// most significant bit <------------------------------- least significant bit
+// [ last square ] ... [ square 0 (2bits) ][ height (5bits) ][ width (5bits) ]
+func (g *Grid) ID() *big.Int {
+	code := big.NewInt(0)
+
+	code.Or(code, big.NewInt(0).Lsh(big.NewInt(int64(g.Width)), uint(0)))
+	code.Or(code, big.NewInt(0).Lsh(big.NewInt(int64(g.Height)), uint(5)))
+
+	for i, val := range g.Squares {
+		squareValue := big.NewInt(int64(val))
+		s := big.NewInt(0).Lsh(squareValue, uint(10+2*i))
+		code.Or(code, s)
+	}
+	return code
 }

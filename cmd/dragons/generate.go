@@ -76,5 +76,6 @@ func printStats(puzzle *model.Grid, solution *model.Grid) {
 		fmt.Printf(" > Puzzle rating:   %.1f %%\n", puzzle.PuzzleRating())
 		fmt.Printf(" > Undefinedness:   %.1f %%\n", 100.0*puzzle.Undefinedness())
 		fmt.Printf(" > Difficulty:      %s\n", model.GetDifficulty(puzzle).String())
+		fmt.Printf(" > Starting points: %v\n", model.GetStartingPoints(puzzle, model.DifficultyEasy))
 	}
 }

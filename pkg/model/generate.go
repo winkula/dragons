@@ -26,9 +26,12 @@ func Generate(width int, height int, duration time.Duration) *Grid {
 	})
 
 	// take the most interesting result
-	return best(c, func(g *Grid) float64 {
+	g := best(c, func(g *Grid) float64 {
 		return g.SolutionRating()
 	})
+
+	// we always normalize generated grids to prevent duplicates
+	return g.Normalize()
 }
 
 func tryGenerate(width int, height int) *Grid {
