@@ -145,8 +145,25 @@ var solveRulesEasy = []solveRule{
 	rule2,
 	rule2derived,
 	rule2inverted,
-	//rule2invertedSpecial,
+	//rule2invertedSpecial, // excluded rule
 	rule3,
 	rule3Inverted,
 	applyKnowledge,
+}
+
+var solveRulesMedium = []solveRule{
+	rule1,
+	rule2,
+	rule2derived,
+	rule2inverted,
+	rule2invertedSpecial,
+	rule3,
+	rule3Inverted,
+	applyKnowledge,
+}
+
+var solveTechniques = map[Difficulty][]solveRule{
+	DifficultyEasy:   solveRulesEasy,
+	DifficultyMedium: solveRulesMedium,
+	DifficultyHard:   solveRulesMedium,
 }

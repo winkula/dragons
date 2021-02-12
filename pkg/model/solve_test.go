@@ -22,20 +22,22 @@ func TestSolve(t *testing.T) {
 
 func TestSolveDk(t *testing.T) {
 	tables := []struct {
-		grid     *Grid
-		solvable bool
+		grid       *Grid
+		difficulty Difficulty
+		solvable   bool
 	}{
-		{Parse("dx,_x"), true},
-		{Parse("dx,__"), true},
-		{Parse("_f_,_f_,_f_"), true},
-		{Parse("d__,___,__d"), true},
+		{Parse("dx,_x"), DifficultyMedium, true},
+		{Parse("dx,__"), DifficultyMedium, true},
+		{Parse("_f_,_f_,_f_"), DifficultyMedium, true},
+		{Parse("d__,___,__d"), DifficultyMedium, true},
 
-		{Parse("_f_,___,___"), false}, // not solvable
-		{Parse("___,_f_,___"), false}, // no distinct solution possible
+		{Parse("_f_,_f_,_f_"), DifficultyEasy, false},   // not solvable using easy rule set
+		{Parse("_f_,___,___"), DifficultyMedium, false}, // not solvable
+		{Parse("___,_f_,___"), DifficultyMedium, false}, // no distinct solution possible
 	}
 
 	for _, table := range tables {
-		solved := SolveDk(table.grid, DifficultyEasy)
+		solved := SolveDk(table.grid, table.difficulty)
 
 		if table.solvable {
 			if solved == nil || !isSolved(solved) {

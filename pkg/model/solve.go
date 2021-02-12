@@ -133,7 +133,7 @@ func SolveDk(g *Grid, difficulty Difficulty) *Grid {
 	for dirty {
 		dirty = false
 		for i := range cpy.Squares {
-			for _, rule := range solveRulesEasy {
+			for _, rule := range solveTechniques[difficulty] {
 				if rule(cpy, i, knowledge) == solveResultFillSquare {
 					// set dirty flag if any rule could be applied
 					dirty = true
