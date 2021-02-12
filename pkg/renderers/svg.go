@@ -106,7 +106,7 @@ type svgSquare struct {
 }
 
 // RenderSvg prints a grid in SVG format
-func RenderSvg(g *model.Grid, border bool) {
+func RenderSvg(g *model.Grid, border bool, filename string) {
 	gridSize := 100
 	grid := svgGrid{
 		Squares: make([]svgSquare, 0, g.Width*g.Height),
@@ -127,7 +127,7 @@ func RenderSvg(g *model.Grid, border bool) {
 		grid.Squares = append(grid.Squares, cell)
 	}
 
-	saveFile("test.svg", grid)
+	saveFile(fmt.Sprintf("%v.svg", filename), grid)
 }
 
 func saveFile(filename string, data interface{}) {

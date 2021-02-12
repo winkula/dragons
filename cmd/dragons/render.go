@@ -18,5 +18,6 @@ func init() {
 
 func render(s string, noOutline bool) {
 	g := model.Parse(s)
-	renderers.RenderSvg(g, !noOutline)
+	renderers.RenderSvg(g, !noOutline, "puzzle_old")
+	renderers.RenderPdf(g, !noOutline, "puzzle")
 }

@@ -1,6 +1,7 @@
 package renderers
 
 import (
+	"fmt"
 	"image/color"
 
 	"github.com/tdewolff/canvas"
@@ -17,7 +18,7 @@ var gridBorder = 0.25
 var gridColor = canvas.Black
 var symbolLine = 0.15
 
-func RenderPdf(g *model.Grid, border bool) {
+func RenderPdf(g *model.Grid, border bool, filename string) {
 	c := canvas.New(float64(g.Width*size+2*padding), float64(g.Height*size+2*padding))
 	ctx := canvas.NewContext(c)
 	ctx.SetFillColor(canvas.Transparent)
@@ -27,8 +28,8 @@ func RenderPdf(g *model.Grid, border bool) {
 	drawGrid(ctx, g, border)
 	drawSymbols(ctx, g)
 
-	c.WriteFile("out.pdf", pdf.Writer)
-	c.WriteFile("out.svg", svg.Writer)
+	c.WriteFile(fmt.Sprintf("%v.pdf", filename), pdf.Writer)
+	c.WriteFile(fmt.Sprintf("%v.svg", filename), svg.Writer)
 }
 
 func drawGrid(ctx *canvas.Context, g *model.Grid, border bool) {

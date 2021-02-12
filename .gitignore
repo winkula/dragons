@@ -19,4 +19,8 @@ node_modules/
 .cache/
 dist/
 
-test.svg
+# Generated/rendered files
+*puzzle*.svg
+*puzzle*.pdf
+*solution*.svg
+*solution*.pdf

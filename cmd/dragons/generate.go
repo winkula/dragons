@@ -59,8 +59,8 @@ func generateFrom(solution *model.Grid, difficulty model.Difficulty, duration ti
 	if puzzle != nil {
 		fmt.Println("Puzzle:")
 		fmt.Println(puzzle)
-		renderers.RenderSvg(puzzle, true)
-		renderers.RenderPdf(puzzle, true)
+		renderers.RenderSvg(puzzle, true, "puzzle_old")
+		renderers.RenderPdf(puzzle, true, "puzzle")
 	}
 
 	printStats(puzzle, solution)
