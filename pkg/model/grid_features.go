@@ -65,6 +65,8 @@ func (g *Grid) Undefinedness() float64 {
 
 // PuzzleRating is used to generate puzzles from solutions.
 // This value is used to find the best obfuscated puzzle among others.
+//
+// TODO: use a sigmoid function or similar to clamp the value always between 0.0 and 1.0
 func (g *Grid) PuzzleRating() float64 {
 	return GetAvgOptions(g, DifficultyEasy)
 }
