@@ -66,14 +66,7 @@ func (g *Grid) Undefinedness() float64 {
 // PuzzleRating is used to generate puzzles from solutions.
 // This value is used to find the best obfuscated puzzle among others.
 func (g *Grid) PuzzleRating() float64 {
-	return 1.0 / GetStartingPoints(g, DifficultyMedium)
-	/*
-	value := 0
-	for _, val := range g.Squares {
-		value += val.PuzzleValue()
-	}
-	return float64(value) / float64(g.Size()) / 100.0
-	*/
+	return GetAvgOptions(g, DifficultyEasy)
 }
 
 // ID creates a unique identifier for a puzzle.

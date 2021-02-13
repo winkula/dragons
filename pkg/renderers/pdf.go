@@ -6,7 +6,6 @@ import (
 
 	"github.com/tdewolff/canvas"
 	"github.com/tdewolff/canvas/pdf"
-	"github.com/tdewolff/canvas/svg"
 	"github.com/winkula/dragons/pkg/model"
 )
 
@@ -29,7 +28,7 @@ func RenderPdf(g *model.Grid, border bool, filename string) {
 	drawSymbols(ctx, g)
 
 	c.WriteFile(fmt.Sprintf("%v.pdf", filename), pdf.Writer)
-	c.WriteFile(fmt.Sprintf("%v.svg", filename), svg.Writer)
+	//c.WriteFile(fmt.Sprintf("%v.svg", filename), svg.Writer)
 }
 
 func drawGrid(ctx *canvas.Context, g *model.Grid, border bool) {

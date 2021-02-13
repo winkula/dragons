@@ -67,8 +67,8 @@ $difficulties | % {
 
         $n = Get-LineNumbers + 1
         Write-Entry -Solution $codeSolution -Puzzle $codePuzzle -N $n -Difficulty $difficulty
-
-        Dragons-Render -Filename "puzzles/$size-$difficulty-$n-puzzle" -Code $codeSolution | Out-Null
-        Dragons-Render -Filename "puzzles/$size-$difficulty-$n-solution" -Code $codePuzzle | Out-Null
+        
+        Dragons-Render -Filename "puzzles/$size-$difficulty-$n-puzzle" -Code $codePuzzle | Out-Null
+        Dragons-Render -Filename "puzzles/$size-$difficulty-$n-solution" -Code $codeSolution | Out-Null
 	}
 }

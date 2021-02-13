@@ -81,8 +81,20 @@ func Obfuscate(g *Grid, difficulty Difficulty, duration time.Duration) *Grid {
 
 	// take the best result
 	return best(c, func(g *Grid) float64 {
-		return g.PuzzleRating()
+		return g.Undefinedness() * diffToGoal(g.PuzzleRating(), difficulty)
 	})
+}
+
+func diffToGoal(rating float64, difficulty Difficulty) float64 {
+	switch difficulty {
+	case DifficultyEasy:
+		return 1.0 - math.Abs(rating - 0.5)
+	case DifficultyMedium:
+		return 1.0 - math.Abs(rating - 0.0)
+	case DifficultyHard:
+		return 1.0 - math.Abs(rating - 0.0)
+	}
+	return 1.0
 }
 
 func obfuscate(ctx context.Context, g *Grid, difficulty Difficulty) *Grid {

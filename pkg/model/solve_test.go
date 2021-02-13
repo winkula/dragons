@@ -79,7 +79,7 @@ func TestSolveIterative(t *testing.T) {
 	}{
 		{Parse("__,__"), DifficultyEasy, false},
 		{Parse("_f_,___,___"), DifficultyEasy, false},
-		{Parse("_f_,___,___"), DifficultyHard, true},
+		{Parse("_f_,___,___"), DifficultyBrutal, true},
 		{Parse("_f_,_f_,___"), DifficultyEasy, true},
 	}
 

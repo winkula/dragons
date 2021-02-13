@@ -167,40 +167,34 @@ func SolveBruteForce(g *Grid) *Grid {
 
 // GetDifficulty gets the difficulty of a puzzle.
 func GetDifficulty(g *Grid) Difficulty {
+	
 	if SolveTechnically(g, DifficultyEasy) != nil {
-		// easy puzzles must be solvable with applying easy techniques only (domain knowledge)
-		return DifficultyEasy
-	}
-	if SolveTechnically(g, DifficultyMedium) != nil {
-		// easy puzzles must be solvable with applying medium techniques only (domain knowledge)
+		if g.PuzzleRating() >= 0.35 {
+			// easy puzzles must be solvable with applying easy techniques only (domain knowledge)
+			return DifficultyEasy
+		}		
 		return DifficultyMedium
 	}
-	if SolveIterative(g, DifficultyMedium) != nil {
+
+	if SolveIterative(g, DifficultyEasy) != nil {
 		// medium puzzles must be solvable using the SolveIterative algorithm with parameter "easy"
 		// it should not be solvable with "SolveTechnically"
 		return DifficultyHard
 	}
-	/*
-	if SolveIterative(g, DifficultyEasy) != nil {
-		// medium puzzles must be solvable using the SolveIterative algorithm with parameter "easy"
-		// it should not be solvable with "SolveTechnically"
-		return DifficultyMedium
-	}*/
 
 	// hard puzzles have no restriction in being solvable using a specific algorithm
 	// sometimes, brute force is the only option to solve a "hard" puzzle
 	return DifficultyBrutal
 }
 
-func GetStartingPoints(g *Grid, difficulty Difficulty) float64 {
+// GetAvgOptions gets the average options of possible solve techniques that can be applied per square.
+func GetAvgOptions(g *Grid, difficulty Difficulty) float64 {
 	count := 0
 	for i := range g.Squares {
 		for _, rule := range solveTechniques[difficulty] {
 			cpy := g.Clone()
 			knowledge := newKnowledge(cpy)
-			if rule(cpy, i, knowledge) > solveResultNone {
-				count++
-			}
+			count += int(rule(cpy, i, knowledge))
 		}
 	}
 	return float64(count) / float64(g.Size())

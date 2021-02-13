@@ -20,7 +20,7 @@ node_modules/
 dist/
 
 # Generated/rendered files
-*puzzle*.svg
-*puzzle*.pdf
-*solution*.svg
-*solution*.pdf
+*puzzle.svg
+*puzzle.pdf
+*solution.svg
+*solution.pdf
