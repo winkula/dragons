@@ -27,7 +27,7 @@ func Generate(width int, height int, duration time.Duration) *Grid {
 
 	// take the most interesting result
 	g := best(c, func(g *Grid) float64 {
-		return g.SolutionRating()
+		return float64(g.CountSquares(SquareDragon))
 	})
 
 	// we always normalize generated grids to prevent duplicates
@@ -88,11 +88,11 @@ func Obfuscate(g *Grid, difficulty Difficulty, duration time.Duration) *Grid {
 func diffToGoal(rating float64, difficulty Difficulty) float64 {
 	switch difficulty {
 	case DifficultyEasy:
-		return 1.0 - math.Abs(rating - 0.5)
+		return 1.0 - math.Abs(rating-0.5)
 	case DifficultyMedium:
-		return 1.0 - math.Abs(rating - 0.0)
+		return 1.0 - math.Abs(rating-0.0)
 	case DifficultyHard:
-		return 1.0 - math.Abs(rating - 0.0)
+		return 1.0 - math.Abs(rating-0.0)
 	}
 	return 1.0
 }
