@@ -44,6 +44,7 @@ func Parse(s string) *Grid {
 	return g
 }
 
+// TODO: use squareAttributes here
 func getSquare(square rune) Square {
 	switch unicode.ToLower(square) {
 	case '_', '.':
@@ -54,6 +55,8 @@ func getSquare(square rune) Square {
 		return SquareFire
 	case 'd':
 		return SquareDragon
+	case 'n':
+		return SquareNoDragon
 	}
 	panic(fmt.Sprintf("Parse error: '%c' is not a valid value.", square))
 }

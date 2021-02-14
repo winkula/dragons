@@ -13,7 +13,7 @@ var size = 5 // 5mm
 var sizeFactor = float64(size)
 var padding = 1 // 1mm
 var gridLine = 0.05
-var gridBorder = 0.25
+var gridBorder = 0.3
 var gridColor = canvas.Black
 var symbolLine = 0.15
 
@@ -60,6 +60,8 @@ func drawSymbols(ctx *canvas.Context, g *model.Grid) {
 			drawTriangle(ctx, x, yNorm, canvas.Transparent)
 		case model.SquareAir:
 			drawLine(ctx, x, yNorm)
+		case model.SquareNoDragon:
+			drawPoint(ctx, x, yNorm)
 		}
 	}
 }
@@ -79,11 +81,15 @@ func drawRect(ctx *canvas.Context, x float64, y float64, width float64, height f
 }
 
 func drawTriangle(ctx *canvas.Context, x int, y int, col color.RGBA) {
+	triangleSize := 0.75
+	sqrt3 := 1.73205080757
+	triangleHeight := sqrt3 / 2.0 * triangleSize
+
 	polyline := &canvas.Polyline{}
-	polyline.Add(0.2*sizeFactor, 0.26*sizeFactor)
-	polyline.Add(0.5*sizeFactor, 0.78*sizeFactor)
-	polyline.Add(0.8*sizeFactor, 0.26*sizeFactor)
-	polyline.Add(0.2*sizeFactor, 0.26*sizeFactor)
+	polyline.Add((1.0-triangleSize)/2.0*sizeFactor, (1.0-triangleHeight)/2.0*sizeFactor)
+	polyline.Add(0.5*sizeFactor, (1.0-(1.0-triangleHeight)/2.0)*sizeFactor)
+	polyline.Add((1.0-(1.0-triangleSize)/2.0)*sizeFactor, (1.0-triangleHeight)/2.0*sizeFactor)
+	polyline.Add((1.0-triangleSize)/2.0*sizeFactor, (1.0-triangleHeight)/2.0*sizeFactor)
 	ctx.SetFillColor(col)
 	ctx.SetStrokeColor(canvas.Black)
 	ctx.SetStrokeWidth(symbolLine)
@@ -92,12 +98,23 @@ func drawTriangle(ctx *canvas.Context, x int, y int, col color.RGBA) {
 }
 
 func drawLine(ctx *canvas.Context, x int, y int) {
+	lineSize := 0.4
 	polyline := &canvas.Polyline{}
-	polyline.Add(0.3*sizeFactor, 0.5*sizeFactor)
-	polyline.Add(0.7*sizeFactor, 0.5*sizeFactor)
+	polyline.Add((1.0-lineSize)/2.0*sizeFactor, 0.5*sizeFactor)
+	polyline.Add((1.0-(1.0-lineSize)/2.0)*sizeFactor, 0.5*sizeFactor)
 	ctx.SetFillColor(canvas.Transparent)
 	ctx.SetStrokeColor(canvas.Black)
 	ctx.SetStrokeWidth(symbolLine)
 
 	ctx.DrawPath(float64(size*x+padding), float64(size*y+padding), polyline.ToPath())
+}
+
+func drawPoint(ctx *canvas.Context, x int, y int) {
+	pointSize := 0.02 * sizeFactor
+	ctx.SetFillColor(canvas.Black)
+	ctx.SetStrokeColor(canvas.Black)
+	ctx.SetStrokeWidth(symbolLine)
+
+	circle := canvas.Circle(pointSize).Translate(0.5*sizeFactor, 0.5*sizeFactor)
+	ctx.DrawPath(float64(size*x+padding), float64(size*y+padding), circle)
 }

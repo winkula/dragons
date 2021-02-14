@@ -14,6 +14,8 @@ const (
 	SquareDragon
 	// SquareOut represents squares that are outside of the grid.
 	SquareOut
+	// SquareNoDragon represents squares that can not be dragons.
+	SquareNoDragon
 )
 
 const numSquareValues = 5
