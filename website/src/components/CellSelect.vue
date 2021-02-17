@@ -33,8 +33,8 @@ export default Vue.extend({
       buttons: [
         {
           id: 0,
-          value: getCellType(CellType.Empty).value,
-          icon: getCellType(CellType.Empty).icon,
+          value: getCellType(CellType.Air).value,
+          icon: getCellType(CellType.Air).icon,
         },
         {
           id: 1,
@@ -45,6 +45,11 @@ export default Vue.extend({
           id: 2,
           value: getCellType(CellType.Fire).value,
           icon: getCellType(CellType.Fire).icon,
+        },
+        {
+          id: 3,
+          value: getCellType(CellType.Point).value,
+          icon: getCellType(CellType.Point).icon,
         },
       ],
     };

@@ -5,7 +5,7 @@ import soundWin from "../assets/audio/win.mp3";
 
 const music = new Audio(soundMusic);
 music.loop = true;
-music.volume = 0.4;
+music.volume = 0.1;
 
 function playClick() {
 	const sound = new Audio(soundClick);

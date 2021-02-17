@@ -30,12 +30,18 @@ class Game {
 			});
 	}
 
+	private get isFilled() {
+		return cellCoords(this.width, this.height)
+		.every(({ x, y }) => this.puzzle.getCell(x, y).isDefined);
+	}
+
 	private get isSolved() {
 		return cellCoords(this.width, this.height)
 			.every(({ x, y }) => this.puzzle.getCell(x, y).value === this.solution.getCell(x, y).value);
 	}
 
 	get status() {
+		if (!this.isFilled) return GameStatus.Unsolved;
 		if (!this.isValid) return GameStatus.Invalid;
 		if (this.isSolved) return GameStatus.Solved
 		return GameStatus.Unsolved;

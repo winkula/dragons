@@ -53,7 +53,7 @@ export default Vue.extend({
       status: "unsolved",
       isSolved: false,
       isValid: true,
-      fillType: getCellType(CellType.Empty).value,
+      fillType: getCellType(CellType.Air).value,
       helpVisible: false,
       startDialogVisible: true,
     };
@@ -70,7 +70,7 @@ export default Vue.extend({
         return;
       }
 
-      if (cell.isDefined && (cell.value === this.fillType)) {
+      if (cell.value === this.fillType) {
         // set back to undeinef
         cell.value = getCellType(CellType.Undefined).value;
       } else {

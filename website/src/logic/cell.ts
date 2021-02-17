@@ -1,11 +1,11 @@
 import iconDragon from "../assets/icons/dragon-s2.png";
 import iconFire from "../assets/icons/fire.svg";
-import iconEmpty from "../assets/icons/empty.svg";
+import iconAir from "../assets/icons/air.svg";
 import iconPoint from "../assets/icons/point.svg";
 
 enum CellType {
 	Undefined,
-	Empty,
+	Air,
 	Dragon,
 	Fire,
 
@@ -31,9 +31,9 @@ const cellDefinitions: CellDefinition[] = [
 	},
 	{
 		value: 1,
-		name: CellType.Empty,
-		desc: "empty",
-		icon: iconEmpty,
+		name: CellType.Air,
+		desc: "air",
+		icon: iconAir,
 		symbol: "x",
 		isDefined: true
 	},
@@ -93,9 +93,6 @@ class Cell {
 	}
 
 	get icon() {
-		if (!this.given && !this.isDefined && this.cantBeDragon) {
-			return iconPoint;
-		}
 		return getCellTypeByValue(this.value)?.icon;
 	}
 }
