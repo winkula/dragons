@@ -100,20 +100,19 @@ func TestIndex(t *testing.T) {
 	}
 }
 
-func TestRandomness(t *testing.T) {
+func TestSolutionRating(t *testing.T) {
 	tables := []struct {
-		grid *Grid
-		min  float64
-		max  float64
+		grid   *Grid
+		rating float64
 	}{
-		{New(3, 3), 0.6, 0.7},
-		{Parse("xfx,dfd,xfx"), 0.8, 0.9},
+		{Parse("__,__"), 0.0},
+		{Parse("dx,_f"), 0.25},
 	}
 	for _, table := range tables {
-		randomness := table.grid.Randomness()
+		rating := table.grid.SolutionRating()
 
-		if randomness < table.min || randomness > table.max {
-			t.Errorf("Randomness was incorrect, got: %v. Must be between %v and %v", randomness, table.min, table.max)
+		if table.rating != rating {
+			t.Errorf("SolutionRating was incorrect, got: %v. Expected %v", rating, table.rating)
 		}
 	}
 }

@@ -13,6 +13,7 @@ func TestParse(t *testing.T) {
 		{"_", New(1, 1)},
 		{"___,___", New(3, 2)},
 		{"_D", New(2, 1).SetSquare(1, 0, SquareDragon)},
+		{"_n", New(2, 1).SetSquare(1, 0, SquareNoDragon)},
 
 		{"1,1", New(1, 1)},
 		{"2,1", New(2, 1)},

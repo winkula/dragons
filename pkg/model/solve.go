@@ -167,12 +167,12 @@ func SolveBruteForce(g *Grid) *Grid {
 
 // GetDifficulty gets the difficulty of a puzzle.
 func GetDifficulty(g *Grid) Difficulty {
-	
+
 	if SolveTechnically(g, DifficultyEasy) != nil {
 		if g.PuzzleRating() >= 0.35 {
 			// easy puzzles must be solvable with applying easy techniques only (domain knowledge)
 			return DifficultyEasy
-		}		
+		}
 		return DifficultyMedium
 	}
 
@@ -198,17 +198,6 @@ func GetAvgOptions(g *Grid, difficulty Difficulty) float64 {
 		}
 	}
 	return float64(count) / float64(g.Size())
-}
-
-func anyRuleApplies(g *Grid, i int) bool {
-	cpy := g.Clone()
-	knowledge := newKnowledge(cpy)
-	for _, rule := range solveRulesEasy {
-		if rule(cpy, i, knowledge) > solveResultNone {
-			return true
-		}
-	}
-	return false
 }
 
 func isSolved(g *Grid) bool {

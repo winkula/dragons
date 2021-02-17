@@ -66,8 +66,6 @@ func generateFrom(solution *model.Grid, difficulty model.Difficulty, duration ti
 func printStats(puzzle *model.Grid, solution *model.Grid) {
 	if solution != nil {
 		fmt.Printf(" > Solution rating: %.1f %%\n", 100.0*solution.SolutionRating())
-		fmt.Printf(" > Density:         %.1f %%\n", 100.0*solution.Density())
-		fmt.Printf(" > Randomness:      %.1f %%\n", 100.0*solution.Randomness())
 	}
 	if puzzle != nil {
 		fmt.Printf(" > Puzzle rating:   %.1f %%\n", 100.0*puzzle.PuzzleRating())

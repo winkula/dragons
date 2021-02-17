@@ -65,8 +65,22 @@ func TestSolveBruteForce(t *testing.T) {
 	for _, table := range tables {
 		solved := SolveBruteForce(table)
 		if !isSolved(solved) {
-			t.Errorf("TestSolve was incorrect, grid is not solved. Grid: \n%s",
+			t.Errorf("SolveBruteForce was incorrect, grid is not solved. Grid: \n%s",
 				table)
+		}
+	}
+}
+
+func TestSolveBruteForceWithUnsolvablePuzzle(t *testing.T) {
+	tables := []*Grid{
+		Parse("d_,_d"),
+		Parse("_f_,__f,_f_"),
+	}
+
+	for _, table := range tables {
+		solved := SolveBruteForce(table)
+		if solved != nil {
+			t.Errorf("SolveBruteForce was incorrect, puzzle should not be solvable.")
 		}
 	}
 }
@@ -81,6 +95,7 @@ func TestSolveIterative(t *testing.T) {
 		{Parse("_f_,___,___"), DifficultyEasy, false},
 		{Parse("_f_,___,___"), DifficultyBrutal, true},
 		{Parse("_f_,_f_,___"), DifficultyEasy, true},
+		{Parse("_f_,_f_,___"), DifficultyMedium, true},
 	}
 
 	for _, table := range tables {
