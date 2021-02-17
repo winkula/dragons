@@ -29,12 +29,11 @@ import {
   createGame,
   emptyGame,
   Cell,
-  CellDefinition,
   CellType,
   getCellType,
 } from "../logic";
 import { Difficulty, GameStatus } from "../logic/game";
-import { playClick, playMusic, playError, playWin } from "../sfx";
+import { playClick, playError, playWin } from "../sfx";
 
 export default Vue.extend({
   components: {
@@ -102,7 +101,6 @@ export default Vue.extend({
       this.status = "unsolved";
     },
     start(difficulty) {
-      playMusic();
       this.difficulty = difficulty;
       this.startDialogVisible = false;
       this.newGame();

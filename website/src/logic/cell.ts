@@ -1,4 +1,4 @@
-import iconDragon from "../assets/icons/dragon-s2.png";
+import iconDragon from "../assets/icons/dragon.png";
 import iconFire from "../assets/icons/fire.svg";
 import iconAir from "../assets/icons/air.svg";
 import iconPoint from "../assets/icons/point.svg";
