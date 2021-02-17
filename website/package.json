@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel serve ./src/index.html",
-    "build": "parcel build --public-url . ./src/index.html"
+    "build": "parcel build --public-url . ./src/index.html",
+    "preinstall": "npx npm-force-resolutions"
   },
   "author": "Mathias Winkler",
   "license": "MIT",
@@ -23,5 +24,8 @@
   "dependencies": {
     "vue": "^2.6.12",
     "vue-hot-reload-api": "^2.3.4"
+  },
+  "resolutions": {
+    "node-forge": "0.10.0"
   }
 }
