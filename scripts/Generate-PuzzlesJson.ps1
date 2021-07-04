@@ -1,3 +1,6 @@
+<#
+This script generates new puzzles for the website game.
+#>
 param (
     [string]$DatabaseFile = "database.txt",
     [string]$TargetFile = ".\website\src\assets\data\grids.json"

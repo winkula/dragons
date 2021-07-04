@@ -1,3 +1,9 @@
+<#
+This script generates a bunch of new puzzles and solutions according to the specified parameters.
+Only new puzzles are accepted (ones that are not yet listed in the database file).
+
+At the end, the script renders ALL puzzles into the /print/puzzles folder.
+#>
 param (
     [string[]]$Difficulties = @('easy', 'medium', 'hard'),
     [int]$Size = 8,
