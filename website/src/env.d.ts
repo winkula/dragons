@@ -7,27 +7,24 @@ declare module '*.vue' {
   export default component
 }
 
-declare module "*.svg" {
-  const content: string;
-  export default content;
+/*
+declare module "*.json" {
+  const json: object;
+  export default json;
 }
 
-declare module "*.json" {
-  const content: object;
-  export default content;
+declare module "*.svg" {
+  const svg: string;
+  export default svg;
 }
 
 declare module "*.wav" {
-  const content: string;
-  export default content;
+  const wav: string;
+  export default wav;
 }
 
 declare module "*.mp3" {
-  const content: string;
-  export default content;
+  const mp3: string;
+  export default mp3;
 }
-
-declare module "*.vue" {
-  import Vue from 'vue';
-  export default Vue;
-}
+*/

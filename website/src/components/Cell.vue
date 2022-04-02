@@ -24,7 +24,7 @@ export default defineComponent({
   },
   computed: {
     tabindex() {
-      return this.given ? null : "0";
+      return this.given ? undefined : "0";
     },
     ariaPressed() {
       return this.given ? null : "true";

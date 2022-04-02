@@ -11,10 +11,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
+
+interface Button {
+  id: number;
+  value: number;
+  icon: number;
+}
+
 export default defineComponent({
   props: {
-    buttons: Array,
+    buttons: Array as PropType<Button[]>,
   },
 });
 </script>
