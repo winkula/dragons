@@ -125,7 +125,6 @@ body,
 .wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
 
   & > header {
     padding: 2vmin 0;
