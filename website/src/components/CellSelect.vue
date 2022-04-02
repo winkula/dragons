@@ -15,13 +15,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import Cell from "./Cell.vue";
 
 import { getCellType, CellType } from "../logic";
 import { playClick } from "../sfx";
 
-export default Vue.extend({
+interface Button {
+  id: number;
+  value: number;
+  icon: number;
+}
+
+export default defineComponent({
   components: {
     Cell,
   },
@@ -33,29 +39,29 @@ export default Vue.extend({
       buttons: [
         {
           id: 0,
-          value: getCellType(CellType.Air).value,
-          icon: getCellType(CellType.Air).icon,
+          value: getCellType(CellType.Air)!.value,
+          icon: getCellType(CellType.Air)!.icon,
         },
         {
           id: 1,
-          value: getCellType(CellType.Dragon).value,
-          icon: getCellType(CellType.Dragon).icon,
+          value: getCellType(CellType.Dragon)!.value,
+          icon: getCellType(CellType.Dragon)!.icon,
         },
         {
           id: 2,
-          value: getCellType(CellType.Fire).value,
-          icon: getCellType(CellType.Fire).icon,
+          value: getCellType(CellType.Fire)!.value,
+          icon: getCellType(CellType.Fire)!.icon,
         },
         {
           id: 3,
-          value: getCellType(CellType.Point).value,
-          icon: getCellType(CellType.Point).icon,
+          value: getCellType(CellType.Point)!.value,
+          icon: getCellType(CellType.Point)!.icon,
         },
       ],
     };
   },
   methods: {
-    updateValue(button) {
+    updateValue(button: Button) {
       playClick();
       this.$emit("input", button.value);
     },

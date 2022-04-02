@@ -4,9 +4,9 @@
 
 <script lang="ts">
 import Buttons from "./Buttons.vue";
-import Vue from "vue";
+import { defineComponent } from "vue";
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     Buttons,
   },

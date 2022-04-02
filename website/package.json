@@ -1,32 +1,20 @@
 {
   "name": "dragons",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "version": "0.0.0",
   "scripts": {
-    "start": "parcel serve ./src/index.html",
-    "build": "parcel build --public-url . ./src/index.html",
-    "preinstall": "npx npm-force-resolutions"
-  },
-  "author": "Mathias Winkler",
-  "license": "MIT",
-  "browserslist": [
-    "last 1 Chrome versions"
-  ],
-  "devDependencies": {
-    "@vue/component-compiler-utils": "^3.2.0",
-    "parcel-bundler": "^1.12.4",
-    "parcel-plugin-clean-dist": "0.0.6",
-    "sass": "^1.26.10",
-    "typescript": "^4.0.2",
-    "vue-template-compiler": "^2.6.12",
-    "node-forge": ">=0.10.0"
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^2.6.12",
-    "vue-hot-reload-api": "^2.3.4"
+    "vue": "^3.2.25"
   },
-  "resolutions": {
-    "node-forge": "1.3.0"
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.3.0",
+    "sass": "^1.49.11",
+    "typescript": "^4.5.4",
+    "vite": "^2.9.0",
+    "vue-tsc": "^0.29.8"
   }
 }

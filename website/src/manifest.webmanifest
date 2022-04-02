@@ -5,12 +5,12 @@
 	"description": "Logic puzzle about dragons.",
 	"icons": [
 		{
-			"src": "/assets/icons/app-icon-128.png",
+			"src": "/src/assets/icons/app-icon-128.png",
 			"type": "image/png",
 			"sizes": "128x128"
 		},
 		{
-			"src": "/assets/icons/app-icon-192.png",
+			"src": "/src/assets/icons/app-icon-192.png",
 			"type": "image/png",
 			"sizes": "192x192"
 		}

@@ -10,11 +10,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import GridComponent from "./Grid.vue";
 import { Grid } from "../logic/grid";
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     Grid: GridComponent,
   },
@@ -55,7 +55,7 @@ export default Vue.extend({
     box-sizing: border-box;
     background-color: $color-background-inner;
     border-radius: 1.5vmin;
-    box-shadow: 0 3px 10px rgba(0,0,0, 0.5);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
 
     .close {
       $size: 3rem;

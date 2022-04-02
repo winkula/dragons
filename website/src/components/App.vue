@@ -4,7 +4,12 @@
       <Menu @new="openStartDialog" @help="showHelp" @solve="solve"></Menu>
     </header>
     <main>
-      <Grid :grid="game.puzzle" @filled="fillCell" :stataus="status" interactive></Grid>
+      <Grid
+        :grid="game.puzzle"
+        @filled="fillCell"
+        :stataus="status"
+        interactive
+      ></Grid>
     </main>
     <footer>
       <CellSelect v-model="fillType"></CellSelect>
@@ -16,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 
 import Menu from "./Menu.vue";
 import Grid from "./Grid.vue";
@@ -25,17 +30,11 @@ import Help from "./Help.vue";
 import Overlay from "./Overlay.vue";
 import StartDialog from "./StartDialog.vue";
 
-import {
-  createGame,
-  emptyGame,
-  Cell,
-  CellType,
-  getCellType,
-} from "../logic";
+import { createGame, emptyGame, Cell, CellType, getCellType } from "../logic";
 import { Difficulty, GameStatus } from "../logic/game";
 import { playClick, playError, playWin } from "../sfx";
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     Menu,
     Grid,
@@ -52,7 +51,7 @@ export default Vue.extend({
       status: "unsolved",
       isSolved: false,
       isValid: true,
-      fillType: getCellType(CellType.Air).value,
+      fillType: getCellType(CellType.Air)!.value,
       helpVisible: false,
       startDialogVisible: true,
     };
@@ -71,7 +70,7 @@ export default Vue.extend({
 
       if (cell.value === this.fillType) {
         // set back to undeinef
-        cell.value = getCellType(CellType.Undefined).value;
+        cell.value = getCellType(CellType.Undefined)!.value;
       } else {
         // set value of cell
         cell.value = this.fillType;
@@ -100,7 +99,7 @@ export default Vue.extend({
     overlayClosed() {
       this.status = "unsolved";
     },
-    start(difficulty) {
+    start(difficulty: Difficulty) {
       this.difficulty = difficulty;
       this.startDialogVisible = false;
       this.newGame();

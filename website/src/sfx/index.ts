@@ -2,22 +2,16 @@ import soundClick from "../assets/audio/click.mp3";
 import soundError from "../assets/audio/error.mp3";
 import soundWin from "../assets/audio/win.mp3";
 
-function playClick() {
+export function playClick() {
 	const sound = new Audio(soundClick);
 	sound.volume = 0.4;
 	sound.play();
 }
 
-function playError() {
+export function playError() {
 	new Audio(soundError).play();
 }
 
-function playWin() {
+export function playWin() {
 	new Audio(soundWin).play();
-}
-
-export {
-	playClick,
-	playError,
-	playWin
 }

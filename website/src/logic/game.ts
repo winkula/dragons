@@ -2,13 +2,13 @@ import grids from "../assets/data/grids.json";
 import { cellCoords, randomInteger } from "./util";
 import { Grid } from "./grid";
 
-enum GameStatus {
+export enum GameStatus {
 	Unsolved = "unsolved",
 	Invalid = "invalid",
 	Solved = "solved"
 }
 
-class Game {
+export class Game {
 	readonly width: number;
 	readonly height: number;
 	readonly puzzle: Grid;
@@ -32,7 +32,7 @@ class Game {
 
 	private get isFilled() {
 		return cellCoords(this.width, this.height)
-		.every(({ x, y }) => this.puzzle.getCell(x, y).isDefined);
+			.every(({ x, y }) => this.puzzle.getCell(x, y).isDefined);
 	}
 
 	private get isSolved() {
@@ -48,14 +48,14 @@ class Game {
 	}
 }
 
-enum Difficulty {
+export enum Difficulty {
 	Easy = "easy",
 	Medium = "medium",
 	Hard = "hard"
 }
 
 function checkGridData(difficulties: Difficulty[]) {
-	const validateSerializeData = (str, size) => str.split(',').length === size && str.split(',').every(row => row.length === size);
+	const validateSerializeData = (str: string, size: number) => str.split(',').length === size && str.split(',').every(row => row.length === size);
 
 	for (const difficulty of difficulties) {
 		for (const grid of grids[difficulty]) {
@@ -82,18 +82,9 @@ function createGameBuilder() {
 }
 const builder = createGameBuilder();
 
-function createGame(difficulty: Difficulty = Difficulty.Easy, size: number = 8) {
+export function createGame(difficulty: Difficulty = Difficulty.Easy, size: number = 8) {
 	return builder(difficulty, size);
 }
 
 const emptyGrid = "________,________,________,________,________,________,________,________";
-const emptyGame = new Game(8, emptyGrid, emptyGrid);
-
-export {
-	Game,
-	GameStatus,
-	Difficulty,
-
-	createGame,
-	emptyGame
-}
+export const emptyGame = new Game(8, emptyGrid, emptyGrid);

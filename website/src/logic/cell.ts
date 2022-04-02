@@ -3,7 +3,7 @@ import iconFire from "../assets/icons/fire.svg";
 import iconAir from "../assets/icons/air.svg";
 import iconPoint from "../assets/icons/point.svg";
 
-enum CellType {
+export enum CellType {
 	Undefined,
 	Air,
 	Dragon,
@@ -12,13 +12,13 @@ enum CellType {
 	Point
 }
 
-interface CellDefinition {
+export interface CellDefinition {
 	value: number;
 	name: CellType;
 	desc?: string;
 	symbol: string;
 	isDefined: boolean;
-	icon?: string;
+	icon?: string | null;
 }
 
 const cellDefinitions: CellDefinition[] = [
@@ -63,18 +63,18 @@ const cellDefinitions: CellDefinition[] = [
 	}
 ];
 
-const getCellType = (name: CellType) => cellDefinitions.find(x => x.name === name);
-const getCellTypeByValue = (value: number) => cellDefinitions.find(x => x.value === value);
-const getCellTypeBySymbol = (symbol: string) => cellDefinitions.find(x => x.symbol === symbol);
+export const getCellType = (name: CellType) => cellDefinitions.find(x => x.name === name);
+export const getCellTypeByValue = (value: number) => cellDefinitions.find(x => x.value === value);
+export const getCellTypeBySymbol = (symbol: string) => cellDefinitions.find(x => x.symbol === symbol);
 
-class Cell {
+export class Cell {
 	readonly id: number;
 	readonly given: boolean;
 	value: number;
 	neighbours: Cell[] = [];
 
 	constructor(id: number, symbol: string, notGiven: boolean = false) {
-		const definition = getCellTypeBySymbol(symbol);
+		const definition = getCellTypeBySymbol(symbol)!;
 		this.id = id;
 		this.value = definition.value;
 		this.given = (definition.isDefined && !notGiven);
@@ -85,24 +85,14 @@ class Cell {
 	}
 
 	get isDefined() {
-		return getCellTypeByValue(this.value).isDefined;
+		return getCellTypeByValue(this.value)!.isDefined;
 	}
 
 	get cantBeDragon() {
-		return this.neighbours.some(x => x.type.name === CellType.Dragon);
+		return this.neighbours.some(x => x.type!.name === CellType.Dragon);
 	}
 
 	get icon() {
 		return getCellTypeByValue(this.value)?.icon;
 	}
-}
-
-export {
-	CellDefinition,
-	CellType,
-	Cell,
-
-	getCellType,
-	getCellTypeByValue,
-	getCellTypeBySymbol
 }

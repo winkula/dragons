@@ -6,7 +6,7 @@ interface Row {
 	cells: Cell[];
 }
 
-class Grid {
+export class Grid {
 	rows: Row[];
 
 	get width() { return this.rows[0]?.cells.length ?? 0; }
@@ -53,8 +53,4 @@ class Grid {
 	getCell(x: number, y: number) {
 		return this.rows[y]?.cells[x];
 	}
-}
-
-export {
-	Grid
 }

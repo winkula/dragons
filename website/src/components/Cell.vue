@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['grid-cell', { 'given': given || selected }, cellType]"
+    :class="['grid-cell', { given: given || selected }, cellType]"
     :tabindex="tabindex"
     :role="role"
     :aria-pressed="ariaPressed"
@@ -11,13 +11,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-
+import { defineComponent } from "vue";
 import { getCellTypeByValue } from "../logic";
 
-import iconPoint from "../assets/icons/point.svg";
-
-export default Vue.extend({
+export default defineComponent({
   props: {
     id: Number,
     value: Number,
@@ -36,7 +33,7 @@ export default Vue.extend({
       return this.given ? null : "button";
     },
     cellType() {
-      return getCellTypeByValue(this.value)?.desc;
+      return getCellTypeByValue(this.value!)?.desc;
     },
   },
   methods: {

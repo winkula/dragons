@@ -1,6 +1,12 @@
 <template>
   <div
-    :class="['grid', { 'invalid': status === 'invalid' }, {'solved': status === 'solved'}, {'grid-interactive': interactive}, {'grid-small': small}]"
+    :class="[
+      'grid',
+      { invalid: status === 'invalid' },
+      { solved: status === 'solved' },
+      { 'grid-interactive': interactive },
+      { 'grid-small': small },
+    ]"
   >
     <div class="grid-row" v-for="row in grid.rows" :key="row.id">
       <Cell
@@ -17,11 +23,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 
 import Cell from "./Cell.vue";
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     Cell,
   },
@@ -61,7 +67,7 @@ export default Vue.extend({
 
   width: $size;
   height: $size + $shadow;
-  margin: (($gap - $shadow) / 2) ($gap / 2);
+  margin: (calc(($gap - $shadow) / 2)) (calc($gap / 2));
   padding: $padding;
   position: relative;
 

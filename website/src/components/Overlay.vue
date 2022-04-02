@@ -1,5 +1,9 @@
 <template>
-  <div class="overlay" :class="[{'invalid': invalid}, {'solved': solved}]" @click="dismiss">
+  <div
+    class="overlay"
+    :class="[{ invalid: invalid }, { solved: solved }]"
+    @click="dismiss"
+  >
     <svg viewBox="0 0 24 24" v-if="solved">
       <polyline points="20 6 9 17 4 12" />
     </svg>
@@ -7,9 +11,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     state: String,
   },
