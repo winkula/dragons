@@ -2,7 +2,7 @@
   <div class="buttons">
     <button
       type="button"
-      @click="$emit('click', button.id)"
+      @click="$emit('selected', button.id)"
       v-for="button in buttons"
       :key="button.id"
       v-html="button.icon"

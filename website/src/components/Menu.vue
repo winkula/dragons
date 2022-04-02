@@ -1,5 +1,5 @@
 <template>
-  <Buttons :buttons="buttons" @click="$emit($event)"></Buttons>
+  <Buttons :buttons="buttons" @selected="$emit($event)"></Buttons>
 </template>
 
 <script lang="ts">

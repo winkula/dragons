@@ -1,143 +1,143 @@
 {
-    "easy":  [
-                 {
-                     "puzzle":  "d__d__d_,_x______,_x__x_d_,d_fff__x,___x__f_,___xxxfd,d__xxx__,__d_xdxx",
-                     "size":  8,
-                     "solution":  "dxxdxxdx,xxffffff,xxxdxxdx,dffffffx,xfdxxdfx,xfxxxxfd,dfxxxxfx,xfdxxdxx"
-                 },
-                 {
-                     "puzzle":  "__x__x_d,_ff_ffx_,__x__xx_,____ff_d,_d___x__,_____x_d,d__d____,_xx__d_x",
-                     "size":  8,
-                     "solution":  "xdxxdxxd,ffffffxx,xdxxdxxx,ffffffxd,xdxxdxff,fffffxxd,dxxdfxfx,xxxxfdxx"
-                 },
-                 {
-                     "puzzle":  "__d_xx_d,d__xx___,_xx___f_,_x_d_xfd,d_______,___xx___,__xfff_d,d_x_d_x_",
-                     "size":  8,
-                     "solution":  "xfdxxxxd,dfxxxxfx,xxxxfdfx,xxxdfxfd,dffffxfx,xfdxxdfx,xfxffffd,dxxxdxxx"
-                 },
-                 {
-                     "puzzle":  "d__d_x__,_____fff,x__f___d,xfxfxxx_,_xx_____,xx_d_d_d,_x______,d__d_xxx",
-                     "size":  8,
-                     "solution":  "dxxdxxdx,xfffffff,xxdfdxxd,xfxfxxxx,dxxxfxfx,xxxdfdfd,xxfffxfx,dxxdxxxx"
-                 },
-                 {
-                     "puzzle":  "d__d_d_x_d,_xx_______,_____x_d__,_f___x____,xfx_ff__fx,_____xxxf_,d_d__xx__d,___xxxfd__,_xx___f___,d__d__xx_d",
-                     "size":  10,
-                     "solution":  "dxxdfdxxxd,xxxxfxfxfx,xfxfxxxdfx,dfdfdxfffd,xfxfffxdfx,xfxfdxxxfx,dfdfxxxxfd,xfxxxxfdfx,xxxxfdfxfx,dxxdfxxxxd"
-                 },
-                 {
-                     "puzzle":  "_d_d__d__d,x___x___x_,xfxfx_d_x_,_f_f___x_d,_______x__,_______x_d,_f__d_ff__,xfx__x__f_,_xx____xfd,d__d_d_xx_",
-                     "size":  10,
-                     "solution":  "xdfdxxdxxd,xxfxxfffxx,xfxfxfdxxx,dfdfdfxxxd,xfxfxfxxff,xfxfxfdxxd,dfdfdffffx,xfxfxxxdfx,xxxxfxfxfd,dxxdfdxxxx"
-                 },
-                 {
-                     "puzzle":  "d_x_d_d__d,_______xx_,___xxx____,__ffx_f__d,xf__xxfx__,_fx____xx_,_f__d_d__d,xfd_______,___fx_d__d,d_xx___xx_",
-                     "size":  10,
-                     "solution":  "dxxxdfdxxd,xfxfxfxxxx,xfdxxxfxfx,dfffxdfdfd,xfdxxxfxfx,xfxfxfxxxx,dfxfdfdxxd,xfdfxfffff,xfxfxfdxxd,dxxxdfxxxx"
-                 },
-                 {
-                     "puzzle":  "d___f__x_d,_xxxfx____,xfx__x_dfx,_f__d___f_,______d_x_,_______xx_,d_df___x_d,___fx__x__,_xxxx_ff_d,d_xdx__xx_",
-                     "size":  10,
-                     "solution":  "dxxdfdxxxd,xxxxfxfxfx,xfxfxxxdfx,dfdfdffffd,xfxfxfdxxx,xfxfxfxxxx,dfdfdfxxxd,xfxfxfdxff,xxxxxfffxd,dxxdxxdxxx"
-                 },
-                 {
-                     "puzzle":  "d___f___d__d,_xxxfxff____,_____xx__d_x,d_d_d_x_____,____ff_xf__d,___xx___fd__,d_d_x_______,___________d,_x__f___f___,_xxxfx_xfx__,ffxx___xx__d,_d__d_d__d__",
-                     "size":  12,
-                     "solution":  "dxxdfdxxdxxd,xxxxfxfffffx,xfxfxxxdfdxx,dfdfdxxxfxfx,xfxffffxfxfd,xfxxxdfdfdfx,dfdxxxfxfxfx,xffffxfxfxfd,xxxdfdfdfdfx,dxxxfxfxfxfx,ffxxxfxxxxfd,xdxxdfdxxdfx"
-                 }
-             ],
-    "hard":  [
-                 {
-                     "puzzle":  "d_______,___ff_ff,_x______,_x_ff_ff,ff__x__x,_x__ff__,_____x_d,__d__x__",
-                     "size":  8,
-                     "solution":  "dxxdxxdx,xxffffff,xxxdxxdx,dxffffff,ffxdxxdx,dxxfffff,xfxfdxxd,xxdfxxxx"
-                 },
-                 {
-                     "puzzle":  "_______d,_ff_ffx_,__x__xx_,______x_,d___xxff,_x_ff_x_,____f___,d_x_fd__",
-                     "size":  8,
-                     "solution":  "xdxxdxxd,ffffffxx,xdxxdxxx,fffffxxd,dxxdxxff,xxfffxxd,xxxdfxfx,dxxxfdxx"
-                 },
-                 {
-                     "puzzle":  "d__x____,__xf__fx,xx__f___,__xxfxf_,xf_____d,_x__d___,_ff____d,d_x___x_",
-                     "size":  8,
-                     "solution":  "dxxxdxxd,xxxffffx,xxxdfdxx,dxxxfxfx,xfxfxxxd,xxdfdxff,xffffxxd,dxxdxxxx"
-                 },
-                 {
-                     "puzzle":  "_______d,_ff_ffx_,__x__xx_,______x_,__x_d_ff,xxfff_x_,____f___,d_x_fd__",
-                     "size":  8,
-                     "solution":  "xdxxdxxd,ffffffxx,xdxxdxxx,ffffffxd,xdxxdxff,xxfffxxd,xxxdfxfx,dxxxfdxx"
-                 },
-                 {
-                     "puzzle":  "d________d,__xff_ff__,____d___f_,_f____xxfd,_fx_xx__x_,___fx_d_x_,d_df_____d,_______d__,_x_xfx__fx,d___f_____",
-                     "size":  10,
-                     "solution":  "dxxdxxdxxd,xxxffffffx,xfxfdxxdfx,dfdfxxxxfd,xfxxxxxxxx,xfxfxfdxxx,dfdfdffffd,xfxfxxxdfx,xxxxfxfxfx,dxxdfdxxxd"
-                 },
-                 {
-                     "puzzle":  "d________d,___ff_ffx_,_x______x_,_x_ff_ff_d,ff___x____,__xff_xx_d,xfx_d__xf_,_x___x__f_,xf__x___f_,___d__d___",
-                     "size":  10,
-                     "solution":  "dxxdxxdxxd,xxffffffxx,xxxdxxdxxx,dxffffffxd,ffxdxxdxff,dxxfffxxxd,xfxfdxxxfx,xxdfxxxdfx,xfffxxfffd,dxxdxxdxxx"
-                 },
-                 {
-                     "puzzle":  "d_x_f_____,__x_fx__fx,_______d__,_f___x____,_fx_ff__fx,______xxf_,_f__xfxx_d,xfx__x____,_xfxxff__d,__f_______",
-                     "size":  10,
-                     "solution":  "dxxdfdxxxd,xxxxfxfxfx,xfxfxxxdfx,dfdfdxfffd,xfxfffxdfx,xfxfdxxxfx,dfdfxfxxxd,xfxxxxdxff,xxfxxfffxd,xdfdxxdxxx"
-                 },
-                 {
-                     "puzzle":  "d________d,_x_ff_ffx_,________x_,_x_ff_ff_d,ff________,___f__fx_d,xx__f_____,__xxfx__fx,_fx_xxfdf_,_f____f___",
-                     "size":  10,
-                     "solution":  "dxxdxxdxxd,xxffffffxx,xxxdxxdxxx,dxffffffxd,ffxdxxdxff,dxfffffxxd,xxxdfdxxxx,xxxxfxfxfx,dfxxxxfdfd,xfdxxdfxfx"
-                 },
-                 {
-                     "puzzle":  "___________d,___x_ff_ffx_,__ff_____xx_,xf_x_ff____d,xf_______x__,_xxx_ff_ff_d,______x_d___,d_ff__x_ffx_,_x_________d,_xxx__x_ff__,_f___ff____d,_fd___xxxxx_",
-                     "size":  12,
-                     "solution":  "xxxxxdxxdxxd,xfdxffffffxx,dfffxdxxdxxx,xfdxffffffxd,xfxxxdxxdxff,dxxxffffffxd,ffxdfdxxdxxx,dxfffxxfffxx,xxxdfxxxdxxd,xxxxfdxfffff,dfxxfffxdxxd,xfdxxdxxxxxx"
-                 }
-             ],
-    "medium":  [
-                   {
-                       "puzzle":  "_xx__x_d,xf__ffx_,xx___xx_,xff__x_d,xx___x__,_____x_d,dfx_fff_,_f____xx",
-                       "size":  8,
-                       "solution":  "dxxxdxxd,xfxfffxx,xxdfdxxx,xfffxxxd,xxdfxxff,xfxfdxxd,dfxffffx,xfdxxdxx"
-                   },
-                   {
-                       "puzzle":  "__fd_x_d,xxf__xf_,___x__fx,_f_ffff_,xfxf__x_,_____xxx,d__f_xxd,__xfd_xx",
-                       "size":  8,
-                       "solution":  "xdfdxxxd,xxfxfxfx,xfxxxdfx,dfdffffd,xfxfdxxx,xfxfxxxx,dfdfxxxd,xfxfdxxx"
-                   },
-                   {
-                       "puzzle":  "__x__xx_,xff_fffx,xf____xx,_fx_fffx,_xx__xx_,________,d__f___d,__xfxxx_",
-                       "size":  8,
-                       "solution":  "xdxxdxxd,xffffffx,xfdxxdxx,dfxffffx,xxxxdxxd,xfxfffff,dfdfdxxd,xfxfxxxx"
-                   },
-                   {
-                       "puzzle":  "d_x__xx_,_xx__ffx,xx_d__xx,dxx___fx,x_x__xx_,xx___x__,xfx_ff_d,_xx__xx_",
-                       "size":  8,
-                       "solution":  "dxxxdxxd,xxxffffx,xxxdfdxx,dxxxfxfx,xfxfxxxd,xxdfdxff,xfxfffxd,dxxxdxxx"
-                   },
-                   {
-                       "puzzle":  "d___x__x_d,_x_ff_ffx_,xx__x__xx_,dx__fff__d,xx__xx____,__fffffx_d,d__x__fx__,___xx_f___,_xxxf____d,d___fd_xx_",
-                       "size":  10,
-                       "solution":  "dxxdxxdxxd,xxffffffxx,xxxdxxdxxx,dxffffffxd,xxxdxxdxff,xffffffxxd,dfdxxdfxfx,xfxxxxfdfx,xxxxfxfxfd,dxxdfdxxxx"
-                   },
-                   {
-                       "puzzle":  "_x_d__d__d,d_ff___xx_,___x__f___,___xxxf__d,_xx___fx__,ff_d__xxx_,_x___ffx_d,_xx__x____,_xff_ff__d,d_x__x__x_",
-                       "size":  10,
-                       "solution":  "xxxdxxdxxd,dffffffxxx,xfdxxdfxfx,xfxxxxfdfd,dxxxfxfxfx,ffxdfdxxxx,dxfffffxxd,xxxdxxdxff,xxffffffxd,dxxdxxdxxx"
-                   },
-                   {
-                       "puzzle":  "d___f___d_,_xxxfx___x,_____x__f_,_f__d_xxfd,xfx_f__xx_,_xx__f_xx_,d_xfx_ffx_,___xx__xff,____x___x_,d__d__d_x_",
-                       "size":  10,
-                       "solution":  "dxxdfdxxdx,xxxxfxfffx,xfxfxxxdfx,dfdfdxxxfd,xfxfffxxxx,xxxxdfdxxx,dfxfxfffxd,xfdxxxdxff,xfffxfffxd,dxxdxxdxxx"
-                   },
-                   {
-                       "puzzle":  "_xx___d__d,xfff___xx_,xf___d_xx_,_f_____x_d,_xx__xx___,__x_fffx__,_f_x__f__d,xfxxx_fd__,_xx__xf___,d__d__xx_d",
-                       "size":  10,
-                       "solution":  "dxxdxxdxxd,xffffffxxx,xfdxxdxxxx,dfxffffxfd,xxxxdxxdfx,xfxffffxfx,dfdxxdfxfd,xfxxxxfdfx,xxxxfxfxfx,dxxdfdxxxd"
-                   },
-                   {
-                       "puzzle":  "_x__f____f__,_xxxfxxxxfxx,ffx_________,_x__f___f__d,___ffx_xfx__,__dxx___fx__,d__x_d_df__d,__xfff______,___f__xxfxfx,d____x__f_f_,__xf_x______,x__fd__d_xxx",
-                       "size":  12,
-                       "solution":  "xxxdfdxxdfdx,dxxxfxxxxfxx,ffxxfxfxfxfx,dxxdfdfdfdfd,xffffxfxfxfx,xfdxxxfxfxfx,dfxxxdfdfdfd,xfxffffxfxfx,xfdfdxxxfxfx,dfxfxxxdfdfd,xfxfxxfffxfx,xxdfdxxdxxxx"
-                   }
-               ]
+    "easy": [
+        {
+            "puzzle": "d__d__d_,_x______,_x__x_d_,d_fff__x,___x__f_,___xxxfd,d__xxx__,__d_xdxx",
+            "size": 8,
+            "solution": "dxxdxxdx,xxffffff,xxxdxxdx,dffffffx,xfdxxdfx,xfxxxxfd,dfxxxxfx,xfdxxdxx"
+        },
+        {
+            "puzzle": "__x__x_d,_ff_ffx_,__x__xx_,____ff_d,_d___x__,_____x_d,d__d____,_xx__d_x",
+            "size": 8,
+            "solution": "xdxxdxxd,ffffffxx,xdxxdxxx,ffffffxd,xdxxdxff,fffffxxd,dxxdfxfx,xxxxfdxx"
+        },
+        {
+            "puzzle": "__d_xx_d,d__xx___,_xx___f_,_x_d_xfd,d_______,___xx___,__xfff_d,d_x_d_x_",
+            "size": 8,
+            "solution": "xfdxxxxd,dfxxxxfx,xxxxfdfx,xxxdfxfd,dffffxfx,xfdxxdfx,xfxffffd,dxxxdxxx"
+        },
+        {
+            "puzzle": "d__d_x__,_____fff,x__f___d,xfxfxxx_,_xx_____,xx_d_d_d,_x______,d__d_xxx",
+            "size": 8,
+            "solution": "dxxdxxdx,xfffffff,xxdfdxxd,xfxfxxxx,dxxxfxfx,xxxdfdfd,xxfffxfx,dxxdxxxx"
+        },
+        {
+            "puzzle": "d__d_d_x_d,_xx_______,_____x_d__,_f___x____,xfx_ff__fx,_____xxxf_,d_d__xx__d,___xxxfd__,_xx___f___,d__d__xx_d",
+            "size": 10,
+            "solution": "dxxdfdxxxd,xxxxfxfxfx,xfxfxxxdfx,dfdfdxfffd,xfxfffxdfx,xfxfdxxxfx,dfdfxxxxfd,xfxxxxfdfx,xxxxfdfxfx,dxxdfxxxxd"
+        },
+        {
+            "puzzle": "_d_d__d__d,x___x___x_,xfxfx_d_x_,_f_f___x_d,_______x__,_______x_d,_f__d_ff__,xfx__x__f_,_xx____xfd,d__d_d_xx_",
+            "size": 10,
+            "solution": "xdfdxxdxxd,xxfxxfffxx,xfxfxfdxxx,dfdfdfxxxd,xfxfxfxxff,xfxfxfdxxd,dfdfdffffx,xfxfxxxdfx,xxxxfxfxfd,dxxdfdxxxx"
+        },
+        {
+            "puzzle": "d_x_d_d__d,_______xx_,___xxx____,__ffx_f__d,xf__xxfx__,_fx____xx_,_f__d_d__d,xfd_______,___fx_d__d,d_xx___xx_",
+            "size": 10,
+            "solution": "dxxxdfdxxd,xfxfxfxxxx,xfdxxxfxfx,dfffxdfdfd,xfdxxxfxfx,xfxfxfxxxx,dfxfdfdxxd,xfdfxfffff,xfxfxfdxxd,dxxxdfxxxx"
+        },
+        {
+            "puzzle": "d___f__x_d,_xxxfx____,xfx__x_dfx,_f__d___f_,______d_x_,_______xx_,d_df___x_d,___fx__x__,_xxxx_ff_d,d_xdx__xx_",
+            "size": 10,
+            "solution": "dxxdfdxxxd,xxxxfxfxfx,xfxfxxxdfx,dfdfdffffd,xfxfxfdxxx,xfxfxfxxxx,dfdfdfxxxd,xfxfxfdxff,xxxxxfffxd,dxxdxxdxxx"
+        },
+        {
+            "puzzle": "d___f___d__d,_xxxfxff____,_____xx__d_x,d_d_d_x_____,____ff_xf__d,___xx___fd__,d_d_x_______,___________d,_x__f___f___,_xxxfx_xfx__,ffxx___xx__d,_d__d_d__d__",
+            "size": 12,
+            "solution": "dxxdfdxxdxxd,xxxxfxfffffx,xfxfxxxdfdxx,dfdfdxxxfxfx,xfxffffxfxfd,xfxxxdfdfdfx,dfdxxxfxfxfx,xffffxfxfxfd,xxxdfdfdfdfx,dxxxfxfxfxfx,ffxxxfxxxxfd,xdxxdfdxxdfx"
+        }
+    ],
+    "hard": [
+        {
+            "puzzle": "d_______,___ff_ff,_x______,_x_ff_ff,ff__x__x,_x__ff__,_____x_d,__d__x__",
+            "size": 8,
+            "solution": "dxxdxxdx,xxffffff,xxxdxxdx,dxffffff,ffxdxxdx,dxxfffff,xfxfdxxd,xxdfxxxx"
+        },
+        {
+            "puzzle": "_______d,_ff_ffx_,__x__xx_,______x_,d___xxff,_x_ff_x_,____f___,d_x_fd__",
+            "size": 8,
+            "solution": "xdxxdxxd,ffffffxx,xdxxdxxx,fffffxxd,dxxdxxff,xxfffxxd,xxxdfxfx,dxxxfdxx"
+        },
+        {
+            "puzzle": "d__x____,__xf__fx,xx__f___,__xxfxf_,xf_____d,_x__d___,_ff____d,d_x___x_",
+            "size": 8,
+            "solution": "dxxxdxxd,xxxffffx,xxxdfdxx,dxxxfxfx,xfxfxxxd,xxdfdxff,xffffxxd,dxxdxxxx"
+        },
+        {
+            "puzzle": "_______d,_ff_ffx_,__x__xx_,______x_,__x_d_ff,xxfff_x_,____f___,d_x_fd__",
+            "size": 8,
+            "solution": "xdxxdxxd,ffffffxx,xdxxdxxx,ffffffxd,xdxxdxff,xxfffxxd,xxxdfxfx,dxxxfdxx"
+        },
+        {
+            "puzzle": "d________d,__xff_ff__,____d___f_,_f____xxfd,_fx_xx__x_,___fx_d_x_,d_df_____d,_______d__,_x_xfx__fx,d___f_____",
+            "size": 10,
+            "solution": "dxxdxxdxxd,xxxffffffx,xfxfdxxdfx,dfdfxxxxfd,xfxxxxxxxx,xfxfxfdxxx,dfdfdffffd,xfxfxxxdfx,xxxxfxfxfx,dxxdfdxxxd"
+        },
+        {
+            "puzzle": "d________d,___ff_ffx_,_x______x_,_x_ff_ff_d,ff___x____,__xff_xx_d,xfx_d__xf_,_x___x__f_,xf__x___f_,___d__d___",
+            "size": 10,
+            "solution": "dxxdxxdxxd,xxffffffxx,xxxdxxdxxx,dxffffffxd,ffxdxxdxff,dxxfffxxxd,xfxfdxxxfx,xxdfxxxdfx,xfffxxfffd,dxxdxxdxxx"
+        },
+        {
+            "puzzle": "d_x_f_____,__x_fx__fx,_______d__,_f___x____,_fx_ff__fx,______xxf_,_f__xfxx_d,xfx__x____,_xfxxff__d,__f_______",
+            "size": 10,
+            "solution": "dxxdfdxxxd,xxxxfxfxfx,xfxfxxxdfx,dfdfdxfffd,xfxfffxdfx,xfxfdxxxfx,dfdfxfxxxd,xfxxxxdxff,xxfxxfffxd,xdfdxxdxxx"
+        },
+        {
+            "puzzle": "d________d,_x_ff_ffx_,________x_,_x_ff_ff_d,ff________,___f__fx_d,xx__f_____,__xxfx__fx,_fx_xxfdf_,_f____f___",
+            "size": 10,
+            "solution": "dxxdxxdxxd,xxffffffxx,xxxdxxdxxx,dxffffffxd,ffxdxxdxff,dxfffffxxd,xxxdfdxxxx,xxxxfxfxfx,dfxxxxfdfd,xfdxxdfxfx"
+        },
+        {
+            "puzzle": "___________d,___x_ff_ffx_,__ff_____xx_,xf_x_ff____d,xf_______x__,_xxx_ff_ff_d,______x_d___,d_ff__x_ffx_,_x_________d,_xxx__x_ff__,_f___ff____d,_fd___xxxxx_",
+            "size": 12,
+            "solution": "xxxxxdxxdxxd,xfdxffffffxx,dfffxdxxdxxx,xfdxffffffxd,xfxxxdxxdxff,dxxxffffffxd,ffxdfdxxdxxx,dxfffxxfffxx,xxxdfxxxdxxd,xxxxfdxfffff,dfxxfffxdxxd,xfdxxdxxxxxx"
+        }
+    ],
+    "medium": [
+        {
+            "puzzle": "_xx__x_d,xf__ffx_,xx___xx_,xff__x_d,xx___x__,_____x_d,dfx_fff_,_f____xx",
+            "size": 8,
+            "solution": "dxxxdxxd,xfxfffxx,xxdfdxxx,xfffxxxd,xxdfxxff,xfxfdxxd,dfxffffx,xfdxxdxx"
+        },
+        {
+            "puzzle": "__fd_x_d,xxf__xf_,___x__fx,_f_ffff_,xfxf__x_,_____xxx,d__f_xxd,__xfd_xx",
+            "size": 8,
+            "solution": "xdfdxxxd,xxfxfxfx,xfxxxdfx,dfdffffd,xfxfdxxx,xfxfxxxx,dfdfxxxd,xfxfdxxx"
+        },
+        {
+            "puzzle": "__x__xx_,xff_fffx,xf____xx,_fx_fffx,_xx__xx_,________,d__f___d,__xfxxx_",
+            "size": 8,
+            "solution": "xdxxdxxd,xffffffx,xfdxxdxx,dfxffffx,xxxxdxxd,xfxfffff,dfdfdxxd,xfxfxxxx"
+        },
+        {
+            "puzzle": "d_x__xx_,_xx__ffx,xx_d__xx,dxx___fx,x_x__xx_,xx___x__,xfx_ff_d,_xx__xx_",
+            "size": 8,
+            "solution": "dxxxdxxd,xxxffffx,xxxdfdxx,dxxxfxfx,xfxfxxxd,xxdfdxff,xfxfffxd,dxxxdxxx"
+        },
+        {
+            "puzzle": "d___x__x_d,_x_ff_ffx_,xx__x__xx_,dx__fff__d,xx__xx____,__fffffx_d,d__x__fx__,___xx_f___,_xxxf____d,d___fd_xx_",
+            "size": 10,
+            "solution": "dxxdxxdxxd,xxffffffxx,xxxdxxdxxx,dxffffffxd,xxxdxxdxff,xffffffxxd,dfdxxdfxfx,xfxxxxfdfx,xxxxfxfxfd,dxxdfdxxxx"
+        },
+        {
+            "puzzle": "_x_d__d__d,d_ff___xx_,___x__f___,___xxxf__d,_xx___fx__,ff_d__xxx_,_x___ffx_d,_xx__x____,_xff_ff__d,d_x__x__x_",
+            "size": 10,
+            "solution": "xxxdxxdxxd,dffffffxxx,xfdxxdfxfx,xfxxxxfdfd,dxxxfxfxfx,ffxdfdxxxx,dxfffffxxd,xxxdxxdxff,xxffffffxd,dxxdxxdxxx"
+        },
+        {
+            "puzzle": "d___f___d_,_xxxfx___x,_____x__f_,_f__d_xxfd,xfx_f__xx_,_xx__f_xx_,d_xfx_ffx_,___xx__xff,____x___x_,d__d__d_x_",
+            "size": 10,
+            "solution": "dxxdfdxxdx,xxxxfxfffx,xfxfxxxdfx,dfdfdxxxfd,xfxfffxxxx,xxxxdfdxxx,dfxfxfffxd,xfdxxxdxff,xfffxfffxd,dxxdxxdxxx"
+        },
+        {
+            "puzzle": "_xx___d__d,xfff___xx_,xf___d_xx_,_f_____x_d,_xx__xx___,__x_fffx__,_f_x__f__d,xfxxx_fd__,_xx__xf___,d__d__xx_d",
+            "size": 10,
+            "solution": "dxxdxxdxxd,xffffffxxx,xfdxxdxxxx,dfxffffxfd,xxxxdxxdfx,xfxffffxfx,dfdxxdfxfd,xfxxxxfdfx,xxxxfxfxfx,dxxdfdxxxd"
+        },
+        {
+            "puzzle": "_x__f____f__,_xxxfxxxxfxx,ffx_________,_x__f___f__d,___ffx_xfx__,__dxx___fx__,d__x_d_df__d,__xfff______,___f__xxfxfx,d____x__f_f_,__xf_x______,x__fd__d_xxx",
+            "size": 12,
+            "solution": "xxxdfdxxdfdx,dxxxfxxxxfxx,ffxxfxfxfxfx,dxxdfdfdfdfd,xffffxfxfxfx,xfdxxxfxfxfx,dfxxxdfdfdfd,xfxffffxfxfx,xfdfdxxxfxfx,dfxfxxxdfdfd,xfxfxxfffxfx,xxdfdxxdxxxx"
+        }
+    ]
 }

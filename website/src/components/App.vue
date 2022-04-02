@@ -47,7 +47,7 @@ export default defineComponent({
     return {
       game: emptyGame,
       size: 8,
-      difficulty: "easy",
+      difficulty: Difficulty.Easy,
       status: "unsolved",
       isSolved: false,
       isValid: true,
@@ -87,7 +87,7 @@ export default defineComponent({
       }
     },
     newGame() {
-      this.game = createGame(this.difficulty as Difficulty, this.size);
+      this.game = createGame(this.difficulty, this.size);
       this.status = "unsolved";
     },
     solve() {

@@ -7,7 +7,7 @@
         :id="button.id"
         :value="button.value"
         :icon="button.icon"
-        :selected="button.value === value"
+        :selected="button.value === modelValue"
         @clicked="updateValue(button)"
       ></Cell>
     </div>
@@ -32,7 +32,7 @@ export default defineComponent({
     Cell,
   },
   props: {
-    value: Number,
+    modelValue: Number,
   },
   data() {
     return {
@@ -63,7 +63,7 @@ export default defineComponent({
   methods: {
     updateValue(button: Button) {
       playClick();
-      this.$emit("input", button.value);
+      this.$emit("update:modelValue", button.value);
     },
   },
 });

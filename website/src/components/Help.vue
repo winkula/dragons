@@ -1,5 +1,9 @@
 <template>
-  <Dialog closable :value="value" @input="$emit('input', $event)">
+  <Dialog
+    closable
+    :modelValue="modelValue"
+    @update:modelValue="$emit('update:modelValue', $event)"
+  >
     <h1>Rules</h1>
 
     <p>
@@ -38,7 +42,7 @@
       <strong>must be air</strong>.
     </p>
     <Grid :grid="example3" small></Grid>
-    <p class="copyright">© {{ year }} Mathias Winkler</p>
+    <p class="copyright">© 2021 Mathias Winkler</p>
   </Dialog>
 </template>
 
@@ -54,7 +58,7 @@ export default defineComponent({
     Dialog,
   },
   props: {
-    value: Boolean,
+    modelValue: Boolean,
   },
   data() {
     return {
@@ -68,11 +72,6 @@ export default defineComponent({
       example2: new Grid("_____,_df__,__fd_", true),
       example3: new Grid("dx_,x__,___", true),
     };
-  },
-  computed: {
-    year() {
-      return new Date().getFullYear();
-    },
   },
 });
 </script>

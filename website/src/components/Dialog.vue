@@ -1,5 +1,5 @@
 <template>
-  <div class="dialog" v-if="value">
+  <div class="dialog" v-if="modelValue">
     <div class="dialog-inner">
       <div class="close" @click="close" v-if="closable">&#10006;</div>
       <div class="dialog-content">
@@ -11,20 +11,15 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import GridComponent from "./Grid.vue";
-import { Grid } from "../logic/grid";
 
 export default defineComponent({
-  components: {
-    Grid: GridComponent,
-  },
   props: {
-    value: Boolean,
+    modelValue: Boolean,
     closable: Boolean,
   },
   methods: {
     close() {
-      this.$emit("input", false);
+      this.$emit("update:modelValue", false);
     },
   },
 });

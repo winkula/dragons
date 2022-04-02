@@ -1,7 +1,7 @@
 <template>
-  <Dialog v-model="value">
+  <Dialog v-model="modelValue">
     <p class="difficulty-text">Select the difficulty:</p>
-    <Buttons :buttons="buttons" @click="$emit('start', $event)"></Buttons>
+    <Buttons :buttons="buttons" @selected="$emit('start', $event)"></Buttons>
   </Dialog>
 </template>
 
@@ -16,7 +16,7 @@ export default defineComponent({
     Buttons,
   },
   props: {
-    value: Boolean,
+    modelValue: Boolean,
   },
   data() {
     return {
