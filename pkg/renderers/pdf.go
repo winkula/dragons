@@ -3,9 +3,10 @@ package renderers
 import (
 	"fmt"
 	"image/color"
+	"os"
 
 	"github.com/tdewolff/canvas"
-	"github.com/tdewolff/canvas/pdf"
+	"github.com/tdewolff/canvas/renderers/pdf"
 	"github.com/winkula/dragons/pkg/model"
 )
 
@@ -18,6 +19,14 @@ var gridColor = canvas.Black
 var symbolLine = 0.15
 
 func RenderPdf(g *model.Grid, border bool, filename string) {
+	f, err := os.Create(fmt.Sprintf("%v.pdf", filename))
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	p := pdf.New(f, float64(g.Width*size+2*padding), float64(g.Height*size+2*padding), nil)
+
 	c := canvas.New(float64(g.Width*size+2*padding), float64(g.Height*size+2*padding))
 	ctx := canvas.NewContext(c)
 	ctx.SetFillColor(canvas.Transparent)
@@ -27,8 +36,8 @@ func RenderPdf(g *model.Grid, border bool, filename string) {
 	drawGrid(ctx, g, border)
 	drawSymbols(ctx, g)
 
-	c.WriteFile(fmt.Sprintf("%v.pdf", filename), pdf.Writer)
-	//c.WriteFile(fmt.Sprintf("%v.svg", filename), svg.Writer)
+	c.Render(p)
+	p.Close()
 }
 
 func drawGrid(ctx *canvas.Context, g *model.Grid, border bool) {
