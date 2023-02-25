@@ -19,8 +19,8 @@ require (
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/tdewolff/minify/v2 v2.11.10 // indirect
 	github.com/tdewolff/parse/v2 v2.6.0 // indirect
-	golang.org/x/image v0.0.0-20220617043117-41969df76e82 // indirect
+	golang.org/x/image v0.5.0 // indirect
 	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
-	golang.org/x/text v0.3.8 // indirect
+	golang.org/x/text v0.7.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
