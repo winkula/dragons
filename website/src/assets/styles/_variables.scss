@@ -1,29 +1,31 @@
+@use 'sass:color';
+
 // common
 
 $color-main: #ebe5d2;
-//$color-main: lighten(#C7D2DD, 3%);
+//$color-main: color.adjust(#C7D2DD, $lightness: 3%);
 
-$color-background-inner: lighten($color-main, 5%);
-$color-background: darken($color-background-inner, 10%);
+$color-background-inner: color.adjust($color-main, $lightness: 5%);
+$color-background: color.adjust($color-background-inner, $lightness: -10%);
 
-$color-font: darken($color-main, 50%);
-$color-font-copyright: darken($color-main, 30%);
+$color-font: color.adjust($color-main, $lightness: -50%);
+$color-font-copyright: color.adjust($color-main, $lightness: -30%);
 
 
 // buttons
 
-$color-button: darken($color-main, 50%);
-$color-button-hover: darken($color-main, 60%);
+$color-button: color.adjust($color-main, $lightness: -50%);
+$color-button-hover: color.adjust($color-main, $lightness: -60%);
 $button-size: 8.5vmin;
 
 
 // grid, cells
 
 $color-cell: #fff;
-$color-cell-border: darken($color-main, 10%);
+$color-cell-border: color.adjust($color-main, $lightness: -10%);
 
-$color-cell-hover: lighten($color-main, 5%);
-$color-cell-border-hover: darken($color-cell-hover, 20%);
+$color-cell-hover: color.adjust($color-main, $lightness: 5%);
+$color-cell-border-hover: color.adjust($color-cell-hover, $lightness: -20%);
 
-$color-cell-given: darken($color-main, 7%);
-$color-cell-border-given: darken($color-cell-given, 20%);
+$color-cell-given: color.adjust($color-main, $lightness: -7%);
+$color-cell-border-given: color.adjust($color-cell-given, $lightness: -20%);
